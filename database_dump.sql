@@ -1,1796 +1,1 @@
-��-- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
---
--- Host: 127.0.0.1    Database: project
--- ------------------------------------------------------
--- Server version	10.4.32-MariaDB
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `addon_subscriptions`
---
-
-DROP TABLE IF EXISTS `addon_subscriptions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `addon_subscriptions` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `subscription_id` bigint(20) unsigned DEFAULT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `feature_id` bigint(20) unsigned NOT NULL,
-  `price` decimal(64,2) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '0 => Discontinue next billing, 1 => Continue',
-  `payment_transaction_id` bigint(20) unsigned DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `addon_subscriptions_school_id_foreign` (`school_id`),
-  KEY `addon_subscriptions_feature_id_foreign` (`feature_id`),
-  KEY `addon_subscriptions_subscription_id_foreign` (`subscription_id`),
-  KEY `addon_subscriptions_payment_transaction_id_foreign` (`payment_transaction_id`),
-  CONSTRAINT `addon_subscriptions_feature_id_foreign` FOREIGN KEY (`feature_id`) REFERENCES `features` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `addon_subscriptions_payment_transaction_id_foreign` FOREIGN KEY (`payment_transaction_id`) REFERENCES `payment_transactions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `addon_subscriptions_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `addon_subscriptions_subscription_id_foreign` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `addon_subscriptions`
---
-
-LOCK TABLES `addon_subscriptions` WRITE;
-/*!40000 ALTER TABLE `addon_subscriptions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `addon_subscriptions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `addons`
---
-
-DROP TABLE IF EXISTS `addons`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `addons` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `price` decimal(64,2) NOT NULL,
-  `feature_id` bigint(20) unsigned NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 => Inactive, 1 => Active',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `addons_feature_id_unique` (`feature_id`),
-  CONSTRAINT `addons_feature_id_foreign` FOREIGN KEY (`feature_id`) REFERENCES `features` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `addons`
---
-
-LOCK TABLES `addons` WRITE;
-/*!40000 ALTER TABLE `addons` DISABLE KEYS */;
-INSERT INTO `addons` VALUES (1,'fee',10.00,16,1,'2025-12-12 23:05:08','2025-12-12 23:05:56',NULL),(2,'Announce Management',100.00,12,0,'2025-12-20 12:27:14','2025-12-20 12:27:14',NULL),(3,'Timetable add on',200.00,7,0,'2025-12-20 12:30:12','2025-12-20 12:30:12',NULL),(4,'Pro Exclusive',200.00,9,0,'2025-12-20 12:39:42','2025-12-20 12:39:42',NULL),(5,'Assignment management',5000.00,11,0,'2026-01-11 23:43:47','2026-01-11 23:43:47',NULL);
-/*!40000 ALTER TABLE `addons` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `announcement_classes`
---
-
-DROP TABLE IF EXISTS `announcement_classes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `announcement_classes` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `announcement_id` bigint(20) unsigned DEFAULT NULL,
-  `class_section_id` bigint(20) unsigned DEFAULT NULL,
-  `class_subject_id` bigint(20) unsigned DEFAULT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `announcement_classes_announcement_id_foreign` (`announcement_id`),
-  KEY `announcement_classes_class_section_id_foreign` (`class_section_id`),
-  CONSTRAINT `announcement_classes_announcement_id_foreign` FOREIGN KEY (`announcement_id`) REFERENCES `announcements` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `announcement_classes_class_section_id_foreign` FOREIGN KEY (`class_section_id`) REFERENCES `class_sections` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `announcement_classes`
---
-
-LOCK TABLES `announcement_classes` WRITE;
-/*!40000 ALTER TABLE `announcement_classes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `announcement_classes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `announcements`
---
-
-DROP TABLE IF EXISTS `announcements`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `announcements` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(128) NOT NULL,
-  `description` longtext DEFAULT NULL,
-  `session_year_id` bigint(20) unsigned NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `announcements_session_year_id_foreign` (`session_year_id`),
-  KEY `announcements_school_id_foreign` (`school_id`),
-  CONSTRAINT `announcements_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `announcements_session_year_id_foreign` FOREIGN KEY (`session_year_id`) REFERENCES `session_years` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `announcements`
---
-
-LOCK TABLES `announcements` WRITE;
-/*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
-/*!40000 ALTER TABLE `announcements` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `class_groups`
---
-
-DROP TABLE IF EXISTS `class_groups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `class_groups` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `description` varchar(191) DEFAULT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `class_groups_school_id_foreign` (`school_id`),
-  CONSTRAINT `class_groups_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `class_groups`
---
-
-LOCK TABLES `class_groups` WRITE;
-/*!40000 ALTER TABLE `class_groups` DISABLE KEYS */;
-/*!40000 ALTER TABLE `class_groups` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `class_sections`
---
-
-DROP TABLE IF EXISTS `class_sections`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `class_sections` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `class_id` bigint(20) unsigned NOT NULL,
-  `section_id` bigint(20) unsigned NOT NULL,
-  `medium_id` bigint(20) unsigned NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_id` (`class_id`,`section_id`,`medium_id`),
-  KEY `class_sections_section_id_foreign` (`section_id`),
-  KEY `class_sections_medium_id_foreign` (`medium_id`),
-  KEY `class_sections_school_id_foreign` (`school_id`),
-  CONSTRAINT `class_sections_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `class_sections_medium_id_foreign` FOREIGN KEY (`medium_id`) REFERENCES `mediums` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `class_sections_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `class_sections_section_id_foreign` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `class_sections`
---
-
-LOCK TABLES `class_sections` WRITE;
-/*!40000 ALTER TABLE `class_sections` DISABLE KEYS */;
-/*!40000 ALTER TABLE `class_sections` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `class_subjects`
---
-
-DROP TABLE IF EXISTS `class_subjects`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `class_subjects` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `class_id` bigint(20) unsigned NOT NULL,
-  `subject_id` bigint(20) unsigned NOT NULL,
-  `type` varchar(32) NOT NULL COMMENT 'Compulsory / Elective',
-  `elective_subject_group_id` bigint(20) unsigned DEFAULT NULL COMMENT 'if type=Elective',
-  `semester_id` bigint(20) unsigned DEFAULT NULL,
-  `virtual_semester_id` int(11) GENERATED ALWAYS AS (case when `semester_id` is not null then `semester_id` else 0 end) VIRTUAL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_ids` (`class_id`,`subject_id`,`virtual_semester_id`),
-  KEY `class_subjects_subject_id_foreign` (`subject_id`),
-  KEY `class_subjects_elective_subject_group_id_foreign` (`elective_subject_group_id`),
-  KEY `class_subjects_semester_id_foreign` (`semester_id`),
-  KEY `class_subjects_school_id_foreign` (`school_id`),
-  CONSTRAINT `class_subjects_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `class_subjects_elective_subject_group_id_foreign` FOREIGN KEY (`elective_subject_group_id`) REFERENCES `elective_subject_groups` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `class_subjects_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `class_subjects_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `class_subjects_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `class_subjects`
---
-
-LOCK TABLES `class_subjects` WRITE;
-/*!40000 ALTER TABLE `class_subjects` DISABLE KEYS */;
-/*!40000 ALTER TABLE `class_subjects` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `classes`
---
-
-DROP TABLE IF EXISTS `classes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `classes` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `include_semesters` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - no 1 - yes',
-  `medium_id` bigint(20) unsigned NOT NULL,
-  `shift_id` bigint(20) unsigned DEFAULT NULL,
-  `stream_id` bigint(20) unsigned DEFAULT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `classes_medium_id_foreign` (`medium_id`),
-  KEY `classes_shift_id_foreign` (`shift_id`),
-  KEY `classes_stream_id_foreign` (`stream_id`),
-  KEY `classes_school_id_foreign` (`school_id`),
-  CONSTRAINT `classes_medium_id_foreign` FOREIGN KEY (`medium_id`) REFERENCES `mediums` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `classes_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `classes_shift_id_foreign` FOREIGN KEY (`shift_id`) REFERENCES `shifts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `classes_stream_id_foreign` FOREIGN KEY (`stream_id`) REFERENCES `streams` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `classes`
---
-
-LOCK TABLES `classes` WRITE;
-/*!40000 ALTER TABLE `classes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `classes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `contact_inquiry`
---
-
-DROP TABLE IF EXISTS `contact_inquiry`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `contact_inquiry` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) DEFAULT NULL,
-  `email` varchar(191) DEFAULT NULL,
-  `subject` varchar(191) DEFAULT NULL,
-  `message` varchar(191) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `contact_inquiry`
---
-
-LOCK TABLES `contact_inquiry` WRITE;
-/*!40000 ALTER TABLE `contact_inquiry` DISABLE KEYS */;
-/*!40000 ALTER TABLE `contact_inquiry` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `elective_subject_groups`
---
-
-DROP TABLE IF EXISTS `elective_subject_groups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `elective_subject_groups` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `total_subjects` int(11) NOT NULL,
-  `total_selectable_subjects` int(11) NOT NULL,
-  `class_id` bigint(20) unsigned NOT NULL,
-  `semester_id` bigint(20) unsigned DEFAULT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `elective_subject_groups_class_id_foreign` (`class_id`),
-  KEY `elective_subject_groups_semester_id_foreign` (`semester_id`),
-  KEY `elective_subject_groups_school_id_foreign` (`school_id`),
-  CONSTRAINT `elective_subject_groups_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `elective_subject_groups_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `elective_subject_groups_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `elective_subject_groups`
---
-
-LOCK TABLES `elective_subject_groups` WRITE;
-/*!40000 ALTER TABLE `elective_subject_groups` DISABLE KEYS */;
-/*!40000 ALTER TABLE `elective_subject_groups` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `extra_school_datas`
---
-
-DROP TABLE IF EXISTS `extra_school_datas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `extra_school_datas` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `school_inquiry_id` bigint(20) unsigned DEFAULT NULL,
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `form_field_id` bigint(20) unsigned NOT NULL,
-  `data` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `extra_school_datas_school_inquiry_id_foreign` (`school_inquiry_id`),
-  KEY `extra_school_datas_school_id_foreign` (`school_id`),
-  KEY `extra_school_datas_form_field_id_foreign` (`form_field_id`),
-  CONSTRAINT `extra_school_datas_form_field_id_foreign` FOREIGN KEY (`form_field_id`) REFERENCES `form_fields` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `extra_school_datas_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `extra_school_datas_school_inquiry_id_foreign` FOREIGN KEY (`school_inquiry_id`) REFERENCES `school_inquiries` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `extra_school_datas`
---
-
-LOCK TABLES `extra_school_datas` WRITE;
-/*!40000 ALTER TABLE `extra_school_datas` DISABLE KEYS */;
-INSERT INTO `extra_school_datas` VALUES (1,NULL,2,1,NULL,'2025-12-10 19:26:30','2025-12-10 19:26:30',NULL),(2,NULL,3,1,NULL,'2025-12-10 19:36:17','2025-12-10 19:36:17',NULL),(3,NULL,4,1,NULL,'2025-12-10 19:59:59','2025-12-10 19:59:59',NULL);
-/*!40000 ALTER TABLE `extra_school_datas` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `failed_jobs`
---
-
-DROP TABLE IF EXISTS `failed_jobs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `failed_jobs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(191) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `failed_jobs`
---
-
-LOCK TABLES `failed_jobs` WRITE;
-/*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `faqs`
---
-
-DROP TABLE IF EXISTS `faqs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `faqs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) NOT NULL,
-  `description` text NOT NULL,
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `faqs_school_id_foreign` (`school_id`),
-  CONSTRAINT `faqs_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `faqs`
---
-
-LOCK TABLES `faqs` WRITE;
-/*!40000 ALTER TABLE `faqs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `faqs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `feature_section_lists`
---
-
-DROP TABLE IF EXISTS `feature_section_lists`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `feature_section_lists` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `feature_section_id` bigint(20) unsigned NOT NULL,
-  `feature` varchar(191) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `image` varchar(191) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `feature_section_lists_feature_section_id_foreign` (`feature_section_id`),
-  CONSTRAINT `feature_section_lists_feature_section_id_foreign` FOREIGN KEY (`feature_section_id`) REFERENCES `feature_sections` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `feature_section_lists`
---
-
-LOCK TABLES `feature_section_lists` WRITE;
-/*!40000 ALTER TABLE `feature_section_lists` DISABLE KEYS */;
-/*!40000 ALTER TABLE `feature_section_lists` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `feature_sections`
---
-
-DROP TABLE IF EXISTS `feature_sections`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `feature_sections` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) NOT NULL,
-  `heading` varchar(191) DEFAULT NULL,
-  `rank` int(11) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `feature_sections`
---
-
-LOCK TABLES `feature_sections` WRITE;
-/*!40000 ALTER TABLE `feature_sections` DISABLE KEYS */;
-/*!40000 ALTER TABLE `feature_sections` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `features`
---
-
-DROP TABLE IF EXISTS `features`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `features` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `is_default` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 => No, 1 => Yes',
-  `status` int(11) NOT NULL DEFAULT 1,
-  `required_vps` int(11) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `features`
---
-
-LOCK TABLES `features` WRITE;
-/*!40000 ALTER TABLE `features` DISABLE KEYS */;
-INSERT INTO `features` VALUES (1,'Student Management',1,1,0,'2025-12-09 19:02:17','2025-12-09 19:02:54'),(2,'Academics Management',1,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(3,'Slider Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(4,'Teacher Management',1,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(5,'Session Year Management',1,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(6,'Holiday Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(7,'Timetable Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(8,'Attendance Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(9,'Exam Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(10,'Lesson Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(11,'Assignment Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(12,'Announcement Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(13,'Staff Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(14,'Expense Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(15,'Staff Leave Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(16,'Fees Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(17,'School Gallery Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(18,'ID Card - Certificate Generation',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(19,'Website Management',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(20,'Chat Module',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(21,'Transportation Module',0,1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54');
-/*!40000 ALTER TABLE `features` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `files`
---
-
-DROP TABLE IF EXISTS `files`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `files` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `modal_type` varchar(191) NOT NULL,
-  `modal_id` bigint(20) unsigned NOT NULL,
-  `file_name` varchar(1024) DEFAULT NULL,
-  `file_thumbnail` varchar(1024) DEFAULT NULL,
-  `type` tinytext NOT NULL COMMENT '1 = File Upload, 2 = Youtube Link, 3 = Video Upload, 4 = Other Link',
-  `file_url` varchar(1024) NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `files_modal_type_modal_id_index` (`modal_type`,`modal_id`),
-  KEY `files_school_id_foreign` (`school_id`),
-  CONSTRAINT `files_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `files`
---
-
-LOCK TABLES `files` WRITE;
-/*!40000 ALTER TABLE `files` DISABLE KEYS */;
-/*!40000 ALTER TABLE `files` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `form_fields`
---
-
-DROP TABLE IF EXISTS `form_fields`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `form_fields` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) NOT NULL,
-  `type` varchar(128) NOT NULL COMMENT 'text,number,textarea,dropdown,checkbox,radio,fileupload',
-  `is_required` tinyint(1) NOT NULL DEFAULT 0,
-  `default_values` text DEFAULT NULL COMMENT 'values of radio,checkbox,dropdown,etc',
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `rank` int(11) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`,`school_id`),
-  KEY `form_fields_school_id_foreign` (`school_id`),
-  CONSTRAINT `form_fields_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `form_fields`
---
-
-LOCK TABLES `form_fields` WRITE;
-/*!40000 ALTER TABLE `form_fields` DISABLE KEYS */;
-INSERT INTO `form_fields` VALUES (1,'sri chaitanya','text',0,NULL,NULL,1,'2025-12-10 15:23:28','2025-12-10 22:57:06','2025-12-10 22:57:06');
-/*!40000 ALTER TABLE `form_fields` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `galleries`
---
-
-DROP TABLE IF EXISTS `galleries`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `galleries` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `thumbnail` varchar(191) DEFAULT NULL,
-  `session_year_id` bigint(20) unsigned DEFAULT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `galleries_school_id_foreign` (`school_id`),
-  CONSTRAINT `galleries_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `galleries`
---
-
-LOCK TABLES `galleries` WRITE;
-/*!40000 ALTER TABLE `galleries` DISABLE KEYS */;
-/*!40000 ALTER TABLE `galleries` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `guidances`
---
-
-DROP TABLE IF EXISTS `guidances`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `guidances` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `link` text DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `guidances`
---
-
-LOCK TABLES `guidances` WRITE;
-/*!40000 ALTER TABLE `guidances` DISABLE KEYS */;
-/*!40000 ALTER TABLE `guidances` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `jobs`
---
-
-DROP TABLE IF EXISTS `jobs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jobs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `queue` varchar(191) NOT NULL,
-  `payload` longtext NOT NULL,
-  `attempts` tinyint(3) unsigned NOT NULL,
-  `reserved_at` int(10) unsigned DEFAULT NULL,
-  `available_at` int(10) unsigned NOT NULL,
-  `created_at` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `jobs_queue_index` (`queue`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `jobs`
---
-
-LOCK TABLES `jobs` WRITE;
-/*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
-INSERT INTO `jobs` VALUES (43,'default','{\"uuid\":\"feb39a38-fefe-4498-80aa-6db57b3f3218\",\"displayName\":\"App\\\\Jobs\\\\SetupSchoolDatabase\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":3,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":\"120\",\"timeout\":300,\"retryUntil\":null,\"data\":{\"commandName\":\"App\\\\Jobs\\\\SetupSchoolDatabase\",\"command\":\"O:28:\\\"App\\\\Jobs\\\\SetupSchoolDatabase\\\":3:{s:38:\\\"\\u0000App\\\\Jobs\\\\SetupSchoolDatabase\\u0000schoolId\\\";i:7;s:39:\\\"\\u0000App\\\\Jobs\\\\SetupSchoolDatabase\\u0000packageId\\\";N;s:46:\\\"\\u0000App\\\\Jobs\\\\SetupSchoolDatabase\\u0000schoolCodePrefix\\\";s:3:\\\"SCH\\\";}\"}}',0,NULL,1770306681,1770306681);
-/*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `languages`
---
-
-DROP TABLE IF EXISTS `languages`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `languages` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `code` varchar(64) NOT NULL,
-  `file` varchar(512) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '1=>active',
-  `is_rtl` tinyint(4) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `languages_code_unique` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `languages`
---
-
-LOCK TABLES `languages` WRITE;
-/*!40000 ALTER TABLE `languages` DISABLE KEYS */;
-INSERT INTO `languages` VALUES (1,'English','en','en.json',1,0,'2025-12-09 19:02:54','2025-12-09 19:02:54');
-/*!40000 ALTER TABLE `languages` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `marketplace_products`
---
-
-DROP TABLE IF EXISTS `marketplace_products`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `marketplace_products` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) NOT NULL,
-  `description` text DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `commission_percentage` double DEFAULT 0,
-  `category` varchar(191) DEFAULT NULL,
-  `image` varchar(191) DEFAULT NULL,
-  `contact_info` text DEFAULT NULL,
-  `link` varchar(191) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '1=Active, 0=Inactive',
-  `user_id` bigint(20) unsigned NOT NULL,
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `marketplace_products_user_id_foreign` (`user_id`),
-  KEY `marketplace_products_school_id_foreign` (`school_id`),
-  CONSTRAINT `marketplace_products_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `marketplace_products_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `marketplace_products`
---
-
-LOCK TABLES `marketplace_products` WRITE;
-/*!40000 ALTER TABLE `marketplace_products` DISABLE KEYS */;
-INSERT INTO `marketplace_products` VALUES (1,'test','test',5000.00,10,'Software',NULL,NULL,NULL,1,1,NULL,'2026-02-05 15:27:05','2026-02-05 15:27:05'),(2,'test','demo',4000.00,15,'Software',NULL,NULL,NULL,1,1,NULL,'2026-02-06 12:13:45','2026-02-16 07:30:05');
-/*!40000 ALTER TABLE `marketplace_products` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mediums`
---
-
-DROP TABLE IF EXISTS `mediums`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mediums` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `mediums_school_id_foreign` (`school_id`),
-  CONSTRAINT `mediums_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mediums`
---
-
-LOCK TABLES `mediums` WRITE;
-/*!40000 ALTER TABLE `mediums` DISABLE KEYS */;
-/*!40000 ALTER TABLE `mediums` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `migrations`
---
-
-DROP TABLE IF EXISTS `migrations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `migrations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(191) NOT NULL,
-  `batch` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `migrations`
---
-
-LOCK TABLES `migrations` WRITE;
-/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2019_08_19_000000_create_failed_jobs_table',1),(4,'2019_12_14_000001_create_personal_access_tokens_table',1),(5,'2022_04_01_091033_create_permission_tables',1),(6,'2022_04_01_105826_all_tables',1),(7,'2023_11_16_134449_version1-0-1',1),(8,'2023_12_07_120054_version1_1_0',1),(9,'2024_01_30_092228_version1_2_0',1),(10,'2024_03_12_173521_version1_3_0',1),(11,'2024_05_21_094714_version1_3_2',1),(12,'2024_07_21_093657_version1_4_0',1),(13,'2024_08_08_094709_version1_4_1',1),(14,'2024_10_17_112347_version1_5_0',1),(15,'2025_01_22_102146_version1_5_2',1),(16,'2025_04_10_100137_version1_5_4',1),(17,'2025_05_02_095829_version1_6_0',1),(18,'2025_07_28_123928_version1_7_0',1),(19,'2025_09_09_125830_version1_8_0',1),(20,'2026_02_05_201156_create_marketplace_products_table',2),(21,'2026_02_05_204200_add_commission_to_marketplace_products_table',3);
-/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `model_has_permissions`
---
-
-DROP TABLE IF EXISTS `model_has_permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `model_has_permissions` (
-  `permission_id` bigint(20) unsigned NOT NULL,
-  `model_type` varchar(191) NOT NULL,
-  `model_id` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
-  KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`),
-  CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `model_has_permissions`
---
-
-LOCK TABLES `model_has_permissions` WRITE;
-/*!40000 ALTER TABLE `model_has_permissions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `model_has_permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `model_has_roles`
---
-
-DROP TABLE IF EXISTS `model_has_roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `model_has_roles` (
-  `role_id` bigint(20) unsigned NOT NULL,
-  `model_type` varchar(191) NOT NULL,
-  `model_id` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
-  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`),
-  CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `model_has_roles`
---
-
-LOCK TABLES `model_has_roles` WRITE;
-/*!40000 ALTER TABLE `model_has_roles` DISABLE KEYS */;
-INSERT INTO `model_has_roles` VALUES (1,'App\\Models\\User',1),(4,'App\\Models\\User',8),(4,'App\\Models\\User',9);
-/*!40000 ALTER TABLE `model_has_roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `package_features`
---
-
-DROP TABLE IF EXISTS `package_features`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `package_features` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `package_id` bigint(20) unsigned NOT NULL,
-  `feature_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique` (`package_id`,`feature_id`),
-  KEY `package_features_package_id_index` (`package_id`),
-  KEY `package_features_feature_id_index` (`feature_id`),
-  CONSTRAINT `package_features_feature_id_foreign` FOREIGN KEY (`feature_id`) REFERENCES `features` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `package_features_package_id_foreign` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=283 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `package_features`
---
-
-LOCK TABLES `package_features` WRITE;
-/*!40000 ALTER TABLE `package_features` DISABLE KEYS */;
-INSERT INTO `package_features` VALUES (1,1,2,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(2,1,5,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(3,1,1,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(4,1,4,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(5,1,12,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(6,1,11,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(7,1,8,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(8,1,20,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(9,1,9,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(10,1,14,'2025-12-10 19:40:02','2025-12-10 19:40:02'),(11,2,2,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(12,2,5,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(13,2,1,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(14,2,4,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(15,2,12,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(16,2,11,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(17,2,8,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(18,2,20,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(19,2,14,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(20,2,16,'2025-12-11 16:28:21','2025-12-12 22:57:50'),(31,2,9,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(32,2,17,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(33,2,3,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(34,2,15,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(35,2,13,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(36,2,7,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(37,2,21,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(38,2,19,'2025-12-12 22:56:33','2025-12-12 22:57:50'),(67,3,2,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(68,3,5,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(69,3,1,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(70,3,4,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(71,3,12,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(72,3,11,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(73,3,8,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(74,3,20,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(75,3,9,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(76,3,14,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(77,3,16,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(78,3,6,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(79,3,18,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(80,3,10,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(81,3,17,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(82,3,15,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(83,3,13,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(84,3,19,'2025-12-12 23:15:51','2025-12-12 23:43:04'),(85,3,3,'2025-12-12 23:34:39','2025-12-12 23:43:04'),(86,3,21,'2025-12-12 23:34:39','2025-12-12 23:43:04'),(105,3,7,'2025-12-12 23:35:12','2025-12-12 23:43:04'),(147,4,2,'2025-12-20 12:24:39','2026-01-02 10:56:57'),(148,4,5,'2025-12-20 12:24:39','2026-01-02 10:56:57'),(149,4,1,'2025-12-20 12:24:39','2026-01-02 10:56:57'),(150,4,4,'2025-12-20 12:24:39','2026-01-02 10:56:57'),(157,4,16,'2025-12-20 12:24:39','2026-01-02 10:56:57'),(161,4,3,'2025-12-20 12:24:39','2026-01-02 10:56:57'),(182,4,9,'2025-12-20 12:37:43','2026-01-02 10:56:57'),(196,4,12,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(197,4,11,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(198,4,8,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(199,4,20,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(200,4,14,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(201,4,6,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(202,4,18,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(203,4,10,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(204,4,17,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(205,4,15,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(206,4,13,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(207,4,7,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(208,4,21,'2025-12-20 12:41:32','2026-01-02 10:56:57'),(216,5,2,'2025-12-20 12:46:48','2025-12-20 12:46:48'),(217,5,5,'2025-12-20 12:46:48','2025-12-20 12:46:48'),(218,5,1,'2025-12-20 12:46:48','2025-12-20 12:46:48'),(219,5,4,'2025-12-20 12:46:48','2025-12-20 12:46:48'),(240,4,19,'2026-01-02 10:56:57','2026-01-02 10:56:57'),(261,6,2,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(262,6,5,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(263,6,1,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(264,6,4,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(265,6,12,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(267,6,8,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(268,6,20,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(269,6,9,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(270,6,14,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(271,6,16,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(272,6,6,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(273,6,18,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(274,6,10,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(275,6,17,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(276,6,3,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(277,6,15,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(278,6,13,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(279,6,7,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(280,6,21,'2026-01-11 23:41:44','2026-01-11 23:42:23'),(281,6,19,'2026-01-11 23:41:44','2026-01-11 23:42:23');
-/*!40000 ALTER TABLE `package_features` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `packages`
---
-
-DROP TABLE IF EXISTS `packages`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `packages` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) DEFAULT NULL,
-  `description` varchar(191) DEFAULT NULL,
-  `tagline` varchar(191) DEFAULT NULL,
-  `student_charge` double(8,2) NOT NULL,
-  `staff_charge` double(8,2) NOT NULL,
-  `days` int(11) NOT NULL DEFAULT 1,
-  `type` int(11) NOT NULL DEFAULT 1 COMMENT '0 => Prepaid, 1 => Postpaid',
-  `no_of_students` int(11) NOT NULL DEFAULT 0,
-  `no_of_staffs` int(11) NOT NULL DEFAULT 0,
-  `charges` double(64,4) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 => Unpublished, 1 => Published',
-  `is_trial` int(11) NOT NULL DEFAULT 0,
-  `highlight` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 => No, 1 => Yes',
-  `rank` int(11) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `packages`
---
-
-LOCK TABLES `packages` WRITE;
-/*!40000 ALTER TABLE `packages` DISABLE KEYS */;
-INSERT INTO `packages` VALUES (1,'free','free','free',0.00,0.00,20,1,0,0,0.0000,0,0,0,0,NULL,'2025-12-10 19:55:32','2025-12-10 19:55:32'),(2,'free',NULL,'free',0.00,0.00,20,0,100,15,10.0000,1,0,1,4,NULL,'2026-01-15 02:28:29',NULL),(3,'Pro','Pro',NULL,20.00,20.00,30,1,0,0,0.0000,1,0,0,5,NULL,'2026-01-15 02:28:29',NULL),(4,'Pro Exclusive',NULL,NULL,15.00,20.00,250,1,0,0,0.0000,0,0,1,1,NULL,'2026-01-15 02:28:29',NULL),(5,'PREMIUM',NULL,NULL,20.00,20.00,200,1,0,0,0.0000,0,0,0,2,NULL,'2026-01-15 02:28:29',NULL),(6,'supraja premium','best for value','best',10.00,20.00,250,1,0,0,0.0000,1,0,0,3,NULL,'2026-01-15 02:28:29',NULL);
-/*!40000 ALTER TABLE `packages` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `password_resets`
---
-
-DROP TABLE IF EXISTS `password_resets`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `password_resets` (
-  `email` varchar(191) NOT NULL,
-  `token` varchar(191) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  KEY `password_resets_email_index` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `password_resets`
---
-
-LOCK TABLES `password_resets` WRITE;
-/*!40000 ALTER TABLE `password_resets` DISABLE KEYS */;
-/*!40000 ALTER TABLE `password_resets` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `payment_configurations`
---
-
-DROP TABLE IF EXISTS `payment_configurations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `payment_configurations` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `payment_method` varchar(191) NOT NULL,
-  `api_key` varchar(191) NOT NULL,
-  `secret_key` varchar(191) NOT NULL,
-  `webhook_secret_key` varchar(191) NOT NULL,
-  `bank_name` varchar(191) DEFAULT NULL,
-  `account_name` varchar(191) DEFAULT NULL,
-  `account_no` varchar(191) DEFAULT NULL,
-  `currency_code` varchar(128) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 - Disabled, 1 - Enabled',
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `payment_configurations_school_id_foreign` (`school_id`),
-  CONSTRAINT `payment_configurations_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `payment_configurations`
---
-
-LOCK TABLES `payment_configurations` WRITE;
-/*!40000 ALTER TABLE `payment_configurations` DISABLE KEYS */;
-INSERT INTO `payment_configurations` VALUES (1,'Stripe','pk_test_51NxxxxxxDummyPublishableKey1234567890','sk_test_51NxxxxxxDummySecretKey0987654321','whsec_dummyWebhookSecret_123456789abcdef','','','','INR',0,NULL,'2025-12-10 15:20:57','2025-12-12 23:38:58'),(2,'Razorpay','rzp_test_DummyKeyId123456','DummyKeySecret_abcdefghijklmnopqrstuvwxyz','dummy_webhook_secret_razorpay_12345','','','','INR',0,NULL,'2025-12-10 15:20:57','2025-12-12 23:38:58'),(3,'Paystack','pk_test_dummyPublicKey_1234567890','sk_test_dummySecretKey_abcdefghijklmnopqrstuvwxyz','paystack_dummy_webhook_secret_12345','','','','INR',0,NULL,'2025-12-10 15:20:57','2025-12-12 23:38:58'),(4,'Flutterwave','FLWPUBK_TEST-DummyPublishableKey1234567890-X','FLWSECK_TEST-DummySecretKey_abcdefghijklmnopqrstuvwxyz-X','','','','','INR',0,NULL,'2025-12-10 15:20:57','2025-12-12 23:38:58');
-/*!40000 ALTER TABLE `payment_configurations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `payment_transactions`
---
-
-DROP TABLE IF EXISTS `payment_transactions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `payment_transactions` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `amount` double(64,2) NOT NULL,
-  `payment_gateway` varchar(191) NOT NULL,
-  `order_id` varchar(191) DEFAULT NULL COMMENT 'order_id / payment_intent_id',
-  `payment_id` varchar(191) DEFAULT NULL,
-  `payment_signature` varchar(191) DEFAULT NULL,
-  `payment_status` enum('failed','succeed','pending') NOT NULL,
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `payment_transactions_school_id_foreign` (`school_id`),
-  KEY `payment_transactions_user_id_foreign` (`user_id`),
-  CONSTRAINT `payment_transactions_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `payment_transactions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `payment_transactions`
---
-
-LOCK TABLES `payment_transactions` WRITE;
-/*!40000 ALTER TABLE `payment_transactions` DISABLE KEYS */;
-INSERT INTO `payment_transactions` VALUES (1,2,10.00,'Cash',NULL,NULL,NULL,'succeed',1,'2025-12-11 16:29:35','2025-12-11 16:29:35'),(2,4,10.00,'Cash',NULL,NULL,NULL,'succeed',3,'2025-12-12 21:58:54','2025-12-12 21:58:54'),(3,5,10.00,'Cash',NULL,NULL,NULL,'succeed',4,'2025-12-16 16:10:33','2025-12-16 16:10:33');
-/*!40000 ALTER TABLE `payment_transactions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `permissions`
---
-
-DROP TABLE IF EXISTS `permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `permissions` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `guard_name` varchar(191) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `permissions`
---
-
-LOCK TABLES `permissions` WRITE;
-/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
-INSERT INTO `permissions` VALUES (1,'role-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(2,'role-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(3,'role-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(4,'role-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(5,'language-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(6,'language-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(7,'language-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(8,'language-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(9,'schools-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(10,'schools-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(11,'schools-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(12,'schools-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(13,'package-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(14,'package-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(15,'package-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(16,'package-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(17,'addons-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(18,'addons-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(19,'addons-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(20,'addons-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(21,'guidance-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(22,'guidance-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(23,'guidance-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(24,'guidance-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(25,'system-setting-manage','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(26,'fcm-setting-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(27,'email-setting-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(28,'privacy-policy','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(29,'contact-us','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(30,'about-us','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(31,'terms-condition','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(32,'app-settings','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(33,'subscription-view','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(34,'staff-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(35,'staff-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(36,'staff-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(37,'staff-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(38,'faqs-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(39,'faqs-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(40,'faqs-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(41,'faqs-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(42,'fcm-setting-manage','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(43,'front-site-setting','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(44,'payment-settings','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(45,'subscription-settings','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(46,'subscription-change-bills','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(47,'school-terms-condition','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(48,'subscription-bill-payment','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(49,'web-settings','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(50,'email-template','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(51,'custom-school-email','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(52,'database-backup','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(53,'school-custom-field-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(54,'school-custom-field-create','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(55,'school-custom-field-edit','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(56,'school-custom-field-delete','web','2025-12-09 19:02:54','2025-12-09 19:02:54'),(57,'contact-inquiry-list','web','2025-12-09 19:02:54','2025-12-09 19:02:54');
-/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `personal_access_tokens`
---
-
-DROP TABLE IF EXISTS `personal_access_tokens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `personal_access_tokens` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `tokenable_type` varchar(191) NOT NULL,
-  `tokenable_id` bigint(20) unsigned NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `token` varchar(64) NOT NULL,
-  `abilities` text DEFAULT NULL,
-  `last_used_at` timestamp NULL DEFAULT NULL,
-  `expires_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
-  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `personal_access_tokens`
---
-
-LOCK TABLES `personal_access_tokens` WRITE;
-/*!40000 ALTER TABLE `personal_access_tokens` DISABLE KEYS */;
-/*!40000 ALTER TABLE `personal_access_tokens` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `role_has_permissions`
---
-
-DROP TABLE IF EXISTS `role_has_permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role_has_permissions` (
-  `permission_id` bigint(20) unsigned NOT NULL,
-  `role_id` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`permission_id`,`role_id`),
-  KEY `role_has_permissions_role_id_foreign` (`role_id`),
-  CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `role_has_permissions`
---
-
-LOCK TABLES `role_has_permissions` WRITE;
-/*!40000 ALTER TABLE `role_has_permissions` DISABLE KEYS */;
-INSERT INTO `role_has_permissions` VALUES (1,1),(1,3),(1,4),(2,1),(2,3),(2,4),(3,1),(3,3),(3,4),(4,1),(4,3),(4,4),(5,1),(5,3),(5,4),(6,1),(6,3),(6,4),(7,1),(7,3),(7,4),(8,1),(8,3),(8,4),(9,1),(9,3),(9,4),(10,1),(10,3),(10,4),(11,1),(11,3),(11,4),(12,1),(12,3),(12,4),(13,1),(13,3),(13,4),(14,1),(14,3),(14,4),(15,1),(15,3),(15,4),(16,1),(16,3),(16,4),(17,1),(17,3),(17,4),(18,1),(18,3),(18,4),(19,1),(19,3),(19,4),(20,1),(20,3),(20,4),(21,1),(21,3),(21,4),(22,1),(22,3),(22,4),(23,1),(23,3),(23,4),(24,1),(24,3),(24,4),(25,1),(25,3),(26,1),(26,3),(26,4),(27,1),(27,3),(27,4),(28,1),(28,3),(28,4),(29,1),(29,3),(29,4),(30,1),(30,3),(30,4),(31,1),(31,3),(32,1),(32,3),(32,4),(33,1),(33,3),(33,4),(34,1),(34,3),(34,4),(35,1),(35,3),(35,4),(36,1),(36,3),(36,4),(37,1),(37,3),(37,4),(38,1),(38,3),(38,4),(39,1),(39,3),(39,4),(40,1),(40,3),(40,4),(41,1),(41,3),(41,4),(42,1),(42,3),(42,4),(45,1),(45,3),(45,4),(46,1),(46,3),(46,4),(47,1),(47,3),(47,4),(48,1),(48,3),(48,4),(49,1),(49,3),(51,1),(51,3),(51,4),(52,1),(52,3),(52,4),(53,1),(53,3),(53,4),(54,1),(54,3),(54,4),(55,1),(55,3),(55,4),(56,1),(56,3),(56,4),(57,1),(57,3),(57,4);
-/*!40000 ALTER TABLE `role_has_permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `roles`
---
-
-DROP TABLE IF EXISTS `roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `roles` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `guard_name` varchar(191) NOT NULL,
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `custom_role` tinyint(1) NOT NULL DEFAULT 1,
-  `editable` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `roles_name_guard_name_school_id_unique` (`name`,`guard_name`,`school_id`),
-  KEY `roles_school_id_foreign` (`school_id`),
-  CONSTRAINT `roles_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `roles`
---
-
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Super Admin','web',NULL,0,0,'2025-12-09 19:02:54','2025-12-09 19:02:54'),(3,'student','web',NULL,1,1,'2025-12-10 19:40:35','2025-12-10 19:40:35'),(4,'Admin','web',NULL,1,1,'2025-12-20 13:01:59','2025-12-20 13:01:59'),(5,'Teacher','web',NULL,1,1,'2026-02-10 07:45:02','2026-02-10 07:45:02'),(6,'Parent','web',NULL,1,1,'2026-02-10 07:45:02','2026-02-10 07:45:02'),(7,'School Admin','web',NULL,1,1,'2026-02-10 07:45:02','2026-02-10 07:45:02');
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `school_inquiries`
---
-
-DROP TABLE IF EXISTS `school_inquiries`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `school_inquiries` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `school_name` varchar(191) NOT NULL,
-  `school_address` varchar(191) NOT NULL,
-  `school_phone` varchar(191) NOT NULL,
-  `school_email` varchar(191) NOT NULL,
-  `school_tagline` varchar(191) NOT NULL,
-  `date` date NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `school_inquiries`
---
-
-LOCK TABLES `school_inquiries` WRITE;
-/*!40000 ALTER TABLE `school_inquiries` DISABLE KEYS */;
-/*!40000 ALTER TABLE `school_inquiries` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `school_settings`
---
-
-DROP TABLE IF EXISTS `school_settings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `school_settings` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `data` text NOT NULL,
-  `type` varchar(191) DEFAULT NULL COMMENT 'datatype like string , file etc',
-  `school_id` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `school_settings_name_school_id_unique` (`name`,`school_id`),
-  KEY `school_settings_school_id_foreign` (`school_id`),
-  CONSTRAINT `school_settings_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `school_settings`
---
-
-LOCK TABLES `school_settings` WRITE;
-/*!40000 ALTER TABLE `school_settings` DISABLE KEYS */;
-INSERT INTO `school_settings` VALUES (1,'session_year','1','number',1),(2,'school_name','Demo School','string',1);
-/*!40000 ALTER TABLE `school_settings` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `schools`
---
-
-DROP TABLE IF EXISTS `schools`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `schools` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `address` varchar(191) NOT NULL,
-  `support_phone` varchar(191) NOT NULL,
-  `support_email` varchar(191) NOT NULL,
-  `tagline` varchar(191) NOT NULL,
-  `logo` varchar(191) NOT NULL,
-  `admin_id` bigint(20) unsigned DEFAULT NULL COMMENT 'user_id',
-  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 => Deactivate, 1 => Active',
-  `installed` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: Not installed, 1: Installed',
-  `domain` varchar(191) DEFAULT NULL,
-  `database_name` varchar(191) DEFAULT NULL,
-  `code` varchar(191) DEFAULT NULL,
-  `domain_type` varchar(191) DEFAULT 'default',
-  `type` varchar(191) DEFAULT 'custom',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `schools_admin_id_foreign` (`admin_id`),
-  CONSTRAINT `schools_admin_id_foreign` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `schools`
---
-
-LOCK TABLES `schools` WRITE;
-/*!40000 ALTER TABLE `schools` DISABLE KEYS */;
-INSERT INTO `schools` VALUES (1,'Demo School','123 Demo Street','1234567890','demo@school.com','Demo Tagline','',2,1,1,'school1','project','SCH20251','default','demo','2025-12-10 15:23:47','2026-02-10 07:36:13',NULL),(2,'TechNova School','Hyderabad','09392511176','saisuppu1@gmail.com','best education','super-admin/school/694139b37857d0.726851821765882291.png',3,1,1,'beta','school_db','SCH20252','default','custom','2025-12-10 19:26:30','2025-12-16 16:21:31',NULL),(3,'Sarthak Edge','Plot no 54, Flat no 306 OM Residency Bapujinagar, Bowenpally, Secunderabad Hyderabad, Telanagana 500011','7207971984','mmtsofttech@gmail.com','AI-powered SaaS-based','super-admin/school/69397e599a0753.011945231765375577.png',4,1,1,'mmt','school_db','SCH20252','default','custom','2025-12-10 19:36:17','2025-12-11 16:31:35',NULL),(4,'TechNova School','Hyderabad','789456123','technova@gmail.com','Best bet for Education','super-admin/school/694137211353a4.548596141765881633.png',5,0,1,'crudbook.in','school_db','SCH20254','custom','custom','2025-12-10 19:59:59','2025-12-16 16:20:16','2025-12-16 16:20:16'),(6,'Tech Stars','Hyderabad','8179709818','info@sarthakedge.com','Best Bet for Education','super-admin/school/694645d7459237.720339081766213079.png',7,1,1,'beta1','school_db','SCHO20254','default','custom','2025-12-20 12:14:39','2025-12-20 12:15:37',NULL),(7,'Demomain','demo','09392511176','bizbyaravind@gmail.com','test','super-admin/school/6984bc78449472.755283691770306680.png',10,0,0,'test','school_db','SCH20267','default','custom','2026-02-05 15:51:20','2026-02-05 15:51:20',NULL);
-/*!40000 ALTER TABLE `schools` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sections`
---
-
-DROP TABLE IF EXISTS `sections`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sections` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sections_school_id_foreign` (`school_id`),
-  CONSTRAINT `sections_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sections`
---
-
-LOCK TABLES `sections` WRITE;
-/*!40000 ALTER TABLE `sections` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sections` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `semesters`
---
-
-DROP TABLE IF EXISTS `semesters`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `semesters` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `start_month` tinyint(4) NOT NULL,
-  `end_month` tinyint(4) NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `semesters_school_id_foreign` (`school_id`),
-  CONSTRAINT `semesters_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `semesters`
---
-
-LOCK TABLES `semesters` WRITE;
-/*!40000 ALTER TABLE `semesters` DISABLE KEYS */;
-/*!40000 ALTER TABLE `semesters` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `session_years`
---
-
-DROP TABLE IF EXISTS `session_years`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `session_years` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `default` tinyint(4) NOT NULL DEFAULT 0,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `session_years_name_school_id_unique` (`name`,`school_id`),
-  KEY `session_years_school_id_foreign` (`school_id`),
-  CONSTRAINT `session_years_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `session_years`
---
-
-LOCK TABLES `session_years` WRITE;
-/*!40000 ALTER TABLE `session_years` DISABLE KEYS */;
-INSERT INTO `session_years` VALUES (1,'2026',1,'2026-01-01','2026-12-31',1,'2026-02-10 08:03:05','2026-02-10 08:03:05',NULL);
-/*!40000 ALTER TABLE `session_years` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shifts`
---
-
-DROP TABLE IF EXISTS `shifts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shifts` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 1,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `shifts_school_id_foreign` (`school_id`),
-  CONSTRAINT `shifts_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shifts`
---
-
-LOCK TABLES `shifts` WRITE;
-/*!40000 ALTER TABLE `shifts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `shifts` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sliders`
---
-
-DROP TABLE IF EXISTS `sliders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sliders` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `image` varchar(191) NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `link` varchar(191) DEFAULT NULL,
-  `type` int(11) NOT NULL DEFAULT 1 COMMENT '1: App, 2: Web, 3: Both',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sliders_school_id_foreign` (`school_id`),
-  CONSTRAINT `sliders_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sliders`
---
-
-LOCK TABLES `sliders` WRITE;
-/*!40000 ALTER TABLE `sliders` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sliders` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `staff_support_schools`
---
-
-DROP TABLE IF EXISTS `staff_support_schools`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `staff_support_schools` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_school` (`user_id`,`school_id`),
-  KEY `staff_support_schools_school_id_foreign` (`school_id`),
-  CONSTRAINT `staff_support_schools_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `staff_support_schools_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `staff_support_schools`
---
-
-LOCK TABLES `staff_support_schools` WRITE;
-/*!40000 ALTER TABLE `staff_support_schools` DISABLE KEYS */;
-/*!40000 ALTER TABLE `staff_support_schools` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `staffs`
---
-
-DROP TABLE IF EXISTS `staffs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `staffs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `qualification` varchar(512) DEFAULT NULL,
-  `salary` double NOT NULL DEFAULT 0,
-  `joining_date` date DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `staffs_user_id_foreign` (`user_id`),
-  CONSTRAINT `staffs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `staffs`
---
-
-LOCK TABLES `staffs` WRITE;
-/*!40000 ALTER TABLE `staffs` DISABLE KEYS */;
-INSERT INTO `staffs` VALUES (1,8,NULL,0,'1970-01-01','2026-01-13 12:18:02','2026-01-13 12:24:49'),(2,9,NULL,0,'1970-01-01','2026-01-14 20:54:35','2026-01-14 20:54:35');
-/*!40000 ALTER TABLE `staffs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `streams`
---
-
-DROP TABLE IF EXISTS `streams`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `streams` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `streams_school_id_foreign` (`school_id`),
-  CONSTRAINT `streams_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `streams`
---
-
-LOCK TABLES `streams` WRITE;
-/*!40000 ALTER TABLE `streams` DISABLE KEYS */;
-/*!40000 ALTER TABLE `streams` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `students`
---
-
-DROP TABLE IF EXISTS `students`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `students` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `class_section_id` bigint(20) unsigned NOT NULL,
-  `admission_no` varchar(512) NOT NULL,
-  `roll_number` int(11) DEFAULT NULL,
-  `admission_date` date NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `guardian_id` bigint(20) unsigned NOT NULL,
-  `session_year_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `students_user_id_foreign` (`user_id`),
-  KEY `students_class_section_id_foreign` (`class_section_id`),
-  KEY `students_school_id_foreign` (`school_id`),
-  KEY `students_guardian_id_foreign` (`guardian_id`),
-  KEY `students_session_year_id_foreign` (`session_year_id`),
-  CONSTRAINT `students_class_section_id_foreign` FOREIGN KEY (`class_section_id`) REFERENCES `class_sections` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `students_guardian_id_foreign` FOREIGN KEY (`guardian_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `students_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `students_session_year_id_foreign` FOREIGN KEY (`session_year_id`) REFERENCES `session_years` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `students_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `students`
---
-
-LOCK TABLES `students` WRITE;
-/*!40000 ALTER TABLE `students` DISABLE KEYS */;
-/*!40000 ALTER TABLE `students` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `subjects`
---
-
-DROP TABLE IF EXISTS `subjects`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subjects` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) NOT NULL,
-  `code` varchar(64) DEFAULT NULL,
-  `bg_color` varchar(32) NOT NULL,
-  `image` varchar(512) NOT NULL,
-  `medium_id` bigint(20) unsigned NOT NULL,
-  `type` varchar(64) NOT NULL COMMENT 'Theory / Practical',
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `subjects_medium_id_foreign` (`medium_id`),
-  KEY `subjects_school_id_foreign` (`school_id`),
-  CONSTRAINT `subjects_medium_id_foreign` FOREIGN KEY (`medium_id`) REFERENCES `mediums` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `subjects_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `subjects`
---
-
-LOCK TABLES `subjects` WRITE;
-/*!40000 ALTER TABLE `subjects` DISABLE KEYS */;
-/*!40000 ALTER TABLE `subjects` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `subscription_bills`
---
-
-DROP TABLE IF EXISTS `subscription_bills`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subscription_bills` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `subscription_id` bigint(20) unsigned NOT NULL,
-  `description` varchar(191) DEFAULT NULL,
-  `amount` decimal(64,2) NOT NULL,
-  `total_student` bigint(20) NOT NULL,
-  `total_staff` bigint(20) NOT NULL,
-  `payment_transaction_id` bigint(20) unsigned DEFAULT NULL,
-  `due_date` date NOT NULL,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `subscription_bill` (`subscription_id`,`school_id`),
-  KEY `subscription_bills_school_id_foreign` (`school_id`),
-  KEY `subscription_bills_payment_transaction_id_foreign` (`payment_transaction_id`),
-  CONSTRAINT `subscription_bills_payment_transaction_id_foreign` FOREIGN KEY (`payment_transaction_id`) REFERENCES `payment_transactions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `subscription_bills_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `subscription_bills_subscription_id_foreign` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `subscription_bills`
---
-
-LOCK TABLES `subscription_bills` WRITE;
-/*!40000 ALTER TABLE `subscription_bills` DISABLE KEYS */;
-INSERT INTO `subscription_bills` VALUES (1,1,NULL,10.00,100,15,1,'2025-12-11',1,'2025-12-11 16:29:35','2025-12-11 16:29:35'),(2,2,NULL,10.00,100,15,2,'2025-12-12',3,'2025-12-12 21:58:54','2025-12-12 21:58:54'),(3,4,NULL,10.00,100,15,3,'2025-12-16',4,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(4,5,NULL,0.00,0,0,NULL,'2025-12-25',6,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(5,3,NULL,18.00,2,1,NULL,'2025-12-25',2,'2025-12-20 12:58:38','2025-12-20 12:58:38'),(6,7,NULL,3.64,3,1,NULL,'2026-01-07',2,'2026-01-02 11:03:18','2026-01-02 11:03:18');
-/*!40000 ALTER TABLE `subscription_bills` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `subscription_features`
---
-
-DROP TABLE IF EXISTS `subscription_features`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subscription_features` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `subscription_id` bigint(20) unsigned NOT NULL,
-  `feature_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique` (`subscription_id`,`feature_id`),
-  KEY `subscription_features_feature_id_foreign` (`feature_id`),
-  CONSTRAINT `subscription_features_feature_id_foreign` FOREIGN KEY (`feature_id`) REFERENCES `features` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `subscription_features_subscription_id_foreign` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `subscription_features`
---
-
-LOCK TABLES `subscription_features` WRITE;
-/*!40000 ALTER TABLE `subscription_features` DISABLE KEYS */;
-INSERT INTO `subscription_features` VALUES (1,1,1,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(2,1,2,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(3,1,4,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(4,1,5,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(5,1,8,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(6,1,11,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(7,1,12,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(8,1,14,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(9,1,16,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(10,1,20,'2025-12-11 16:29:35','2025-12-12 22:57:50'),(11,2,1,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(12,2,2,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(13,2,4,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(14,2,5,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(15,2,8,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(16,2,11,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(17,2,12,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(18,2,14,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(19,2,16,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(20,2,20,'2025-12-12 21:58:54','2025-12-12 22:57:50'),(21,1,9,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(22,2,9,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(23,1,17,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(24,2,17,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(25,1,3,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(26,2,3,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(27,1,15,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(28,2,15,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(29,1,13,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(30,2,13,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(31,1,7,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(32,2,7,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(33,1,21,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(34,2,21,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(35,1,19,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(36,2,19,'2025-12-12 22:57:50','2025-12-12 22:57:50'),(96,4,1,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(97,4,2,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(98,4,3,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(99,4,4,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(100,4,5,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(101,4,7,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(102,4,8,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(103,4,9,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(104,4,11,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(105,4,12,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(106,4,13,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(107,4,14,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(108,4,15,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(109,4,16,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(110,4,17,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(111,4,19,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(112,4,20,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(113,4,21,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(124,6,1,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(125,6,2,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(126,6,3,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(127,6,4,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(128,6,5,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(129,6,6,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(130,6,7,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(131,6,8,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(132,6,9,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(133,6,10,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(134,6,11,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(135,6,12,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(136,6,13,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(137,6,14,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(138,6,15,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(139,6,16,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(140,6,17,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(141,6,18,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(142,6,20,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(143,6,21,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(164,8,1,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(165,8,2,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(166,8,3,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(167,8,4,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(168,8,5,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(169,8,6,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(170,8,7,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(171,8,8,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(172,8,9,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(173,8,10,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(174,8,11,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(175,8,12,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(176,8,13,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(177,8,14,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(178,8,15,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(179,8,16,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(180,8,17,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(181,8,18,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(182,8,19,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(183,8,20,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(184,8,21,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(185,9,19,'2026-02-06 07:45:05','2026-02-06 07:45:05');
-/*!40000 ALTER TABLE `subscription_features` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `subscriptions`
---
-
-DROP TABLE IF EXISTS `subscriptions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subscriptions` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `school_id` bigint(20) unsigned NOT NULL,
-  `package_id` bigint(20) unsigned NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `student_charge` decimal(64,2) NOT NULL,
-  `staff_charge` decimal(64,2) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `package_type` int(11) NOT NULL DEFAULT 1 COMMENT '0 => Prepaid, 1 => Postpaid',
-  `no_of_students` int(11) NOT NULL DEFAULT 0,
-  `no_of_staffs` int(11) NOT NULL DEFAULT 0,
-  `charges` decimal(64,2) NOT NULL,
-  `billing_cycle` int(11) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `subscriptions_school_id_foreign` (`school_id`),
-  KEY `subscriptions_package_id_foreign` (`package_id`),
-  CONSTRAINT `subscriptions_package_id_foreign` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `subscriptions_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `subscriptions`
---
-
-LOCK TABLES `subscriptions` WRITE;
-/*!40000 ALTER TABLE `subscriptions` DISABLE KEYS */;
-INSERT INTO `subscriptions` VALUES (1,1,2,'free',0.00,0.00,'2025-12-11','2025-12-30',0,100,15,10.00,20,'2025-12-11 16:29:35','2025-12-11 16:29:35'),(2,3,2,'free',0.00,0.00,'2025-12-12','2025-12-31',0,100,15,10.00,20,'2025-12-12 21:58:54','2025-12-12 21:58:54'),(3,2,3,'Pro',20.00,20.00,'2025-12-12','2025-12-20',1,0,0,0.00,30,'2025-12-12 23:32:59','2025-12-20 12:58:38'),(4,4,2,'free',0.00,0.00,'2025-12-16','2026-01-04',0,100,15,10.00,20,'2025-12-16 16:10:33','2025-12-16 16:10:33'),(5,6,4,'Pro Exclusive',15.00,20.00,'2025-12-20','2025-12-20',1,0,0,0.00,250,'2025-12-20 12:34:37','2025-12-20 12:44:38'),(6,6,4,'Pro Exclusive',15.00,20.00,'2025-12-20','2026-08-26',1,0,0,0.00,250,'2025-12-20 12:44:38','2025-12-20 12:44:38'),(7,2,4,'Pro Exclusive',15.00,20.00,'2025-12-20','2026-01-02',1,0,0,0.00,250,'2025-12-20 12:58:38','2026-01-02 11:03:18'),(8,2,4,'Pro Exclusive',15.00,20.00,'2026-01-02','2026-09-08',1,0,0,0.00,250,'2026-01-02 11:03:18','2026-01-02 11:03:18'),(9,1,2,'free',0.00,0.00,'2026-02-06','2027-02-06',1,0,0,0.00,365,'2026-02-06 07:45:05','2026-02-06 07:45:05');
-/*!40000 ALTER TABLE `subscriptions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `system_settings`
---
-
-DROP TABLE IF EXISTS `system_settings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `system_settings` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `data` text NOT NULL,
-  `type` varchar(191) DEFAULT NULL COMMENT 'datatype like string , file etc',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `system_settings_name_unique` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=431 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `system_settings`
---
-
-LOCK TABLES `system_settings` WRITE;
-/*!40000 ALTER TABLE `system_settings` DISABLE KEYS */;
-INSERT INTO `system_settings` VALUES (1,'hero_title_1','Opt for SarthakEdge Schoolmanagement System for 14+ robust features for an enhanced educational experience.','text'),(2,'hero_title_2','Top Rated Instructors','text'),(3,'about_us_title','A modern and unique style','text'),(4,'about_us_heading','Why it is best?','text'),(5,'about_us_description','SarthakEdge is the pinnacle of school management, offering advanced technology, user-friendly features, and personalized solutions. It simplifies communication, streamlines administrative tasks, and elevates the educational experience for all stakeholders. With SarthakEdge, excellence in education management is guaranteed.','text'),(6,'about_us_points','Affordable price,Easy to manage admin panel,Data Security','text'),(7,'custom_package_status','1','text'),(8,'custom_package_description','Tailor your experience with our custom package options. From personalized services to bespoke solutions, we offer flexibility to meet your unique needs.','text'),(9,'download_our_app_description','Join the ranks of true trivia champions and quench your thirst for knowledge with Masters of Trivia - the ultimate quiz app designed to test your wits and unlock a world of fun facts. Challenge your brain, compete with friends, and discover fascinating tidbits from diverse categories. Don\'t miss out on the exhilarating experience that awaits you - get started now!Join the ranks of true trivia champions and quench your thirst for knowledge with Masters of Trivia - the ultimate quiz app designed to test your wits and unlock a world of fun facts.','text'),(10,'theme_primary_color','#2c8e2c','text'),(11,'theme_secondary_color','#1d1a1a','text'),(12,'theme_secondary_color_1','#0e0e0e','text'),(13,'theme_primary_background_color','#111010','text'),(14,'theme_text_secondary_color','#ffffff','text'),(15,'tag_line','','text'),(16,'mobile','918179709818','text'),(17,'hero_description','Experience the future of education with our eSchool SaaS platform. Streamline attendance, assignments, exams, and more. Elevate your school\'s efficiency and engagement.','text'),(18,'display_school_logos','1','text'),(19,'display_counters','','text'),(20,'email_template_school_registration','&lt;p&gt;Dear {school_admin_name},&lt;/p&gt; &lt;p&gt;Welcome to {system_name}!&lt;/p&gt; &lt;p&gt;We are excited to have you as part of our educational community. Below are your registration details to access the system:&lt;/p&gt; &lt;hr&gt; &lt;p&gt;&lt;strong&gt;School Name:&lt;/strong&gt; {school_name}&lt;/p&gt; &lt;p&gt;&lt;strong&gt;System URL:&lt;/strong&gt; {url}&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Your Login Credentials:&lt;/strong&gt;&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;Email:&lt;/strong&gt; {email}&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Password:&lt;/strong&gt; {password}&lt;/li&gt; &lt;li&gt;&lt;strong&gt;School Code:&lt;/strong&gt; {code}&lt;/li&gt; &lt;/ul&gt; &lt;hr&gt; &lt;p&gt;&lt;strong&gt;Please follow these steps to complete your registration:&lt;/strong&gt;&lt;/p&gt; &lt;ol&gt; &lt;li&gt;Click on the system URL provided above.&lt;/li&gt; &lt;li&gt;Enter your email and password.&lt;/li&gt; &lt;li&gt;Follow the instructions to complete your profile setup.&lt;/li&gt; &lt;/ol&gt; &lt;p&gt;&lt;strong&gt;Important:&lt;/strong&gt;&lt;/p&gt; &lt;ul&gt; &lt;li&gt;For security reasons, please change your password after your first login.&lt;/li&gt; &lt;li&gt;If you encounter any issues during the registration process, please do not hesitate to contact our support team at {support_email} or call {contact}.&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;Thank you for choosing {system_name}. We are committed to providing you with the best educational tools and resources.&lt;/p&gt; &lt;p&gt;Best regards,&lt;/p&gt; &lt;p&gt;{super_admin_name}&lt;br&gt;{system_name}&lt;br&gt;{support_email}&lt;br&gt;{url}&lt;/p&gt; &lt;br&gt; &lt;p&gt;&lt;strong&gt;This email was auto-generated, so don&#039;t reply.&lt;/strong&gt;&lt;/p&gt;','text'),(21,'system_version','1.8.0','string'),(23,'email_template_two_factor_authentication_code','&lt;p&gt;Dear {school_admin_name},&lt;/p&gt; &lt;p&gt;Welcome to {system_name}!&lt;/p&gt; &lt;p&gt;We are excited to have you as part of our educational community. To enhance the security of your account, we have enabled Two-Factor Authentication (2FA) for your login.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Your Verification Code:&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;&lt;strong&gt;{verification_code}&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;This verification code is required to complete your login process. Please enter the code within the next {expiration_time} minutes. If the code expires, you can request a new one by following the same process.&lt;/p&gt; &lt;hr&gt; &lt;p&gt;&lt;strong&gt;Important:&lt;/strong&gt;&lt;/p&gt; &lt;ul&gt; &lt;li&gt;If you did not request this verification code, please contact our support team immediately at {support_email} or call {support_contact} to secure your account.&lt;/li&gt; &lt;li&gt;For additional security, ensure that no one else has access to your email or device when retrieving your verification code.&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;If you have any issues with the 2FA process or need assistance, our support team is ready to help at {support_email} or {support_contact}.&lt;/p&gt; &lt;p&gt;Thank you for taking extra steps to secure your account. We appreciate your commitment to keeping your information safe.&lt;/p&gt; &lt;p&gt;Best regards,&lt;/p&gt; &lt;p&gt;{super_admin_name}&lt;br&gt;{system_name}&lt;br&gt;{support_email}&lt;br&gt;{url}&lt;/p&gt; &lt;br&gt; &lt;p&gt;&lt;strong&gt;This email was auto-generated, so please do not reply.&lt;/strong&gt;&lt;/p&gt;','text'),(24,'school_inquiry','1','string'),(25,'file_upload_size_limit','2','string'),(26,'wizard_checkMark','1','integer'),(27,'system_settings_wizard_checkMark','1','integer'),(28,'notification_settings_wizard_checkMark','1','integer'),(29,'email_settings_wizard_checkMark','1','integer'),(30,'verify_email_wizard_checkMark','1','integer'),(31,'email_template_settings_wizard_checkMark','1','integer'),(32,'payment_settings_wizard_checkMark','1','integer'),(33,'third_party_api_settings_wizard_checkMark','1','integer'),(34,'database_root_user','1','integer'),(35,'laravel_queue_setup','1','integer'),(36,'wildcard_domain','1','integer'),(37,'web_socket_setup','1','integer'),(38,'notification_settings','1','integer'),(39,'time_zone','Asia/Kolkata','string'),(40,'date_format','m-d-Y','date'),(41,'time_format','h:i A','time'),(42,'theme_color','#3b13ab','string'),(43,'session_year','1','string'),(44,'email_verified','1','string'),(45,'subscription_alert','7','integer'),(46,'currency_code','INR','string'),(47,'currency_symbol','��c%','string'),(48,'additional_billing_days','5','integer'),(49,'system_name','SarthakEdge, an AI-powered  School Management System','string'),(50,'address','Plot no 54, Flat no 306 OM Residency Bapujinagar, Bowenpally, Secunderabad Hyderabad,Telanagana 500011','string'),(51,'billing_cycle_in_days','30','integer'),(52,'current_plan_expiry_warning_days','7','integer'),(53,'front_site_theme_color','#e9f9f3','text'),(54,'primary_color','#3ccb9b','text'),(55,'secondary_color','#245a7f','text'),(56,'short_description','SarthakEdge -Ai powered school management System - Manage Your School','text'),(57,'facebook','https://www.facebook.com','text'),(58,'instagram','https://www.instagram.com','text'),(59,'linkedin','https://in.linkedin.com','text'),(60,'footer_text','<p>&copy; SarthakEdge. All Rights Reserved</p>','text'),(61,'tagline','We Provide the best Education','text'),(62,'super_admin_name','Super Admin','text'),(69,'web_maintenance','','string'),(100,'school_code_prefix','SCH','string'),(113,'firebase_project_id','schoolapp-f7a57','string'),(114,'mail_mailer','smtp','string'),(115,'mail_host','mail.mmtsofttech.com','string'),(116,'mail_port','587','string'),(117,'mail_username','noreply@mmtsofttech.com','string'),(118,'mail_password','MMT@789!@#sa','string'),(119,'mail_encryption','TLS','string'),(120,'mail_send_from','noreply@mmtsofttech.com','string'),(122,'school_reject_template','','string'),(123,'school_inquiry_template','','string'),(220,'horizontal_logo','super-admin/system-settings/69397cfdb4c333.432217321765375229.png','file'),(221,'vertical_logo','super-admin/system-settings/69397cfdb6b357.521057591765375229.png','file'),(222,'favicon','super-admin/system-settings/69397cfdb779c3.562964331765375229.png','file'),(223,'login_page_logo','super-admin/system-settings/69397cfdb7dd03.955086371765375229.png','file'),(263,'school_prefix','SCHO','text'),(266,'firebase_service_file','super-admin/system-settings/6942408e267598.716139561765949582.json','file');
-/*!40000 ALTER TABLE `system_settings` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(128) NOT NULL,
-  `last_name` varchar(128) NOT NULL,
-  `mobile` varchar(191) DEFAULT NULL,
-  `email` varchar(191) NOT NULL,
-  `password` varchar(191) NOT NULL,
-  `gender` varchar(16) DEFAULT NULL,
-  `image` varchar(512) DEFAULT NULL,
-  `dob` date DEFAULT NULL,
-  `current_address` varchar(191) DEFAULT NULL,
-  `permanent_address` varchar(191) DEFAULT NULL,
-  `occupation` varchar(128) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
-  `reset_request` tinyint(4) NOT NULL DEFAULT 0,
-  `fcm_id` varchar(1024) DEFAULT NULL,
-  `school_id` bigint(20) unsigned DEFAULT NULL,
-  `language` varchar(191) NOT NULL DEFAULT 'en',
-  `remember_token` varchar(100) DEFAULT NULL,
-  `email_verified_at` timestamp NULL DEFAULT NULL,
-  `two_factor_enabled` tinyint(4) NOT NULL DEFAULT 1,
-  `two_factor_secret` varchar(191) DEFAULT NULL,
-  `two_factor_expires_at` varchar(191) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`),
-  KEY `users_school_id_foreign` (`school_id`),
-  CONSTRAINT `users_school_id_foreign` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'super','admin','','superadmin@gmail.com','$2y$10$T5MpdjVz5Wuf2WWRD76GjekHt.efXfS20.DiKoywzO0mgvKP7nzye','male','logo.svg',NULL,NULL,NULL,NULL,1,0,NULL,NULL,'en',NULL,'2025-12-09 19:02:54',0,NULL,NULL,'2025-12-09 19:02:54','2026-01-11 23:35:19',NULL),(2,'Demo','Admin','1234567890','demo@school.com','$2y$10$GttNZGtcoYsu8Pyrj89M6.0hGmys2mdwtI5WhYbdlzhFlCsU8g0XW',NULL,'dummy_logo.jpg',NULL,NULL,NULL,NULL,1,0,NULL,1,'en',NULL,'2025-12-10 15:23:47',0,NULL,NULL,'2025-12-10 15:23:47','2025-12-10 19:56:04',NULL),(3,'School','Admin','09392511176','saisuppu1@gmail.com','$2y$10$NmeDitfDXkvFz74Y3Cxoy.sqbfo9fQLykDOTzJcwJMY3TYWdptyj6',NULL,'',NULL,NULL,NULL,NULL,1,0,NULL,2,'en',NULL,'2025-12-11 18:02:58',0,NULL,NULL,'2025-12-10 19:26:30','2025-12-11 15:58:53',NULL),(4,'School','Admin','7207971984','mmtsofttech@gmail.com','$2y$10$VwlnVhq88V9f.ERgcxHr5O78bg3afYyBrlVkYU0l9f3KiOv1Y9Mrm',NULL,'super-admin/user/69397e59a8ff30.098231871765375577.png',NULL,NULL,NULL,NULL,1,0,NULL,3,'en',NULL,NULL,0,NULL,NULL,'2025-12-10 19:36:17','2025-12-10 19:36:17',NULL),(5,'School','Admin','789456321','x@gmail.com','$2y$10$jFJ31NS3Bl2S3Hl5Pd.kNO.YOVOoXbuPXgNZmnKbg5ANcgg./sFX2',NULL,'super-admin/user/693983e79e6931.602273561765376999.png',NULL,NULL,NULL,NULL,1,0,NULL,4,'en',NULL,NULL,0,NULL,NULL,'2025-12-10 19:59:59','2025-12-16 16:20:16','2025-12-16 16:20:16'),(7,'School','Admin','8179709818','info@sarthakedge.com','$2y$10$1fLQ6Lo0cpcPVRjyHeIPfuf/y6q69oWz1ll8gQjwIceRKX8SYa/yC',NULL,'super-admin/user/694645d75b2e78.065387951766213079.png',NULL,NULL,NULL,NULL,1,0,NULL,6,'en',NULL,'2025-12-20 12:18:03',0,NULL,NULL,'2025-12-20 12:14:39','2025-12-20 12:14:39',NULL),(8,'sarthakedge','admin','123456789','info1@sarthakedge.com','$2y$10$6aq8dypM5.bcFHcy.VCA0e6H1.vSY4Unbqz6onXNLYu3x/CoCbLe.','male',NULL,'2000-03-05','Hyderabad','Hyderabad',NULL,1,0,NULL,NULL,'en',NULL,NULL,0,NULL,NULL,'2026-01-13 12:18:02','2026-01-14 20:52:01',NULL),(9,'sarthak','edge','789456123','sarthak@gmail.com','$2y$10$SW3zaKgRZ0KXAJZuOoM0Heq09n6jREk9G78gdCJaWUcqrhNOQT6NS',NULL,NULL,'2000-05-03',NULL,NULL,NULL,1,0,NULL,NULL,'en',NULL,NULL,0,NULL,NULL,'2026-01-14 20:54:35','2026-01-14 20:54:35',NULL),(10,'School','Admin','09392511176','bizbyaravind@gmail.com','$2y$10$zINFUgdkqZg37PIBpnx.2eRMkQk8gr9Vwc1wqVrsm5rrY4AIHbQke',NULL,'super-admin/user/6984bc78c69293.736395021770306680.png',NULL,NULL,NULL,NULL,1,0,NULL,7,'en',NULL,NULL,0,NULL,NULL,'2026-02-05 15:51:20','2026-02-05 15:51:20',NULL);
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-02-16 22:40:23
+ⴭ䴠牡慩䉄搠浵⁰〱ㄮ‹䐠獩牴扩ㄠ⸰⸴㈳䴭牡慩䉄‬潦⁲楗㙮‴䄨䑍㐶ഩⴊഭⴊ‭潈瑳›㈱⸷⸰⸰‱†䐠瑡扡獡㩥瀠潲敪瑣਍ⴭⴠⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭⴭഭⴊ‭敓癲牥瘠牥楳湯ㄉ⸰⸴㈳䴭牡慩䉄਍਍⨯㐡㄰㄰匠呅䀠䱏彄䡃剁䍁䕔归䕓彔䱃䕉呎䀽䍀䅈䅒呃剅卟呅䍟䥌久⁔⼪഻⼊K〴〱‱䕓⁔佀䑌䍟䅈䅒呃剅卟呅剟卅䱕協䀽䍀䅈䅒呃剅卟呅剟卅䱕協⨠㬯਍⨯㐡㄰㄰匠呅䀠䱏彄佃䱌呁佉彎佃乎䍅䥔乏䀽䍀䱏䅌䥔乏䍟乏䕎呃佉⁎⼪഻⼊K〴〱‱䕓⁔䅎䕍⁓瑵㡦扭‴⼪഻⼊K〴〱″䕓⁔佀䑌呟䵉彅佚䕎䀽呀䵉彅佚䕎⨠㬯਍⨯㐡㄰㌰匠呅吠䵉彅佚䕎✽〫㨰〰‧⼪഻⼊K〴㄰‴䕓⁔佀䑌啟䥎啑彅䡃䍅卋䀽啀䥎啑彅䡃䍅卋‬乕光䕕䍟䕈䭃㵓‰⼪഻⼊K〴㄰‴䕓⁔佀䑌䙟剏䥅乇䭟奅䍟䕈䭃㵓䁀但䕒䝉彎䕋彙䡃䍅卋‬但䕒䝉彎䕋彙䡃䍅卋〽⨠㬯਍⨯㐡㄰㄰匠呅䀠䱏彄兓彌位䕄䀽區䱑䵟䑏ⱅ匠䱑䵟䑏㵅丧彏啁佔噟䱁䕕佟彎䕚佒‧⼪഻⼊K〴ㄱ‱䕓⁔佀䑌卟䱑也呏卅䀽區䱑也呏卅‬兓彌低䕔㵓‰⼪഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥慠摤湯獟扵捳楲瑰潩獮ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓慠摤湯獟扵捳楲瑰潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠摡潤彮畳獢牣灩楴湯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠畳獢牣灩楴湯楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠敦瑡牵彥摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牰捩恥搠捥浩污㘨ⰴ⤲丠呏丠䱕ⱌ਍†獠慴瑲摟瑡恥搠瑡⁥低⁔啎䱌ബ 怠湥彤慤整⁠慤整丠呏丠䱕ⱌ਍†獠慴畴恳琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌ㄠ䌠䵏䕍呎✠‰㸽䐠獩潣瑮湩敵渠硥⁴楢汬湩Ⱨㄠ㴠‾潃瑮湩敵Ⱗ਍†灠祡敭瑮瑟慲獮捡楴湯楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙慠摤湯獟扵捳楲瑰潩獮獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†䕋⁙慠摤湯獟扵捳楲瑰潩獮晟慥畴敲楟彤潦敲杩恮⠠晠慥畴敲楟恤Ⱙ਍†䕋⁙慠摤湯獟扵捳楲瑰潩獮獟扵捳楲瑰潩彮摩晟牯楥湧⁠怨畳獢牣灩楴湯楟恤Ⱙ਍†䕋⁙慠摤湯獟扵捳楲瑰潩獮灟祡敭瑮瑟慲獮捡楴湯楟彤潦敲杩恮⠠灠祡敭瑮瑟慲獮捡楴湯楟恤Ⱙ਍†佃华剔䥁呎怠摡潤彮畳獢牣灩楴湯彳敦瑡牵彥摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敦瑡牵彥摩⥠删䙅剅久䕃⁓晠慥畴敲恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠摡潤彮畳獢牣灩楴湯彳慰浹湥彴牴湡慳瑣潩彮摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨慰浹湥彴牴湡慳瑣潩彮摩⥠删䙅剅久䕃⁓灠祡敭瑮瑟慲獮捡楴湯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠摡潤彮畳獢牣灩楴湯彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔慠摤湯獟扵捳楲瑰潩獮獟扵捳楲瑰潩彮摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨畳獢牣灩楴湯楟恤 䕒䕆䕒䍎卅怠畳獢牣灩楴湯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥慠摤湯獟扵捳楲瑰潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠摡潤彮畳獢牣灩楴湯恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅慠摤湯獟扵捳楲瑰潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠摡潤彮畳獢牣灩楴湯恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠摡潤獮ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓慠摤湯恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅慠摤湯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†灠楲散⁠敤楣慭⡬㐶㈬ 低⁔啎䱌ബ 怠敦瑡牵彥摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠瑳瑡獵⁠楴祮湩⡴⤴丠呏丠䱕⁌䕄䅆䱕⁔‰佃䵍久⁔〧㴠‾湉捡楴敶‬‱㸽䄠瑣癩❥ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙慠摤湯彳敦瑡牵彥摩畟楮畱恥⠠晠慥畴敲楟恤Ⱙ਍†佃华剔䥁呎怠摡潤獮晟慥畴敲楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠晠慥畴敲楟恤 䕒䕆䕒䍎卅怠敦瑡牵獥⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㘽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥慠摤湯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓慠摤湯恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅慠摤湯恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠摡潤獮⁠䅖啌卅⠠ⰱ昧敥Ⱗ〱〮ⰰ㘱ㄬ✬〲㔲ㄭⴲ㈱㈠㨳㔰〺✸✬〲㔲ㄭⴲ㈱㈠㨳㔰㔺✶丬䱕⥌⠬ⰲ䄧湮畯据⁥慍慮敧敭瑮Ⱗ〱⸰〰ㄬⰲⰰ㈧㈰ⴵ㈱㈭‰㈱㈺㨷㐱Ⱗ㈧㈰ⴵ㈱㈭‰㈱㈺㨷㐱Ⱗ啎䱌Ⱙ㌨✬楔敭慴汢⁥摡⁤湯Ⱗ〲⸰〰㜬〬✬〲㔲ㄭⴲ〲ㄠ㨲〳ㄺ✲✬〲㔲ㄭⴲ〲ㄠ㨲〳ㄺ✲丬䱕⥌⠬ⰴ倧潲䔠捸畬楳敶Ⱗ〲⸰〰㤬〬✬〲㔲ㄭⴲ〲ㄠ㨲㤳㐺✲✬〲㔲ㄭⴲ〲ㄠ㨲㤳㐺✲丬䱕⥌⠬ⰵ䄧獳杩浮湥⁴慭慮敧敭瑮Ⱗ〵〰〮ⰰㄱ〬✬〲㘲〭ⴱㄱ㈠㨳㌴㐺✷✬〲㘲〭ⴱㄱ㈠㨳㌴㐺✷丬䱕⥌഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅慠摤湯恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠湡潮湵散敭瑮损慬獳獥ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓慠湮畯据浥湥彴汣獡敳恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅慠湮畯据浥湥彴汣獡敳恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠湡潮湵散敭瑮楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†捠慬獳獟捥楴湯楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†捠慬獳獟扵敪瑣楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙慠湮畯据浥湥彴汣獡敳彳湡潮湵散敭瑮楟彤潦敲杩恮⠠慠湮畯据浥湥彴摩⥠ബ 䬠奅怠湡潮湵散敭瑮损慬獳獥损慬獳獟捥楴湯楟彤潦敲杩恮⠠捠慬獳獟捥楴湯楟恤Ⱙ਍†佃华剔䥁呎怠湡潮湵散敭瑮损慬獳獥慟湮畯据浥湥彴摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨湡潮湵散敭瑮楟恤 䕒䕆䕒䍎卅怠湡潮湵散敭瑮恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠湡潮湵散敭瑮损慬獳獥损慬獳獟捥楴湯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠捠慬獳獟捥楴湯楟恤 䕒䕆䕒䍎卅怠汣獡彳敳瑣潩獮⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠湡潮湵散敭瑮损慬獳獥ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠湡潮湵散敭瑮损慬獳獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠湡潮湵散敭瑮损慬獳獥⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠湡潮湵散敭瑮损慬獳獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥慠湮畯据浥湥獴ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓慠湮畯据浥湥獴㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠湡潮湵散敭瑮恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠楴汴恥瘠牡档牡ㄨ㠲 低⁔啎䱌ബ 怠敤捳楲瑰潩恮氠湯瑧硥⁴䕄䅆䱕⁔啎䱌ബ 怠敳獳潩彮敹牡楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙慠湮畯据浥湥獴獟獥楳湯祟慥彲摩晟牯楥湧⁠怨敳獳潩彮敹牡楟恤Ⱙ਍†䕋⁙慠湮畯据浥湥獴獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠湡潮湵散敭瑮彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔慠湮畯据浥湥獴獟獥楳湯祟慥彲摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敳獳潩彮敹牡楟恤 䕒䕆䕒䍎卅怠敳獳潩彮敹牡恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥慠湮畯据浥湥獴ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠湡潮湵散敭瑮恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅慠湮畯据浥湥獴⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠湡潮湵散敭瑮恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠汣獡彳牧畯獰ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓捠慬獳束潲灵恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅捠慬獳束潲灵恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†摠獥牣灩楴湯⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙捠慬獳束潲灵彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔捠慬獳束潲灵彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠汣獡彳牧畯獰ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠汣獡彳牧畯獰⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汣獡彳牧畯獰⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汣獡彳牧畯獰⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥捠慬獳獟捥楴湯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠汣獡彳敳瑣潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠汣獡彳敳瑣潩獮⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†捠慬獳楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†獠捥楴湯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†浠摥畩彭摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠湵煩敵楟恤⠠捠慬獳楟恤怬敳瑣潩彮摩Ⱡ浠摥畩彭摩⥠ബ 䬠奅怠汣獡彳敳瑣潩獮獟捥楴湯楟彤潦敲杩恮⠠獠捥楴湯楟恤Ⱙ਍†䕋⁙捠慬獳獟捥楴湯彳敭楤浵楟彤潦敲杩恮⠠浠摥畩彭摩⥠ബ 䬠奅怠汣獡彳敳瑣潩獮獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠汣獡彳敳瑣潩獮损慬獳楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠捠慬獳楟恤 䕒䕆䕒䍎卅怠汣獡敳恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡彳敳瑣潩獮浟摥畩彭摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敭楤浵楟恤 䕒䕆䕒䍎卅怠敭楤浵恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡彳敳瑣潩獮獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡彳敳瑣潩獮獟捥楴湯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠捥楴湯楟恤 䕒䕆䕒䍎卅怠敳瑣潩獮⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠汣獡彳敳瑣潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠汣獡彳敳瑣潩獮⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汣獡彳敳瑣潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汣獡彳敳瑣潩獮⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥捠慬獳獟扵敪瑣恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠汣獡彳畳橢捥獴㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠汣獡彳畳橢捥獴⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†捠慬獳楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†獠扵敪瑣楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†瑠灹恥瘠牡档牡㌨⤲丠呏丠䱕⁌佃䵍久⁔䌧浯異獬牯⁹ 汅捥楴敶Ⱗ਍†敠敬瑣癩彥畳橢捥彴牧畯彰摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌䌠䵏䕍呎✠晩琠灹㵥汅捥楴敶Ⱗ਍†獠浥獥整彲摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠楶瑲慵彬敳敭瑳牥楟恤椠瑮ㄨ⤱䜠久剅呁䑅䄠坌奁⁓十⠠慣敳眠敨⁮獠浥獥整彲摩⁠獩渠瑯渠汵⁬桴湥怠敳敭瑳牥楟恤攠獬⁥‰湥⥤嘠剉啔䱁ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠湵煩敵楟獤⁠怨汣獡彳摩Ⱡ獠扵敪瑣楟恤怬楶瑲慵彬敳敭瑳牥楟恤Ⱙ਍†䕋⁙捠慬獳獟扵敪瑣彳畳橢捥彴摩晟牯楥湧⁠怨畳橢捥彴摩⥠ബ 䬠奅怠汣獡彳畳橢捥獴敟敬瑣癩彥畳橢捥彴牧畯彰摩晟牯楥湧⁠怨汥捥楴敶獟扵敪瑣束潲灵楟恤Ⱙ਍†䕋⁙捠慬獳獟扵敪瑣彳敳敭瑳牥楟彤潦敲杩恮⠠獠浥獥整彲摩⥠ബ 䬠奅怠汣獡彳畳橢捥獴獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠汣獡彳畳橢捥獴损慬獳楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠捠慬獳楟恤 䕒䕆䕒䍎卅怠汣獡敳恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡彳畳橢捥獴敟敬瑣癩彥畳橢捥彴牧畯彰摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨汥捥楴敶獟扵敪瑣束潲灵楟恤 䕒䕆䕒䍎卅怠汥捥楴敶獟扵敪瑣束潲灵恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡彳畳橢捥獴獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡彳畳橢捥獴獟浥獥整彲摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敳敭瑳牥楟恤 䕒䕆䕒䍎卅怠敳敭瑳牥恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡彳畳橢捥獴獟扵敪瑣楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠扵敪瑣楟恤 䕒䕆䕒䍎卅怠畳橢捥獴⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠汣獡彳畳橢捥獴ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠汣獡彳畳橢捥獴⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汣獡彳畳橢捥獴⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汣獡彳畳橢捥獴⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥捠慬獳獥ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓捠慬獳獥㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠汣獡敳恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲ㄵ⤲丠呏丠䱕ⱌ਍†楠据畬敤獟浥獥整獲⁠楴祮湩⡴⤴丠呏丠䱕⁌䕄䅆䱕⁔‰佃䵍久⁔〧ⴠ渠⁯‱‭敹❳ബ 怠敭楤浵楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†獠楨瑦楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†獠牴慥彭摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙捠慬獳獥浟摥畩彭摩晟牯楥湧⁠怨敭楤浵楟恤Ⱙ਍†䕋⁙捠慬獳獥獟楨瑦楟彤潦敲杩恮⠠獠楨瑦楟恤Ⱙ਍†䕋⁙捠慬獳獥獟牴慥彭摩晟牯楥湧⁠怨瑳敲浡楟恤Ⱙ਍†䕋⁙捠慬獳獥獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠汣獡敳彳敭楤浵楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠浠摥畩彭摩⥠删䙅剅久䕃⁓浠摥畩獭⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔捠慬獳獥獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡敳彳桳晩彴摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨桳晩彴摩⥠删䙅剅久䕃⁓獠楨瑦恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁⁅乏唠䑐呁⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汣獡敳彳瑳敲浡楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠牴慥彭摩⥠删䙅剅久䕃⁓獠牴慥獭⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄传⁎偕䅄䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠汣獡敳恳਍ⴭ਍਍佌䭃吠䉁䕌⁓捠慬獳獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汣獡敳恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅捠慬獳獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥捠湯慴瑣楟煮極祲ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓捠湯慴瑣楟煮極祲㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠潣瑮捡彴湩畱物恹⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†敠慭汩⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†獠扵敪瑣⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†浠獥慳敧⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤ഩ⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥捠湯慴瑣楟煮極祲ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠潣瑮捡彴湩畱物恹圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅捠湯慴瑣楟煮極祲⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠潣瑮捡彴湩畱物恹䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠汥捥楴敶獟扵敪瑣束潲灵恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠汥捥楴敶獟扵敪瑣束潲灵恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅敠敬瑣癩彥畳橢捥彴牧畯獰⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†瑠瑯污獟扵敪瑣恳椠瑮ㄨ⤱丠呏丠䱕ⱌ਍†瑠瑯污獟汥捥慴汢彥畳橢捥獴⁠湩⡴ㄱ 低⁔啎䱌ബ 怠汣獡彳摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠敳敭瑳牥楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠汥捥楴敶獟扵敪瑣束潲灵彳汣獡彳摩晟牯楥湧⁠怨汣獡彳摩⥠ബ 䬠奅怠汥捥楴敶獟扵敪瑣束潲灵彳敳敭瑳牥楟彤潦敲杩恮⠠獠浥獥整彲摩⥠ബ 䬠奅怠汥捥楴敶獟扵敪瑣束潲灵彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔敠敬瑣癩彥畳橢捥彴牧畯獰损慬獳楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠捠慬獳楟恤 䕒䕆䕒䍎卅怠汣獡敳恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠汥捥楴敶獟扵敪瑣束潲灵彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔敠敬瑣癩彥畳橢捥彴牧畯獰獟浥獥整彲摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敳敭瑳牥楟恤 䕒䕆䕒䍎卅怠敳敭瑳牥恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥敠敬瑣癩彥畳橢捥彴牧畯獰ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠汥捥楴敶獟扵敪瑣束潲灵恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅敠敬瑣癩彥畳橢捥彴牧畯獰⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汥捥楴敶獟扵敪瑣束潲灵恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠硥牴彡捳潨汯摟瑡獡ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓敠瑸慲獟档潯彬慤慴恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅敠瑸慲獟档潯彬慤慴恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠捳潨汯楟煮極祲楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠潦浲晟敩摬楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†摠瑡恡琠硥⁴䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠硥牴彡捳潨汯摟瑡獡獟档潯彬湩畱物役摩晟牯楥湧⁠怨捳潨汯楟煮極祲楟恤Ⱙ਍†䕋⁙敠瑸慲獟档潯彬慤慴彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䬠奅怠硥牴彡捳潨汯摟瑡獡晟牯彭楦汥彤摩晟牯楥湧⁠怨潦浲晟敩摬楟恤Ⱙ਍†佃华剔䥁呎怠硥牴彡捳潨汯摟瑡獡晟牯彭楦汥彤摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨潦浲晟敩摬楟恤 䕒䕆䕒䍎卅怠潦浲晟敩摬恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠硥牴彡捳潨汯摟瑡獡獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠硥牴彡捳潨汯摟瑡獡獟档潯彬湩畱物役摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟煮極祲楟恤 䕒䕆䕒䍎卅怠捳潨汯楟煮極楲獥⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㐽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥敠瑸慲獟档潯彬慤慴恳਍ⴭ਍਍佌䭃吠䉁䕌⁓敠瑸慲獟档潯彬慤慴恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅敠瑸慲獟档潯彬慤慴恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠硥牴彡捳潨汯摟瑡獡⁠䅖啌卅⠠ⰱ啎䱌㈬ㄬ丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㤱㈺㨶〳Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㈺㨶〳Ⱗ啎䱌Ⱙ㈨丬䱕ⱌⰳⰱ啎䱌✬〲㔲ㄭⴲ〱ㄠ㨹㘳ㄺ✷✬〲㔲ㄭⴲ〱ㄠ㨹㘳ㄺ✷丬䱕⥌⠬ⰳ啎䱌㐬ㄬ丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㤱㔺㨹㤵Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㔺㨹㤵Ⱗ啎䱌㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠硥牴彡捳潨汯摟瑡獡⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥晠楡敬彤潪獢ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓晠楡敬彤潪獢㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠慦汩摥機扯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠畵摩⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†捠湯敮瑣潩恮琠硥⁴低⁔啎䱌ബ 怠畱略恥琠硥⁴低⁔啎䱌ബ 怠慰汹慯恤氠湯瑧硥⁴低⁔啎䱌ബ 怠硥散瑰潩恮氠湯瑧硥⁴低⁔啎䱌ബ 怠慦汩摥慟恴琠浩獥慴灭丠呏丠䱕⁌䕄䅆䱕⁔畣牲湥彴楴敭瑳浡⡰Ⱙ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙晠楡敬彤潪獢畟極彤湵煩敵⁠怨畵摩⥠਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎ㄽ″䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠慦汩摥機扯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓晠楡敬彤潪獢⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慦汩摥機扯恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠楡敬彤潪獢⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥晠煡恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠慦獱㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠慦獱⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†瑠瑩敬⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†摠獥牣灩楴湯⁠整瑸丠呏丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙晠煡彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔晠煡彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠慦獱ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠慦獱⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慦獱⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慦獱⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥晠慥畴敲獟捥楴湯江獩獴ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓晠慥畴敲獟捥楴湯江獩獴㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠敦瑡牵彥敳瑣潩彮楬瑳恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠敦瑡牵彥敳瑣潩彮摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠敦瑡牵恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠敤捳楲瑰潩恮琠硥⁴䕄䅆䱕⁔啎䱌ബ 怠浩条恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙晠慥畴敲獟捥楴湯江獩獴晟慥畴敲獟捥楴湯楟彤潦敲杩恮⠠晠慥畴敲獟捥楴湯楟恤Ⱙ਍†佃华剔䥁呎怠敦瑡牵彥敳瑣潩彮楬瑳彳敦瑡牵彥敳瑣潩彮摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敦瑡牵彥敳瑣潩彮摩⥠删䙅剅久䕃⁓晠慥畴敲獟捥楴湯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥晠慥畴敲獟捥楴湯江獩獴ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠敦瑡牵彥敳瑣潩彮楬瑳恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠慥畴敲獟捥楴湯江獩獴⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠敦瑡牵彥敳瑣潩彮楬瑳恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠敦瑡牵彥敳瑣潩獮ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓晠慥畴敲獟捥楴湯恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅晠慥畴敲獟捥楴湯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠楴汴恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠敨摡湩恧瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠慲歮⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌〠ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤ഩ⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥晠慥畴敲獟捥楴湯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓晠慥畴敲獟捥楴湯恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠慥畴敲獟捥楴湯恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠慥畴敲獟捥楴湯恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠敦瑡牵獥ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓晠慥畴敲恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅晠慥畴敲恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†楠彳敤慦汵恴琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌〠䌠䵏䕍呎✠‰㸽丠Ɐㄠ㴠‾教❳ബ 怠瑳瑡獵⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌ㄠബ 怠敲畱物摥癟獰⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌〠ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤ഩ⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔㌲䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥晠慥畴敲恳਍ⴭ਍਍佌䭃吠䉁䕌⁓晠慥畴敲恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠慥畴敲恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠敦瑡牵獥⁠䅖啌卅⠠ⰱ匧畴敤瑮䴠湡条浥湥❴ㄬㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰ㄺ✷✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㈨✬捁摡浥捩⁳慍慮敧敭瑮Ⱗⰱⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰳ匧楬敤⁲慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰴ吧慥档牥䴠湡条浥湥❴ㄬㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨✬敓獳潩⁮教牡䴠湡条浥湥❴ㄬㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㘨✬潈楬慤⁹慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰷ吧浩瑥扡敬䴠湡条浥湥❴〬ㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㠨✬瑁整摮湡散䴠湡条浥湥❴〬ㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㤨✬硅浡䴠湡条浥湥❴〬ㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰰ䰧獥潳⁮慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ㄱ✬獁楳湧敭瑮䴠湡条浥湥❴〬ㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰲ䄧湮畯据浥湥⁴慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㌱✬瑓晡⁦慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㐱✬硅数獮⁥慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㔱✬瑓晡⁦敌癡⁥慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㘱✬敆獥䴠湡条浥湥❴〬ㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰷ匧档潯⁬慇汬牥⁹慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㠱✬䑉䌠牡⁤‭敃瑲晩捩瑡⁥敇敮慲楴湯Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㤱✬敗獢瑩⁥慍慮敧敭瑮Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬〲✬桃瑡䴠摯汵❥〬ㄬ〬✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㈨ⰱ吧慲獮潰瑲瑡潩⁮潍畤敬Ⱗⰰⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠慥畴敲恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠楦敬恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠楦敬恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅晠汩獥⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†浠摯污瑟灹恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠潭慤彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠楦敬湟浡恥瘠牡档牡ㄨ㈰⤴䐠䙅啁呌丠䱕ⱌ਍†晠汩彥桴浵湢楡恬瘠牡档牡ㄨ㈰⤴䐠䙅啁呌丠䱕ⱌ਍†瑠灹恥琠湩瑹硥⁴低⁔啎䱌䌠䵏䕍呎✠‱‽楆敬唠汰慯Ɽ㈠㴠夠畯畴敢䰠湩Ⱬ㌠㴠嘠摩潥唠汰慯Ɽ㐠㴠传桴牥䰠湩❫ബ 怠楦敬畟汲⁠慶捲慨⡲〱㐲 低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙晠汩獥浟摯污瑟灹彥潭慤彬摩楟摮硥⁠怨潭慤彬祴数Ⱡ浠摯污楟恤Ⱙ਍†䕋⁙晠汩獥獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠楦敬彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠楦敬恳਍ⴭ਍਍佌䭃吠䉁䕌⁓晠汩獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠楦敬恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠汩獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥晠牯彭楦汥獤ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓晠牯彭楦汥獤㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠潦浲晟敩摬恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㈱⤸丠呏丠䱕ⱌ਍†瑠灹恥瘠牡档牡ㄨ㠲 低⁔啎䱌䌠䵏䕍呎✠整瑸測浵敢Ⱳ整瑸牡慥搬潲摰睯Ɱ档捥扫硯爬摡潩昬汩略汰慯❤ബ 怠獩牟煥極敲恤琠湩楹瑮ㄨ 低⁔啎䱌䐠䙅啁呌〠ബ 怠敤慦汵彴慶畬獥⁠整瑸䐠䙅啁呌丠䱕⁌佃䵍久⁔瘧污敵⁳景爠摡潩挬敨正潢ⱸ牤灯潤湷攬捴Ⱗ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠慲歮⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌〠ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙湠浡恥⠠湠浡恥怬捳潨汯楟恤Ⱙ਍†䕋⁙晠牯彭楦汥獤獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠潦浲晟敩摬彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㈽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥晠牯彭楦汥獤ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠潦浲晟敩摬恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅晠牯彭楦汥獤⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏晠牯彭楦汥獤⁠䅖啌卅⠠ⰱ猧楲挠慨瑩湡慹Ⱗ琧硥❴〬丬䱕ⱌ啎䱌ㄬ✬〲㔲ㄭⴲ〱ㄠ㨵㌲㈺✸✬〲㔲ㄭⴲ〱㈠㨲㜵〺✶✬〲㔲ㄭⴲ〱㈠㨲㜵〺✶㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠潦浲晟敩摬恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠慧汬牥敩恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠慧汬牥敩恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅杠污敬楲獥⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†瑠瑩敬⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†摠獥牣灩楴湯⁠整瑸䐠䙅啁呌丠䱕ⱌ਍†瑠畨扭慮汩⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†獠獥楳湯祟慥彲摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠慧汬牥敩彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔杠污敬楲獥獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥杠污敬楲獥ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠慧汬牥敩恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅杠污敬楲獥⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慧汬牥敩恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠畧摩湡散恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠畧摩湡散恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅杠極慤据獥⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡ㄨ〰 䕄䅆䱕⁔啎䱌ബ 怠楬歮⁠整瑸䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠畧摩湡散恳਍ⴭ਍਍佌䭃吠䉁䕌⁓杠極慤据獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠畧摩湡散恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅杠極慤据獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥橠扯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠潪獢㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠潪獢⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†煠敵敵⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†灠祡潬摡⁠潬杮整瑸丠呏丠䱕ⱌ਍†慠瑴浥瑰恳琠湩楹瑮㌨ 湵楳湧摥丠呏丠䱕ⱌ਍†牠獥牥敶彤瑡⁠湩⡴〱 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†慠慶汩扡敬慟恴椠瑮ㄨ⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠湩⡴〱 湵楳湧摥丠呏丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠潪獢煟敵敵楟摮硥⁠怨畱略恥ഩ⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔㐴䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥橠扯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓橠扯恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅橠扯恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠潪獢⁠䅖啌卅⠠㌴✬敤慦汵❴✬屻產極層㨢≜敦㍢愹㠳昭晥ⵥ㐴㠹㠭愰ⵡ搶㕢户昳㈳㠱≜尬搢獩汰祡慎敭≜尺䄢灰屜屜潊獢屜屜敓畴印档潯䑬瑡扡獡履Ⱒ≜潪屢㨢≜汉畬業慮整屜屜畑略履屜䍜污公敵敵䡤湡汤牥捀污屬Ⱒ≜慭呸楲獥≜㌺尬洢硡硅散瑰潩獮≜渺汵ⱬ≜慦汩湏楔敭畯屴㨢慦獬ⱥ≜慢正景屦㨢≜㈱尰Ⱒ≜楴敭畯屴㨢〳ⰰ≜敲牴啹瑮汩≜渺汵ⱬ≜慤慴≜笺≜潣浭湡乤浡履㨢≜灁屰屜䩜扯屳屜卜瑥灵捓潨汯慄慴慢敳≜尬挢浯慭摮≜尺伢㈺㨸屜≜灁屰屜䩜扯屳屜卜瑥灵捓潨汯慄慴慢敳屜≜㌺笺㩳㠳尺屜尢畜〰〰灁屰屜䩜扯屳屜卜瑥灵捓潨汯慄慴慢敳屜ふ〰猰档潯䥬層屜㬢㩩㬷㩳㤳尺屜尢畜〰〰灁屰屜䩜扯屳屜卜瑥灵捓潨汯慄慴慢敳屜ふ〰瀰捡慫敧摉屜≜主猻㐺㨶屜≜屜ふ〰䄰灰屜屜潊獢屜屜敓畴印档潯䑬瑡扡獡履畜〰〰捳潨汯潃敤牐晥硩屜≜猻㌺尺屜匢䡃屜≜紻≜絽Ⱗⰰ啎䱌ㄬ㜷㌰㘰㠶ⰱ㜱〷〳㘶ㄸ㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠潪獢⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥池湡畧条獥ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓池湡畧条獥㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠慬杮慵敧恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲ㄵ⤲丠呏丠䱕ⱌ਍†捠摯恥瘠牡档牡㘨⤴丠呏丠䱕ⱌ਍†晠汩恥瘠牡档牡㔨㈱ 低⁔啎䱌ബ 怠瑳瑡獵⁠楴祮湩⡴⤴丠呏丠䱕⁌䕄䅆䱕⁔‰佃䵍久⁔ㄧ㸽捡楴敶Ⱗ਍†楠彳瑲恬琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌〠ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠慬杮慵敧彳潣敤畟楮畱恥⠠捠摯恥ഩ⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔′䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠慬杮慵敧恳਍ⴭ਍਍佌䭃吠䉁䕌⁓池湡畧条獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慬杮慵敧恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠慬杮慵敧恳嘠䱁䕕⁓ㄨ✬湅汧獩❨✬湥Ⱗ攧⹮獪湯Ⱗⰱⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅池湡畧条獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥浠牡敫灴慬散灟潲畤瑣恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠慭歲瑥汰捡彥牰摯捵獴㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠慭歲瑥汰捡彥牰摯捵獴⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†瑠瑩敬⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†摠獥牣灩楴湯⁠整瑸䐠䙅啁呌丠䱕ⱌ਍†灠楲散⁠敤楣慭⡬〱㈬ 低⁔啎䱌䐠䙅啁呌〠〮ⰰ਍†捠浯業獳潩彮数捲湥慴敧⁠潤扵敬䐠䙅啁呌〠ബ 怠慣整潧祲⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†楠慭敧⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†捠湯慴瑣楟普息琠硥⁴䕄䅆䱕⁔啎䱌ബ 怠楬歮⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†獠慴畴恳琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌ㄠ䌠䵏䕍呎✠㴱捁楴敶‬㴰湉捡楴敶Ⱗ਍†畠敳彲摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠慭歲瑥汰捡彥牰摯捵獴畟敳彲摩晟牯楥湧⁠怨獵牥楟恤Ⱙ਍†䕋⁙浠牡敫灴慬散灟潲畤瑣彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔浠牡敫灴慬散灟潲畤瑣彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔浠牡敫灴慬散灟潲畤瑣彳獵牥楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠畠敳彲摩⥠删䙅剅久䕃⁓畠敳獲⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㔽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥浠牡敫灴慬散灟潲畤瑣恳਍ⴭ਍਍佌䭃吠䉁䕌⁓浠牡敫灴慬散灟潲畤瑣恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅浠牡敫灴慬散灟潲畤瑣恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠慭歲瑥汰捡彥牰摯捵獴⁠䅖啌卅⠠ⰱ琧獥❴✬整瑳Ⱗ〵〰〮ⰰ〱✬潓瑦慷敲Ⱗ啎䱌丬䱕ⱌ啎䱌ㄬㄬ丬䱕ⱌ㈧㈰ⴶ㈰〭‵㔱㈺㨷㔰Ⱗ㈧㈰ⴶ㈰〭‵㔱㈺㨷㔰⤧⠬ⰲ琧獥❴✬敤潭Ⱗ〴〰〮ⰰ㔱✬潓瑦慷敲Ⱗ啎䱌丬䱕ⱌ啎䱌ㄬㄬ丬䱕ⱌ㈧㈰ⴶ㈰〭‶㈱ㄺ㨳㔴Ⱗ㈧㈰ⴶ㈰ㄭ‶㜰㌺㨰㔰⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅浠牡敫灴慬散灟潲畤瑣恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠敭楤浵恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠敭楤浵恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅浠摥畩獭⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡㔨㈱ 低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙浠摥畩獭獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠敭楤浵彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠敭楤浵恳਍ⴭ਍਍佌䭃吠䉁䕌⁓浠摥畩獭⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠敭楤浵恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅浠摥畩獭⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥浠杩慲楴湯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠業牧瑡潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠業牧瑡潩獮⁠ന 怠摩⁠湩⡴〱 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠業牧瑡潩恮瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠慢捴恨椠瑮ㄨ⤱丠呏丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㈽′䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠業牧瑡潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠業牧瑡潩獮⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠業牧瑡潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏浠杩慲楴湯恳嘠䱁䕕⁓ㄨ✬〲㐱ㅟ弰㈱た〰〰弰牣慥整畟敳獲瑟扡敬Ⱗ⤱⠬ⰲ㈧㄰弴〱ㅟ弲〱〰〰损敲瑡彥慰獳潷摲牟獥瑥彳慴汢❥ㄬⰩ㌨✬〲㤱た弸㤱た〰〰弰牣慥整晟楡敬彤潪獢瑟扡敬Ⱗ⤱⠬ⰴ㈧㄰弹㈱ㅟ弴〰〰㄰损敲瑡彥数獲湯污慟捣獥彳潴敫獮瑟扡敬Ⱗ⤱⠬ⰵ㈧㈰弲㐰た弱㤰〱㌳损敲瑡彥数浲獩楳湯瑟扡敬❳ㄬⰩ㘨✬〲㈲た弴㄰ㅟ㔰㈸弶污彬慴汢獥Ⱗ⤱⠬ⰷ㈧㈰弳ㄱㅟ弶㌱㐴㤴癟牥楳湯ⴱⴰ✱ㄬⰩ㠨✬〲㌲ㅟ弲㜰ㅟ〲㔰弴敶獲潩ㅮㅟたⰧ⤱⠬ⰹ㈧㈰弴㄰㍟弰㤰㈲㠲癟牥楳湯弱弲✰ㄬⰩㄨⰰ㈧㈰弴㌰ㅟ弲㜱㔳ㄲ癟牥楳湯弱弳✰ㄬⰩㄨⰱ㈧㈰弴㔰㉟弱㤰㜴㐱癟牥楳湯弱弳✲ㄬⰩㄨⰲ㈧㈰弴㜰㉟弱㤰㘳㜵癟牥楳湯弱弴✰ㄬⰩㄨⰳ㈧㈰弴㠰た弸㤰㜴㤰癟牥楳湯弱弴✱ㄬⰩㄨⰴ㈧㈰弴〱ㅟ強ㄱ㌲㜴癟牥楳湯弱張✰ㄬⰩㄨⰵ㈧㈰張㄰㉟弲〱ㄲ㘴癟牥楳湯弱張✲ㄬⰩㄨⰶ㈧㈰張㐰ㅟ弰〱㄰㜳癟牥楳湯弱張✴ㄬⰩㄨⰷ㈧㈰張㔰た弲㤰㠵㤲癟牥楳湯弱弶✰ㄬⰩㄨⰸ㈧㈰張㜰㉟弸㈱㤳㠲癟牥楳湯弱強✰ㄬⰩㄨⰹ㈧㈰張㤰た弹㈱㠵〳癟牥楳湯弱弸✰ㄬⰩ㈨ⰰ㈧㈰弶㈰た張〲ㄱ㘵损敲瑡彥慭歲瑥汰捡彥牰摯捵獴瑟扡敬Ⱗ⤲⠬ㄲ✬〲㘲た弲㔰㉟㐰〲弰摡彤潣浭獩楳湯瑟彯慭歲瑥汰捡彥牰摯捵獴瑟扡敬Ⱗ⤳഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅浠杩慲楴湯恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠潭敤彬慨彳数浲獩楳湯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠潭敤彬慨彳数浲獩楳湯恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅浠摯汥桟獡灟牥業獳潩獮⁠ന 怠数浲獩楳湯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†浠摯汥瑟灹恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠潭敤彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠灠牥業獳潩彮摩Ⱡ浠摯汥楟恤怬潭敤彬祴数⥠ബ 䬠奅怠潭敤彬慨彳数浲獩楳湯彳潭敤彬摩浟摯汥瑟灹彥湩敤恸⠠浠摯汥楟恤怬潭敤彬祴数⥠ബ 䌠乏呓䅒义⁔浠摯汥桟獡灟牥業獳潩獮灟牥業獳潩彮摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨数浲獩楳湯楟恤 䕒䕆䕒䍎卅怠数浲獩楳湯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥浠摯汥桟獡灟牥業獳潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠潭敤彬慨彳数浲獩楳湯恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅浠摯汥桟獡灟牥業獳潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠潭敤彬慨彳数浲獩楳湯恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠潭敤彬慨彳潲敬恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠潭敤彬慨彳潲敬恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅浠摯汥桟獡牟汯獥⁠ന 怠潲敬楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†浠摯汥瑟灹恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠潭敤彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠牠汯彥摩Ⱡ浠摯汥楟恤怬潭敤彬祴数⥠ബ 䬠奅怠潭敤彬慨彳潲敬彳潭敤彬摩浟摯汥瑟灹彥湩敤恸⠠浠摯汥楟恤怬潭敤彬祴数⥠ബ 䌠乏呓䅒义⁔浠摯汥桟獡牟汯獥牟汯彥摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨潲敬楟恤 䕒䕆䕒䍎卅怠潲敬恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥浠摯汥桟獡牟汯獥ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠潭敤彬慨彳潲敬恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅浠摯汥桟獡牟汯獥⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏浠摯汥桟獡牟汯獥⁠䅖啌卅⠠ⰱ䄧灰屜潍敤獬屜獕牥Ⱗ⤱⠬ⰴ䄧灰屜潍敤獬屜獕牥Ⱗ⤸⠬ⰴ䄧灰屜潍敤獬屜獕牥Ⱗ⤹഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅浠摯汥桟獡牟汯獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥灠捡慫敧晟慥畴敲恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠慰正条彥敦瑡牵獥㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠慰正条彥敦瑡牵獥⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†灠捡慫敧楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†晠慥畴敲楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙畠楮畱恥⠠灠捡慫敧楟恤怬敦瑡牵彥摩⥠ബ 䬠奅怠慰正条彥敦瑡牵獥灟捡慫敧楟彤湩敤恸⠠灠捡慫敧楟恤Ⱙ਍†䕋⁙灠捡慫敧晟慥畴敲彳敦瑡牵彥摩楟摮硥⁠怨敦瑡牵彥摩⥠ബ 䌠乏呓䅒义⁔灠捡慫敧晟慥畴敲彳敦瑡牵彥摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敦瑡牵彥摩⥠删䙅剅久䕃⁓晠慥畴敲恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠慰正条彥敦瑡牵獥灟捡慫敧楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠灠捡慫敧楟恤 䕒䕆䕒䍎卅怠慰正条獥⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㈽㌸䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥灠捡慫敧晟慥畴敲恳਍ⴭ਍਍佌䭃吠䉁䕌⁓灠捡慫敧晟慥畴敲恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅灠捡慫敧晟慥畴敲恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠慰正条彥敦瑡牵獥⁠䅖啌卅⠠ⰱⰱⰲ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰⤧⠬ⰲⰱⰵ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰⤧⠬ⰳⰱⰱ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰⤧⠬ⰴⰱⰴ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰⤧⠬ⰵⰱ㈱✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲Ⱙ㘨ㄬㄬⰱ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰⤧⠬ⰷⰱⰸ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㐺㨰㈰⤧⠬ⰸⰱ〲✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲Ⱙ㤨ㄬ㤬✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲Ⱙㄨⰰⰱ㐱✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲✬〲㔲ㄭⴲ〱ㄠ㨹〴〺✲Ⱙㄨⰱⰲⰲ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨸ㄲⰧ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㈱㈬㔬✬〲㔲ㄭⴲㄱㄠ㨶㠲㈺✱✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰳⰲⰱ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨸ㄲⰧ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㐱㈬㐬✬〲㔲ㄭⴲㄱㄠ㨶㠲㈺✱✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰵⰲ㈱✬〲㔲ㄭⴲㄱㄠ㨶㠲㈺✱✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰶⰲㄱ✬〲㔲ㄭⴲㄱㄠ㨶㠲㈺✱✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰷⰲⰸ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨸ㄲⰧ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㠱㈬㈬ⰰ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨸ㄲⰧ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㤱㈬ㄬⰴ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨸ㄲⰧ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬〲㈬ㄬⰶ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨸ㄲⰧ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬ㄳ㈬㤬✬〲㔲ㄭⴲ㈱㈠㨲㘵㌺✳✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㌨ⰲⰲ㜱✬〲㔲ㄭⴲ㈱㈠㨲㘵㌺✳✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㌨ⰳⰲⰳ㈧㈰ⴵ㈱ㄭ′㈲㔺㨶㌳Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㐳㈬ㄬⰵ㈧㈰ⴵ㈱ㄭ′㈲㔺㨶㌳Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㔳㈬ㄬⰳ㈧㈰ⴵ㈱ㄭ′㈲㔺㨶㌳Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㘳㈬㜬✬〲㔲ㄭⴲ㈱㈠㨲㘵㌺✳✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㌨ⰷⰲㄲ✬〲㔲ㄭⴲ㈱㈠㨲㘵㌺✳✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㌨ⰸⰲ㤱✬〲㔲ㄭⴲ㈱㈠㨲㘵㌺✳✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㘨ⰷⰳⰲ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㠶㌬㔬✬〲㔲ㄭⴲ㈱㈠㨳㔱㔺✱✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㘨ⰹⰳⰱ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬〷㌬㐬✬〲㔲ㄭⴲ㈱㈠㨳㔱㔺✱✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㜨ⰱⰳ㈱✬〲㔲ㄭⴲ㈱㈠㨳㔱㔺✱✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㜨ⰲⰳㄱ✬〲㔲ㄭⴲ㈱㈠㨳㔱㔺✱✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㜨ⰳⰳⰸ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㐷㌬㈬ⰰ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㔷㌬㤬✬〲㔲ㄭⴲ㈱㈠㨳㔱㔺✱✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㜨ⰶⰳ㐱✬〲㔲ㄭⴲ㈱㈠㨳㔱㔺✱✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㜨ⰷⰳ㘱✬〲㔲ㄭⴲ㈱㈠㨳㔱㔺✱✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㜨ⰸⰳⰶ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㤷㌬ㄬⰸ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬〸㌬ㄬⰰ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬ㄸ㌬ㄬⰷ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㈸㌬ㄬⰵ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㌸㌬ㄬⰳ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㐸㌬ㄬⰹ㈧㈰ⴵ㈱ㄭ′㌲ㄺ㨵ㄵⰧ㈧㈰ⴵ㈱ㄭ′㌲㐺㨳㐰⤧⠬㔸㌬㌬✬〲㔲ㄭⴲ㈱㈠㨳㐳㌺✹✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙ㠨ⰶⰳㄲ✬〲㔲ㄭⴲ㈱㈠㨳㐳㌺✹✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙㄨ㔰㌬㜬✬〲㔲ㄭⴲ㈱㈠㨳㔳ㄺ✲✬〲㔲ㄭⴲ㈱㈠㨳㌴〺✴Ⱙㄨ㜴㐬㈬✬〲㔲ㄭⴲ〲ㄠ㨲㐲㌺✹✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙㄨ㠴㐬㔬✬〲㔲ㄭⴲ〲ㄠ㨲㐲㌺✹✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙㄨ㤴㐬ㄬ✬〲㔲ㄭⴲ〲ㄠ㨲㐲㌺✹✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙㄨ〵㐬㐬✬〲㔲ㄭⴲ〲ㄠ㨲㐲㌺✹✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙㄨ㜵㐬ㄬⰶ㈧㈰ⴵ㈱㈭‰㈱㈺㨴㤳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬㘱ⰱⰴⰳ㈧㈰ⴵ㈱㈭‰㈱㈺㨴㤳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬㠱ⰲⰴⰹ㈧㈰ⴵ㈱㈭‰㈱㌺㨷㌴Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬㤱ⰶⰴ㈱✬〲㔲ㄭⴲ〲ㄠ㨲ㄴ㌺✲✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙㄨ㜹㐬ㄬⰱ㈧㈰ⴵ㈱㈭‰㈱㐺㨱㈳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬㤱ⰸⰴⰸ㈧㈰ⴵ㈱㈭‰㈱㐺㨱㈳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬㤱ⰹⰴ〲✬〲㔲ㄭⴲ〲ㄠ㨲ㄴ㌺✲✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙ㈨〰㐬ㄬⰴ㈧㈰ⴵ㈱㈭‰㈱㐺㨱㈳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬〲ⰱⰴⰶ㈧㈰ⴵ㈱㈭‰㈱㐺㨱㈳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬〲ⰲⰴ㠱✬〲㔲ㄭⴲ〲ㄠ㨲ㄴ㌺✲✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙ㈨㌰㐬ㄬⰰ㈧㈰ⴵ㈱㈭‰㈱㐺㨱㈳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬〲ⰴⰴ㜱✬〲㔲ㄭⴲ〲ㄠ㨲ㄴ㌺✲✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙ㈨㔰㐬ㄬⰵ㈧㈰ⴵ㈱㈭‰㈱㐺㨱㈳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬〲ⰶⰴ㌱✬〲㔲ㄭⴲ〲ㄠ㨲ㄴ㌺✲✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙ㈨㜰㐬㜬✬〲㔲ㄭⴲ〲ㄠ㨲ㄴ㌺✲✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙ㈨㠰㐬㈬ⰱ㈧㈰ⴵ㈱㈭‰㈱㐺㨱㈳Ⱗ㈧㈰ⴶ㄰〭′〱㔺㨶㜵⤧⠬ㄲⰶⰵⰲ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴⤧⠬ㄲⰷⰵⰵ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴⤧⠬ㄲⰸⰵⰱ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴⤧⠬ㄲⰹⰵⰴ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨶㠴⤧⠬㐲ⰰⰴ㤱✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷✬〲㘲〭ⴱ㈰ㄠ㨰㘵㔺✷Ⱙ㈨ㄶ㘬㈬✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㈶㘬㔬✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㌶㘬ㄬ✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㐶㘬㐬✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㔶㘬ㄬⰲ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㘲ⰷⰶⰸ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㘲ⰸⰶ〲✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㤶㘬㤬✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨〷㘬ㄬⰴ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㜲ⰱⰶ㘱✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㈷㘬㘬✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㌷㘬ㄬⰸ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㜲ⰴⰶ〱✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㔷㘬ㄬⰷ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㜲ⰶⰶⰳ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㜲ⰷⰶ㔱✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨㠷㘬ㄬⰳ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㜲ⰹⰶⰷ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧⠬㠲ⰰⰶㄲ✬〲㘲〭ⴱㄱ㈠㨳ㄴ㐺✴✬〲㘲〭ⴱㄱ㈠㨳㈴㈺✳Ⱙ㈨ㄸ㘬ㄬⰹ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨱㐴Ⱗ㈧㈰ⴶ㄰ㄭ‱㌲㐺㨲㌲⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅灠捡慫敧晟慥畴敲恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠慰正条獥ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓灠捡慫敧恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅灠捡慫敧恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†摠獥牣灩楴湯⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†瑠条楬敮⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†獠畴敤瑮损慨杲恥搠畯汢⡥ⰸ⤲丠呏丠䱕ⱌ਍†獠慴晦损慨杲恥搠畯汢⡥ⰸ⤲丠呏丠䱕ⱌ਍†摠祡恳椠瑮ㄨ⤱丠呏丠䱕⁌䕄䅆䱕⁔ⰱ਍†瑠灹恥椠瑮ㄨ⤱丠呏丠䱕⁌䕄䅆䱕⁔‱佃䵍久⁔〧㴠‾牐灥楡Ɽㄠ㴠‾潐瑳慰摩Ⱗ਍†湠彯景獟畴敤瑮恳椠瑮ㄨ⤱丠呏丠䱕⁌䕄䅆䱕⁔ⰰ਍†湠彯景獟慴晦恳椠瑮ㄨ⤱丠呏丠䱕⁌䕄䅆䱕⁔ⰰ਍†捠慨杲獥⁠潤扵敬㘨ⰴ⤴丠呏丠䱕ⱌ਍†獠慴畴恳琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌〠䌠䵏䕍呎✠‰㸽唠灮扵楬桳摥‬‱㸽倠扵楬桳摥Ⱗ਍†楠彳牴慩恬椠瑮ㄨ⤱丠呏丠䱕⁌䕄䅆䱕⁔ⰰ਍†桠杩汨杩瑨⁠楴祮湩⡴⤴丠呏丠䱕⁌䕄䅆䱕⁔‰佃䵍久⁔〧㴠‾潎‬‱㸽夠獥Ⱗ਍†牠湡恫椠瑮ㄨ⤱丠呏丠䱕⁌䕄䅆䱕⁔ⰰ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤ഩ⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔‷䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠慰正条獥ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠慰正条獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慰正条獥⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏灠捡慫敧恳嘠䱁䕕⁓ㄨ✬牦敥Ⱗ昧敲❥✬牦敥Ⱗ⸰〰〮〬ⰰ〲ㄬ〮〬〬〬〰ⰰⰰⰰⰰⰰ啎䱌✬〲㔲ㄭⴲ〱ㄠ㨹㔵㌺✲✬〲㔲ㄭⴲ〱ㄠ㨹㔵㌺✲Ⱙ㈨✬牦敥Ⱗ啎䱌✬牦敥Ⱗ⸰〰〮〬ⰰ〲〬ㄬ〰ㄬⰵ〱〮〰ⰰⰱⰰⰱⰴ啎䱌✬〲㘲〭ⴱ㔱〠㨲㠲㈺✹丬䱕⥌⠬ⰳ倧潲Ⱗ倧潲Ⱗ啎䱌㈬⸰〰㈬⸰〰㌬ⰰⰱⰰⰰ⸰〰〰ㄬ〬〬㔬丬䱕ⱌ㈧㈰ⴶ㄰ㄭ‵㈰㈺㨸㤲Ⱗ啎䱌Ⱙ㐨✬牐⁯硅汣獵癩❥丬䱕ⱌ啎䱌ㄬ⸵〰㈬⸰〰㈬〵ㄬ〮〬〬〬〰ⰰⰰⰰⰱⰱ啎䱌✬〲㘲〭ⴱ㔱〠㨲㠲㈺✹丬䱕⥌⠬ⰵ倧䕒䥍䵕Ⱗ啎䱌丬䱕ⱌ〲〮ⰰ〲〮ⰰ〲ⰰⰱⰰⰰ⸰〰〰〬〬〬㈬丬䱕ⱌ㈧㈰ⴶ㄰ㄭ‵㈰㈺㨸㤲Ⱗ啎䱌Ⱙ㘨✬畳牰橡⁡牰浥畩❭✬敢瑳映牯瘠污敵Ⱗ戧獥❴ㄬ⸰〰㈬⸰〰㈬〵ㄬ〮〬〬〬〰ⰰⰱⰰⰰⰳ啎䱌✬〲㘲〭ⴱ㔱〠㨲㠲㈺✹丬䱕⥌഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅灠捡慫敧恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠慰獳潷摲牟獥瑥恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠慰獳潷摲牟獥瑥恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅灠獡睳牯彤敲敳獴⁠ന 怠浥楡恬瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠潴敫恮瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†䕋⁙灠獡睳牯彤敲敳獴敟慭汩楟摮硥⁠怨浥楡恬ഩ⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥灠獡睳牯彤敲敳獴ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠慰獳潷摲牟獥瑥恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅灠獡睳牯彤敲敳獴⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慰獳潷摲牟獥瑥恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠慰浹湥彴潣普杩牵瑡潩獮ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓灠祡敭瑮损湯楦畧慲楴湯恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅灠祡敭瑮损湯楦畧慲楴湯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慰浹湥彴敭桴摯⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†慠楰歟祥⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†獠捥敲彴敫恹瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠敷桢潯彫敳牣瑥歟祥⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†扠湡彫慮敭⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†慠捣畯瑮湟浡恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠捡潣湵彴潮⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†捠牵敲据役潣敤⁠慶捲慨⡲㈱⤸䐠䙅啁呌丠䱕ⱌ਍†獠慴畴恳琠湩楹瑮ㄨ 低⁔啎䱌䐠䙅啁呌ㄠ䌠䵏䕍呎✠‰‭楄慳汢摥‬‱‭湅扡敬❤ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠慰浹湥彴潣普杩牵瑡潩獮獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠慰浹湥彴潣普杩牵瑡潩獮獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔‵䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠慰浹湥彴潣普杩牵瑡潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠慰浹湥彴潣普杩牵瑡潩獮⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慰浹湥彴潣普杩牵瑡潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏灠祡敭瑮损湯楦畧慲楴湯恳嘠䱁䕕⁓ㄨ✬瑓楲数Ⱗ瀧彫整瑳㕟丱硸硸硸畄浭偹扵楬桳扡敬敋ㅹ㌲㔴㜶㤸✰✬歳瑟獥彴ㄵ硎硸硸䑸浵祭敓牣瑥敋べ㠹㘷㐵㈳✱✬桷敳彣畤浭坹扥潨歯敓牣瑥ㅟ㌲㔴㜶㤸扡摣晥Ⱗ✧✬Ⱗ✧✬义❒〬丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㔱㈺㨰㜵Ⱗ㈧㈰ⴵ㈱ㄭ′㌲㌺㨸㠵⤧⠬ⰲ刧穡牯慰❹✬穲彰整瑳䑟浵祭敋䥹ㅤ㌲㔴✶✬畄浭䭹祥敓牣瑥慟换敤杦楨歪浬潮煰獲畴睶祸❺✬畤浭役敷桢潯彫敳牣瑥牟穡牯慰役㈱㐳✵✬Ⱗ✧✬Ⱗ䤧剎Ⱗⰰ啎䱌✬〲㔲ㄭⴲ〱ㄠ㨵〲㔺✷✬〲㔲ㄭⴲ㈱㈠㨳㠳㔺✸Ⱙ㌨✬慐獹慴正Ⱗ瀧彫整瑳摟浵祭畐汢捩敋役㈱㐳㘵㠷〹Ⱗ猧彫整瑳摟浵祭敓牣瑥敋役扡摣晥桧橩汫湭灯牱瑳癵硷穹Ⱗ瀧祡瑳捡彫畤浭役敷桢潯彫敳牣瑥ㅟ㌲㔴Ⱗ✧✬Ⱗ✧✬义❒〬丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㔱㈺㨰㜵Ⱗ㈧㈰ⴵ㈱ㄭ′㌲㌺㨸㠵⤧⠬ⰴ䘧畬瑴牥慷敶Ⱗ䘧坌啐䭂呟卅ⵔ畄浭偹扵楬桳扡敬敋ㅹ㌲㔴㜶㤸ⴰ❘✬䱆南䍅彋䕔呓䐭浵祭敓牣瑥敋役扡摣晥桧橩汫湭灯牱瑳癵硷穹堭Ⱗ✧✬Ⱗ✧✬Ⱗ䤧剎Ⱗⰰ啎䱌✬〲㔲ㄭⴲ〱ㄠ㨵〲㔺✷✬〲㔲ㄭⴲ㈱㈠㨳㠳㔺✸㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慰浹湥彴潣普杩牵瑡潩獮⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥灠祡敭瑮瑟慲獮捡楴湯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠慰浹湥彴牴湡慳瑣潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠慰浹湥彴牴湡慳瑣潩獮⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†畠敳彲摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠浡畯瑮⁠潤扵敬㘨ⰴ⤲丠呏丠䱕ⱌ਍†灠祡敭瑮束瑡睥祡⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†潠摲牥楟恤瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌䌠䵏䕍呎✠牯敤彲摩⼠瀠祡敭瑮楟瑮湥彴摩Ⱗ਍†灠祡敭瑮楟恤瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠慰浹湥彴楳湧瑡牵恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠慰浹湥彴瑳瑡獵⁠湥浵✨慦汩摥Ⱗ猧捵散摥Ⱗ瀧湥楤杮⤧丠呏丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙灠祡敭瑮瑟慲獮捡楴湯彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䬠奅怠慰浹湥彴牴湡慳瑣潩獮畟敳彲摩晟牯楥湧⁠怨獵牥楟恤Ⱙ਍†佃华剔䥁呎怠慰浹湥彴牴湡慳瑣潩獮獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠慰浹湥彴牴湡慳瑣潩獮畟敳彲摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨獵牥楟恤 䕒䕆䕒䍎卅怠獵牥恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔‴䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠慰浹湥彴牴湡慳瑣潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠慰浹湥彴牴湡慳瑣潩獮⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慰浹湥彴牴湡慳瑣潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏灠祡敭瑮瑟慲獮捡楴湯恳嘠䱁䕕⁓ㄨ㈬ㄬ⸰〰✬慃桳Ⱗ啎䱌丬䱕ⱌ啎䱌✬畳捣敥❤ㄬ✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵Ⱙ㈨㐬ㄬ⸰〰✬慃桳Ⱗ啎䱌丬䱕ⱌ啎䱌✬畳捣敥❤㌬✬〲㔲ㄭⴲ㈱㈠㨱㠵㔺✴✬〲㔲ㄭⴲ㈱㈠㨱㠵㔺✴Ⱙ㌨㔬ㄬ⸰〰✬慃桳Ⱗ啎䱌丬䱕ⱌ啎䱌✬畳捣敥❤㐬✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠慰浹湥彴牴湡慳瑣潩獮⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥灠牥業獳潩獮ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓灠牥業獳潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠数浲獩楳湯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†杠慵摲湟浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠数浲獩楳湯彳慮敭束慵摲湟浡彥湵煩敵⁠怨慮敭Ⱡ杠慵摲湟浡恥ഩ⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔㠵䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥灠牥業獳潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠数浲獩楳湯恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅灠牥業獳潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏灠牥業獳潩獮⁠䅖啌卅⠠ⰱ爧汯ⵥ楬瑳Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰲ爧汯ⵥ牣慥整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰳ爧汯ⵥ摥瑩Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰴ爧汯ⵥ敤敬整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰵ氧湡畧条ⵥ楬瑳Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰶ氧湡畧条ⵥ牣慥整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰷ氧湡畧条ⵥ摥瑩Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰸ氧湡畧条ⵥ敤敬整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰹ猧档潯獬氭獩❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰰ猧档潯獬挭敲瑡❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰱ猧档潯獬攭楤❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰲ猧档潯獬搭汥瑥❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰳ瀧捡慫敧氭獩❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰴ瀧捡慫敧挭敲瑡❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰵ瀧捡慫敧攭楤❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰶ瀧捡慫敧搭汥瑥❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰷ愧摤湯⵳楬瑳Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㠱✬摡潤獮挭敲瑡❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙㄨⰹ愧摤湯⵳摥瑩Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬〲✬摡潤獮搭汥瑥❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㈨ⰱ朧極慤据ⵥ楬瑳Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㈲✬畧摩湡散挭敲瑡❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㈨ⰳ朧極慤据ⵥ摥瑩Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㐲✬畧摩湡散搭汥瑥❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㈨ⰵ猧獹整⵭敳瑴湩ⵧ慭慮敧Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㘲✬捦⵭敳瑴湩ⵧ牣慥整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㜲✬浥楡⵬敳瑴湩ⵧ牣慥整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㠲✬牰癩捡⵹潰楬祣Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㤲✬潣瑮捡⵴獵Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬〳✬扡畯⵴獵Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ㄳ✬整浲⵳潣摮瑩潩❮✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㌨ⰲ愧灰猭瑥楴杮❳✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㌨ⰳ猧扵捳楲瑰潩⵮楶睥Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㐳✬瑳晡ⵦ楬瑳Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㔳✬瑳晡ⵦ牣慥整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㘳✬瑳晡ⵦ摥瑩Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㜳✬瑳晡ⵦ敤敬整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㠳✬慦獱氭獩❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㌨ⰹ昧煡⵳牣慥整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬〴✬慦獱攭楤❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㐨ⰱ昧煡⵳敤敬整Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㈴✬捦⵭敳瑴湩ⵧ慭慮敧Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㌴✬牦湯⵴楳整猭瑥楴杮Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㐴✬慰浹湥⵴敳瑴湩獧Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㔴✬畳獢牣灩楴湯猭瑥楴杮❳✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㐨ⰶ猧扵捳楲瑰潩⵮档湡敧戭汩獬Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㜴✬捳潨汯琭牥獭挭湯楤楴湯Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㠴✬畳獢牣灩楴湯戭汩⵬慰浹湥❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㐨ⰹ眧扥猭瑥楴杮❳✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨ⰰ攧慭汩琭浥汰瑡❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨ⰱ挧獵潴⵭捳潨汯攭慭汩Ⱗ眧扥Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬㈵✬慤慴慢敳戭捡畫❰✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨ⰳ猧档潯⵬畣瑳浯昭敩摬氭獩❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨ⰴ猧档潯⵬畣瑳浯昭敩摬挭敲瑡❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨ⰵ猧档潯⵬畣瑳浯昭敩摬攭楤❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨ⰶ猧档潯⵬畣瑳浯昭敩摬搭汥瑥❥✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴Ⱙ㔨ⰷ挧湯慴瑣椭煮極祲氭獩❴✬敷❢✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠数浲獩楳湯恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠数獲湯污慟捣獥彳潴敫獮ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓灠牥潳慮彬捡散獳瑟歯湥恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅灠牥潳慮彬捡散獳瑟歯湥恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠潴敫慮汢彥祴数⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†瑠歯湥扡敬楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†湠浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠潴敫恮瘠牡档牡㘨⤴丠呏丠䱕ⱌ਍†慠楢楬楴獥⁠整瑸䐠䙅啁呌丠䱕ⱌ਍†池獡彴獵摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠硥楰敲彳瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙灠牥潳慮彬捡散獳瑟歯湥彳潴敫彮湵煩敵⁠怨潴敫恮Ⱙ਍†䕋⁙灠牥潳慮彬捡散獳瑟歯湥彳潴敫慮汢彥祴数瑟歯湥扡敬楟彤湩敤恸⠠瑠歯湥扡敬瑟灹恥怬潴敫慮汢彥摩⥠਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠数獲湯污慟捣獥彳潴敫獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠数獲湯污慟捣獥彳潴敫獮⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠数獲湯污慟捣獥彳潴敫獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠数獲湯污慟捣獥彳潴敫獮⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥牠汯彥慨彳数浲獩楳湯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠潲敬桟獡灟牥業獳潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠潲敬桟獡灟牥業獳潩獮⁠ന 怠数浲獩楳湯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†牠汯彥摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠灠牥業獳潩彮摩Ⱡ牠汯彥摩⥠ബ 䬠奅怠潲敬桟獡灟牥業獳潩獮牟汯彥摩晟牯楥湧⁠怨潲敬楟恤Ⱙ਍†佃华剔䥁呎怠潲敬桟獡灟牥業獳潩獮灟牥業獳潩彮摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨数浲獩楳湯楟恤 䕒䕆䕒䍎卅怠数浲獩楳湯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠潲敬桟獡灟牥業獳潩獮牟汯彥摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨潲敬楟恤 䕒䕆䕒䍎卅怠潲敬恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥牠汯彥慨彳数浲獩楳湯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓牠汯彥慨彳数浲獩楳湯恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅牠汯彥慨彳数浲獩楳湯恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠潲敬桟獡灟牥業獳潩獮⁠䅖啌卅⠠ⰱ⤱⠬ⰱ⤳⠬ⰱ⤴⠬ⰲ⤱⠬ⰲ⤳⠬ⰲ⤴⠬ⰳ⤱⠬ⰳ⤳⠬ⰳ⤴⠬ⰴ⤱⠬ⰴ⤳⠬ⰴ⤴⠬ⰵ⤱⠬ⰵ⤳⠬ⰵ⤴⠬ⰶ⤱⠬ⰶ⤳⠬ⰶ⤴⠬ⰷ⤱⠬ⰷ⤳⠬ⰷ⤴⠬ⰸ⤱⠬ⰸ⤳⠬ⰸ⤴⠬ⰹ⤱⠬ⰹ⤳⠬ⰹ⤴⠬〱ㄬⰩㄨⰰ⤳⠬〱㐬Ⱙㄨⰱ⤱⠬ㄱ㌬Ⱙㄨⰱ⤴⠬㈱ㄬⰩㄨⰲ⤳⠬㈱㐬Ⱙㄨⰳ⤱⠬㌱㌬Ⱙㄨⰳ⤴⠬㐱ㄬⰩㄨⰴ⤳⠬㐱㐬Ⱙㄨⰵ⤱⠬㔱㌬Ⱙㄨⰵ⤴⠬㘱ㄬⰩㄨⰶ⤳⠬㘱㐬Ⱙㄨⰷ⤱⠬㜱㌬Ⱙㄨⰷ⤴⠬㠱ㄬⰩㄨⰸ⤳⠬㠱㐬Ⱙㄨⰹ⤱⠬㤱㌬Ⱙㄨⰹ⤴⠬〲ㄬⰩ㈨ⰰ⤳⠬〲㐬Ⱙ㈨ⰱ⤱⠬ㄲ㌬Ⱙ㈨ⰱ⤴⠬㈲ㄬⰩ㈨ⰲ⤳⠬㈲㐬Ⱙ㈨ⰳ⤱⠬㌲㌬Ⱙ㈨ⰳ⤴⠬㐲ㄬⰩ㈨ⰴ⤳⠬㐲㐬Ⱙ㈨ⰵ⤱⠬㔲㌬Ⱙ㈨ⰶ⤱⠬㘲㌬Ⱙ㈨ⰶ⤴⠬㜲ㄬⰩ㈨ⰷ⤳⠬㜲㐬Ⱙ㈨ⰸ⤱⠬㠲㌬Ⱙ㈨ⰸ⤴⠬㤲ㄬⰩ㈨ⰹ⤳⠬㤲㐬Ⱙ㌨ⰰ⤱⠬〳㌬Ⱙ㌨ⰰ⤴⠬ㄳㄬⰩ㌨ⰱ⤳⠬㈳ㄬⰩ㌨ⰲ⤳⠬㈳㐬Ⱙ㌨ⰳ⤱⠬㌳㌬Ⱙ㌨ⰳ⤴⠬㐳ㄬⰩ㌨ⰴ⤳⠬㐳㐬Ⱙ㌨ⰵ⤱⠬㔳㌬Ⱙ㌨ⰵ⤴⠬㘳ㄬⰩ㌨ⰶ⤳⠬㘳㐬Ⱙ㌨ⰷ⤱⠬㜳㌬Ⱙ㌨ⰷ⤴⠬㠳ㄬⰩ㌨ⰸ⤳⠬㠳㐬Ⱙ㌨ⰹ⤱⠬㤳㌬Ⱙ㌨ⰹ⤴⠬〴ㄬⰩ㐨ⰰ⤳⠬〴㐬Ⱙ㐨ⰱ⤱⠬ㄴ㌬Ⱙ㐨ⰱ⤴⠬㈴ㄬⰩ㐨ⰲ⤳⠬㈴㐬Ⱙ㐨ⰵ⤱⠬㔴㌬Ⱙ㐨ⰵ⤴⠬㘴ㄬⰩ㐨ⰶ⤳⠬㘴㐬Ⱙ㐨ⰷ⤱⠬㜴㌬Ⱙ㐨ⰷ⤴⠬㠴ㄬⰩ㐨ⰸ⤳⠬㠴㐬Ⱙ㐨ⰹ⤱⠬㤴㌬Ⱙ㔨ⰱ⤱⠬ㄵ㌬Ⱙ㔨ⰱ⤴⠬㈵ㄬⰩ㔨ⰲ⤳⠬㈵㐬Ⱙ㔨ⰳ⤱⠬㌵㌬Ⱙ㔨ⰳ⤴⠬㐵ㄬⰩ㔨ⰴ⤳⠬㐵㐬Ⱙ㔨ⰵ⤱⠬㔵㌬Ⱙ㔨ⰵ⤴⠬㘵ㄬⰩ㔨ⰶ⤳⠬㘵㐬Ⱙ㔨ⰷ⤱⠬㜵㌬Ⱙ㔨ⰷ⤴഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅牠汯彥慨彳数浲獩楳湯恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠潲敬恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠潲敬恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅牠汯獥⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠畧牡彤慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠畣瑳浯牟汯恥琠湩楹瑮ㄨ 低⁔啎䱌䐠䙅啁呌ㄠബ 怠摥瑩扡敬⁠楴祮湩⡴⤱丠呏丠䱕⁌䕄䅆䱕⁔ⰱ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙牠汯獥湟浡彥畧牡彤慮敭獟档潯彬摩畟楮畱恥⠠湠浡恥怬畧牡彤慮敭Ⱡ獠档潯彬摩⥠ബ 䬠奅怠潲敬彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔牠汯獥獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔‸䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠潲敬恳਍ⴭ਍਍佌䭃吠䉁䕌⁓牠汯獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠潲敬恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠潲敬恳嘠䱁䕕⁓ㄨ✬畓数⁲摁業❮✬敷❢丬䱕ⱌⰰⰰ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵Ⱗ㈧㈰ⴵ㈱〭‹㤱〺㨲㐵⤧⠬ⰳ猧畴敤瑮Ⱗ眧扥Ⱗ啎䱌ㄬㄬ✬〲㔲ㄭⴲ〱ㄠ㨹〴㌺✵✬〲㔲ㄭⴲ〱ㄠ㨹〴㌺✵Ⱙ㐨✬摁業❮✬敷❢丬䱕ⱌⰱⰱ㈧㈰ⴵ㈱㈭‰㌱〺㨱㤵Ⱗ㈧㈰ⴵ㈱㈭‰㌱〺㨱㤵⤧⠬ⰵ吧慥档牥Ⱗ眧扥Ⱗ啎䱌ㄬㄬ✬〲㘲〭ⴲ〱〠㨷㔴〺✲✬〲㘲〭ⴲ〱〠㨷㔴〺✲Ⱙ㘨✬慐敲瑮Ⱗ眧扥Ⱗ啎䱌ㄬㄬ✬〲㘲〭ⴲ〱〠㨷㔴〺✲✬〲㘲〭ⴲ〱〠㨷㔴〺✲Ⱙ㜨✬捓潨汯䄠浤湩Ⱗ眧扥Ⱗ啎䱌ㄬㄬ✬〲㘲〭ⴲ〱〠㨷㔴〺✲✬〲㘲〭ⴲ〱〠㨷㔴〺✲㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠潲敬恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠捳潨汯楟煮極楲獥ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠档潯彬湩畱物敩恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅獠档潯彬湩畱物敩恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠捳潨汯湟浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠捳潨汯慟摤敲獳⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†獠档潯彬桰湯恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠捳潨汯敟慭汩⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†獠档潯彬慴汧湩恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠慤整⁠慤整丠呏丠䱕ⱌ਍†獠慴畴恳椠瑮ㄨ⤱丠呏丠䱕⁌䕄䅆䱕⁔ⰰ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠捳潨汯楟煮極楲獥ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠捳潨汯楟煮極楲獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠捳潨汯楟煮極楲獥⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠捳潨汯楟煮極楲獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠档潯彬敳瑴湩獧ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠档潯彬敳瑴湩獧㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠捳潨汯獟瑥楴杮恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†摠瑡恡琠硥⁴低⁔啎䱌ബ 怠祴数⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕⁌佃䵍久⁔搧瑡瑡灹⁥楬敫猠牴湩⁧‬楦敬攠捴Ⱗ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠捳潨汯獟瑥楴杮彳慮敭獟档潯彬摩畟楮畱恥⠠湠浡恥怬捳潨汯楟恤Ⱙ਍†䕋⁙獠档潯彬敳瑴湩獧獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠捳潨汯獟瑥楴杮彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㌽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥獠档潯彬敳瑴湩獧ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠捳潨汯獟瑥楴杮恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠档潯彬敳瑴湩獧⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏獠档潯彬敳瑴湩獧⁠䅖啌卅⠠ⰱ猧獥楳湯祟慥❲✬✱✬畮扭牥Ⱗ⤱⠬ⰲ猧档潯彬慮敭Ⱗ䐧浥⁯捓潨汯Ⱗ猧牴湩❧ㄬ㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠捳潨汯獟瑥楴杮恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠捳潨汯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠捳潨汯恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅獠档潯獬⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠摡牤獥恳瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠畳灰牯彴桰湯恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠畳灰牯彴浥楡恬瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠慴汧湩恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠潬潧⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†慠浤湩楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕⁌佃䵍久⁔甧敳彲摩Ⱗ਍†獠慴畴恳琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌〠䌠䵏䕍呎✠‰㸽䐠慥瑣癩瑡ⱥㄠ㴠‾捁楴敶Ⱗ਍†楠獮慴汬摥⁠楴祮湩⡴⤴丠呏丠䱕⁌䕄䅆䱕⁔‰佃䵍久⁔〧›潎⁴湩瑳污敬Ɽㄠ›湉瑳污敬❤ബ 怠潤慭湩⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†摠瑡扡獡彥慮敭⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†捠摯恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠潤慭湩瑟灹恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔搧晥畡瑬Ⱗ਍†瑠灹恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔挧獵潴❭ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠捳潨汯彳摡業彮摩晟牯楥湧⁠怨摡業彮摩⥠ബ 䌠乏呓䅒义⁔獠档潯獬慟浤湩楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠慠浤湩楟恤 䕒䕆䕒䍎卅怠獵牥恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔‸䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠捳潨汯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠档潯獬⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠捳潨汯恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠捳潨汯恳嘠䱁䕕⁓ㄨ✬敄潭匠档潯❬✬㈱″敄潭匠牴敥❴✬㈱㐳㘵㠷〹Ⱗ搧浥䁯捳潨汯挮浯Ⱗ䐧浥⁯慔汧湩❥✬Ⱗⰲⰱⰱ猧档潯ㅬⰧ瀧潲敪瑣Ⱗ匧䡃〲㔲✱✬敤慦汵❴✬敤潭Ⱗ㈧㈰ⴵ㈱ㄭ‰㔱㈺㨳㜴Ⱗ㈧㈰ⴶ㈰ㄭ‰㜰㌺㨶㌱Ⱗ啎䱌Ⱙ㈨✬敔档潎慶匠档潯❬✬祈敤慲慢❤✬㤰㤳㔲ㄱ㜱✶✬慳獩灵異䀱浧楡⹬潣❭✬敢瑳攠畤慣楴湯Ⱗ猧灵牥愭浤湩猯档潯⽬㤶ㄴ㤳㍢㠷㜵つ㜮㘲㔸㠱ㄲ㘷㠵㈸㤲⸱湰❧㌬ㄬㄬ✬敢慴Ⱗ猧档潯彬扤Ⱗ匧䡃〲㔲✲✬敤慦汵❴✬畣瑳浯Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㈺㨶〳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱㈺㨱ㄳⰧ啎䱌Ⱙ㌨✬慓瑲慨⁫摅敧Ⱗ倧潬⁴潮㔠ⰴ䘠慬⁴潮㌠㘰传⁍敒楳敤据⁹慂異楪慮慧Ⱳ䈠睯湥慰汬ⱹ匠捥湵敤慲慢⁤祈敤慲慢Ɽ吠汥湡条湡⁡〵〰ㄱⰧ㜧〲㤷ㄷ㠹✴✬浭獴景瑴捥䁨浧楡⹬潣❭✬䥁瀭睯牥摥匠慡ⵓ慢敳❤✬畳数⵲摡業⽮捳潨汯㘯㌹㜹㕥㤹ち㔷⸳㄰㤱㔴㌲㜱㔶㜳㔵㜷瀮杮Ⱗⰴⰱⰱ洧瑭Ⱗ猧档潯彬扤Ⱗ匧䡃〲㔲✲✬敤慦汵❴✬畣瑳浯Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㌺㨶㜱Ⱗ㈧㈰ⴵ㈱ㄭ‱㘱㌺㨱㔳Ⱗ啎䱌Ⱙ㐨✬敔档潎慶匠档潯❬✬祈敤慲慢❤✬㠷㐹㘵㈱✳✬整档潮慶杀慭汩挮浯Ⱗ䈧獥⁴敢⁴潦⁲摅捵瑡潩❮✬畳数⵲摡業⽮捳潨汯㘯㐹㌱㈷ㄱ㔳愳⸴㐵㔸㘹㐱㜱㔶㠸㘱㌳瀮杮Ⱗⰵⰰⰱ挧畲扤潯⹫湩Ⱗ猧档潯彬扤Ⱗ匧䡃〲㔲✴✬畣瑳浯Ⱗ挧獵潴❭✬〲㔲ㄭⴲ〱ㄠ㨹㤵㔺✹✬〲㔲ㄭⴲ㘱ㄠ㨶〲ㄺ✶✬〲㔲ㄭⴲ㘱ㄠ㨶〲ㄺ✶Ⱙ㘨✬敔档匠慴獲Ⱗ䠧摹牥扡摡Ⱗ㠧㜱㜹㤰ㄸ✸✬湩潦獀牡桴歡摥敧挮浯Ⱗ䈧獥⁴敂⁴潦⁲摅捵瑡潩❮✬畳数⵲摡業⽮捳潨汯㘯㐹㐶搵㐷㤵㌲⸷㈷㌰㤳㠰㜱㘶ㄲ〳㤷瀮杮Ⱗⰷⰱⰱ戧瑥ㅡⰧ猧档潯彬扤Ⱗ匧䡃㉏㈰㐵Ⱗ搧晥畡瑬Ⱗ挧獵潴❭✬〲㔲ㄭⴲ〲ㄠ㨲㐱㌺✹✬〲㔲ㄭⴲ〲ㄠ㨲㔱㌺✷丬䱕⥌⠬ⰷ䐧浥浯楡❮✬敤潭Ⱗ〧㌹㈹ㄵㄱ㘷Ⱗ戧穩祢牡癡湩䁤浧楡⹬潣❭✬整瑳Ⱗ猧灵牥愭浤湩猯档潯⽬㤶㐸换㠷㐴㐹㈷㜮㔵㠲㘳ㄹ㜷㌰㘰㠶⸰湰❧ㄬⰰⰰⰰ琧獥❴✬捳潨汯摟❢✬䍓㉈㈰㜶Ⱗ搧晥畡瑬Ⱗ挧獵潴❭✬〲㘲〭ⴲ㔰ㄠ㨵ㄵ㈺✰✬〲㘲〭ⴲ㔰ㄠ㨵ㄵ㈺✰丬䱕⥌഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠档潯獬⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠捥楴湯恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠敳瑣潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠敳瑣潩獮⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡㔨㈱ 低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙獠捥楴湯彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔獠捥楴湯彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠敳瑣潩獮ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠敳瑣潩獮⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠敳瑣潩獮⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠敳瑣潩獮⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠浥獥整獲ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠浥獥整獲㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠敳敭瑳牥恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†獠慴瑲浟湯桴⁠楴祮湩⡴⤴丠呏丠䱕ⱌ਍†敠摮浟湯桴⁠楴祮湩⡴⤴丠呏丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠敳敭瑳牥彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔獠浥獥整獲獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥獠浥獥整獲ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠敳敭瑳牥恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠浥獥整獲⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠敳敭瑳牥恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠敳獳潩彮敹牡恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠敳獳潩彮敹牡恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅獠獥楳湯祟慥獲⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡㔨㈱ 低⁔啎䱌ബ 怠敤慦汵恴琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌〠ബ 怠瑳牡彴慤整⁠慤整丠呏丠䱕ⱌ਍†敠摮摟瑡恥搠瑡⁥低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠敳獳潩彮敹牡彳慮敭獟档潯彬摩畟楮畱恥⠠湠浡恥怬捳潨汯楟恤Ⱙ਍†䕋⁙獠獥楳湯祟慥獲獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠敳獳潩彮敹牡彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㈽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥獠獥楳湯祟慥獲ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠敳獳潩彮敹牡恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠獥楳湯祟慥獲⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏獠獥楳湯祟慥獲⁠䅖啌卅⠠ⰱ㈧㈰✶ㄬ✬〲㘲〭ⴱ㄰Ⱗ㈧㈰ⴶ㈱㌭✱ㄬ✬〲㘲〭ⴲ〱〠㨸㌰〺✵✬〲㘲〭ⴲ〱〠㨸㌰〺✵丬䱕⥌഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠獥楳湯祟慥獲⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠楨瑦恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠桳晩獴㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠桳晩獴⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠瑳牡彴楴敭⁠楴敭丠呏丠䱕ⱌ਍†敠摮瑟浩恥琠浩⁥低⁔啎䱌ബ 怠瑳瑡獵⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌ㄠബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙獠楨瑦彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔獠楨瑦彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠桳晩獴ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠桳晩獴⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠桳晩獴⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠桳晩獴⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠楬敤獲ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠楬敤獲㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠汳摩牥恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠浩条恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†池湩恫瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠祴数⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌ㄠ䌠䵏䕍呎✠㨱䄠灰‬㨲圠扥‬㨳䈠瑯❨ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙獠楬敤獲獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠汳摩牥彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠汳摩牥恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠楬敤獲⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠汳摩牥恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠楬敤獲⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠慴晦獟灵潰瑲獟档潯獬ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠慴晦獟灵潰瑲獟档潯獬㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠瑳晡彦畳灰牯彴捳潨汯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠獵牥楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠獵牥獟档潯恬⠠畠敳彲摩Ⱡ獠档潯彬摩⥠ബ 䬠奅怠瑳晡彦畳灰牯彴捳潨汯彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔獠慴晦獟灵潰瑲獟档潯獬獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠瑳晡彦畳灰牯彴捳潨汯彳獵牥楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠畠敳彲摩⥠删䙅剅久䕃⁓畠敳獲⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠瑳晡彦畳灰牯彴捳潨汯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠慴晦獟灵潰瑲獟档潯獬⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠瑳晡彦畳灰牯彴捳潨汯恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠慴晦獟灵潰瑲獟档潯獬⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠慴晦恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠瑳晡獦㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠瑳晡獦⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†畠敳彲摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠畱污晩捩瑡潩恮瘠牡档牡㔨㈱ 䕄䅆䱕⁔啎䱌ബ 怠慳慬祲⁠潤扵敬丠呏丠䱕⁌䕄䅆䱕⁔ⰰ਍†橠楯楮杮摟瑡恥搠瑡⁥䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙獠慴晦彳獵牥楟彤潦敲杩恮⠠畠敳彲摩⥠ബ 䌠乏呓䅒义⁔獠慴晦彳獵牥楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠畠敳彲摩⥠删䙅剅久䕃⁓畠敳獲⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㌽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥獠慴晦恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠慴晦恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠慴晦恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠瑳晡獦⁠䅖啌卅⠠ⰱⰸ啎䱌〬✬㤱〷〭ⴱ㄰Ⱗ㈧㈰ⴶ㄰ㄭ″㈱ㄺ㨸㈰Ⱗ㈧㈰ⴶ㄰ㄭ″㈱㈺㨴㤴⤧⠬ⰲⰹ啎䱌〬✬㤱〷〭ⴱ㄰Ⱗ㈧㈰ⴶ㄰ㄭ‴〲㔺㨴㔳Ⱗ㈧㈰ⴶ㄰ㄭ‴〲㔺㨴㔳⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠慴晦恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠瑳敲浡恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠瑳敲浡恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅獠牴慥獭⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙獠牴慥獭獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠瑳敲浡彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠瑳敲浡恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠牴慥獭⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠瑳敲浡恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠牴慥獭⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠畴敤瑮恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠瑳摵湥獴㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠瑳摵湥獴⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†畠敳彲摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠汣獡彳敳瑣潩彮摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠摡業獳潩彮潮⁠慶捲慨⡲ㄵ⤲丠呏丠䱕ⱌ਍†牠汯彬畮扭牥⁠湩⡴ㄱ 䕄䅆䱕⁔啎䱌ബ 怠摡業獳潩彮慤整⁠慤整丠呏丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠畧牡楤湡楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†獠獥楳湯祟慥彲摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 䬠奅怠瑳摵湥獴畟敳彲摩晟牯楥湧⁠怨獵牥楟恤Ⱙ਍†䕋⁙獠畴敤瑮彳汣獡彳敳瑣潩彮摩晟牯楥湧⁠怨汣獡彳敳瑣潩彮摩⥠ബ 䬠奅怠瑳摵湥獴獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†䕋⁙獠畴敤瑮彳畧牡楤湡楟彤潦敲杩恮⠠杠慵摲慩彮摩⥠ബ 䬠奅怠瑳摵湥獴獟獥楳湯祟慥彲摩晟牯楥湧⁠怨敳獳潩彮敹牡楟恤Ⱙ਍†佃华剔䥁呎怠瑳摵湥獴损慬獳獟捥楴湯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠捠慬獳獟捥楴湯楟恤 䕒䕆䕒䍎卅怠汣獡彳敳瑣潩獮⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔獠畴敤瑮彳畧牡楤湡楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠杠慵摲慩彮摩⥠删䙅剅久䕃⁓畠敳獲⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔獠畴敤瑮彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔獠畴敤瑮彳敳獳潩彮敹牡楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠獥楳湯祟慥彲摩⥠删䙅剅久䕃⁓獠獥楳湯祟慥獲⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔獠畴敤瑮彳獵牥楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠畠敳彲摩⥠删䙅剅久䕃⁓畠敳獲⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠瑳摵湥獴ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠瑳摵湥獴⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠瑳摵湥獴⁠䥄䅓䱂⁅䕋卙⨠㬯਍⨯㐡〰〰䄠呌剅吠䉁䕌怠瑳摵湥獴⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠扵敪瑣恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠畳橢捥獴㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠畳橢捥獴⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†湠浡恥瘠牡档牡㔨㈱ 低⁔啎䱌ബ 怠潣敤⁠慶捲慨⡲㐶 䕄䅆䱕⁔啎䱌ബ 怠杢损汯牯⁠慶捲慨⡲㈳ 低⁔啎䱌ബ 怠浩条恥瘠牡档牡㔨㈱ 低⁔啎䱌ബ 怠敭楤浵楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†瑠灹恥瘠牡档牡㘨⤴丠呏丠䱕⁌佃䵍久⁔吧敨牯⁹ 牐捡楴慣❬ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†摠汥瑥摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙獠扵敪瑣彳敭楤浵楟彤潦敲杩恮⠠浠摥畩彭摩⥠ബ 䬠奅怠畳橢捥獴獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†佃华剔䥁呎怠畳橢捥獴浟摥畩彭摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨敭楤浵楟恤 䕒䕆䕒䍎卅怠敭楤浵恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠畳橢捥獴獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥獠扵敪瑣恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠扵敪瑣恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠扵敪瑣恳䐠卉䉁䕌䬠奅⁓⼪഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠扵敪瑣恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠畳獢牣灩楴湯扟汩獬ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠扵捳楲瑰潩彮楢汬恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅獠扵捳楲瑰潩彮楢汬恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠畳獢牣灩楴湯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†摠獥牣灩楴湯⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†慠潭湵恴搠捥浩污㘨ⰴ⤲丠呏丠䱕ⱌ਍†瑠瑯污獟畴敤瑮⁠楢楧瑮㈨⤰丠呏丠䱕ⱌ਍†瑠瑯污獟慴晦⁠楢楧瑮㈨⤰丠呏丠䱕ⱌ਍†灠祡敭瑮瑟慲獮捡楴湯楟恤戠杩湩⡴〲 湵楳湧摥䐠䙅啁呌丠䱕ⱌ਍†摠敵摟瑡恥搠瑡⁥低⁔啎䱌ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†捠敲瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠灵慤整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙獠扵捳楲瑰潩彮楢汬⁠怨畳獢牣灩楴湯楟恤怬捳潨汯楟恤Ⱙ਍†䕋⁙獠扵捳楲瑰潩彮楢汬彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䬠奅怠畳獢牣灩楴湯扟汩獬灟祡敭瑮瑟慲獮捡楴湯楟彤潦敲杩恮⠠灠祡敭瑮瑟慲獮捡楴湯楟恤Ⱙ਍†佃华剔䥁呎怠畳獢牣灩楴湯扟汩獬灟祡敭瑮瑟慲獮捡楴湯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠灠祡敭瑮瑟慲獮捡楴湯楟恤 䕒䕆䕒䍎卅怠慰浹湥彴牴湡慳瑣潩獮⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔獠扵捳楲瑰潩彮楢汬彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔獠扵捳楲瑰潩彮楢汬彳畳獢牣灩楴湯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠扵捳楲瑰潩彮摩⥠删䙅剅久䕃⁓獠扵捳楲瑰潩獮⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㜽䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥獠扵捳楲瑰潩彮楢汬恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠扵捳楲瑰潩彮楢汬恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠扵捳楲瑰潩彮楢汬恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠畳獢牣灩楴湯扟汩獬⁠䅖啌卅⠠ⰱⰱ啎䱌ㄬ⸰〰ㄬ〰ㄬⰵⰱ㈧㈰ⴵ㈱ㄭ✱ㄬ✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵Ⱙ㈨㈬丬䱕ⱌ〱〮ⰰ〱ⰰ㔱㈬✬〲㔲ㄭⴲ㈱Ⱗⰳ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵⤧⠬ⰳⰴ啎䱌ㄬ⸰〰ㄬ〰ㄬⰵⰳ㈧㈰ⴵ㈱ㄭ✶㐬✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙ㐨㔬丬䱕ⱌ⸰〰〬〬丬䱕ⱌ㈧㈰ⴵ㈱㈭✵㘬✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙ㔨㌬丬䱕ⱌ㠱〮ⰰⰲⰱ啎䱌✬〲㔲ㄭⴲ㔲Ⱗⰲ㈧㈰ⴵ㈱㈭‰㈱㔺㨸㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㔺㨸㠳⤧⠬ⰶⰷ啎䱌㌬㘮ⰴⰳⰱ啎䱌✬〲㘲〭ⴱ㜰Ⱗⰲ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠扵捳楲瑰潩彮楢汬恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍਍ⴭ਍ⴭ吠扡敬猠牴捵畴敲映牯琠扡敬怠畳獢牣灩楴湯晟慥畴敲恳਍ⴭ਍਍剄偏吠䉁䕌䤠⁆塅卉協怠畳獢牣灩楴湯晟慥畴敲恳഻⼊K〴〱‱䕓⁔獀癡摥损彳汣敩瑮††㴠䀠捀慨慲瑣牥獟瑥损楬湥⁴⼪഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠甠晴‸⼪഻䌊䕒呁⁅䅔䱂⁅獠扵捳楲瑰潩彮敦瑡牵獥⁠ന 怠摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌䄠呕彏义剃䵅久ⱔ਍†獠扵捳楲瑰潩彮摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠敦瑡牵彥摩⁠楢楧瑮㈨⤰甠獮杩敮⁤低⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†乕光䕕䬠奅怠湵煩敵⁠怨畳獢牣灩楴湯楟恤怬敦瑡牵彥摩⥠ബ 䬠奅怠畳獢牣灩楴湯晟慥畴敲彳敦瑡牵彥摩晟牯楥湧⁠怨敦瑡牵彥摩⥠ബ 䌠乏呓䅒义⁔獠扵捳楲瑰潩彮敦瑡牵獥晟慥畴敲楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠晠慥畴敲楟恤 䕒䕆䕒䍎卅怠敦瑡牵獥⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄ബ 䌠乏呓䅒义⁔獠扵捳楲瑰潩彮敦瑡牵獥獟扵捳楲瑰潩彮摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨畳獢牣灩楴湯楟恤 䕒䕆䕒䍎卅怠畳獢牣灩楴湯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔㠱‶䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠畳獢牣灩楴湯晟慥畴敲恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠扵捳楲瑰潩彮敦瑡牵獥⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠畳獢牣灩楴湯晟慥畴敲恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠畳獢牣灩楴湯晟慥畴敲恳嘠䱁䕕⁓ㄨㄬㄬ✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㈨ㄬ㈬✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㌨ㄬ㐬✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㐨ㄬ㔬✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㔨ㄬ㠬✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㘨ㄬㄬⰱ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨹㔳Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬ⰷⰱ㈱✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㠨ㄬㄬⰴ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨹㔳Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬ⰹⰱ㘱✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰰⰱ〲✬〲㔲ㄭⴲㄱㄠ㨶㤲㌺✵✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰱⰲⰱ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㈱㈬㈬✬〲㔲ㄭⴲ㈱㈠㨱㠵㔺✴✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰳⰲⰴ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㐱㈬㔬✬〲㔲ㄭⴲ㈱㈠㨱㠵㔺✴✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙㄨⰵⰲⰸ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㘱㈬ㄬⰱ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㜱㈬ㄬⰲ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㠱㈬ㄬⰴ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㤱㈬ㄬⰶ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬〲㈬㈬ⰰ㈧㈰ⴵ㈱ㄭ′ㄲ㔺㨸㐵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬ㄲㄬ㤬✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㈨ⰲⰲⰹ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㌲ㄬㄬⰷ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㐲㈬ㄬⰷ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㔲ㄬ㌬✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㈨ⰶⰲⰳ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㜲ㄬㄬⰵ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㠲㈬ㄬⰵ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㤲ㄬㄬⰳ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬〳㈬ㄬⰳ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬ㄳㄬ㜬✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰✬〲㔲ㄭⴲ㈱㈠㨲㜵㔺✰Ⱙ㌨ⰲⰲⰷ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㌳ㄬ㈬ⰱ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㐳㈬㈬ⰱ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㔳ㄬㄬⰹ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㘳㈬ㄬⰹ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵Ⱗ㈧㈰ⴵ㈱ㄭ′㈲㔺㨷〵⤧⠬㘹㐬ㄬ✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙ㤨ⰷⰴⰲ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬㠹㐬㌬✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙ㤨ⰹⰴⰴ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬〱ⰰⰴⰵ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬〱ⰱⰴⰷ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬〱ⰲⰴⰸ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬〱ⰳⰴⰹ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬〱ⰴⰴㄱ✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙㄨ㔰㐬ㄬⰲ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬〱ⰶⰴ㌱✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙㄨ㜰㐬ㄬⰴ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬〱ⰸⰴ㔱✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙㄨ㤰㐬ㄬⰶ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬ㄱⰰⰴ㜱✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙㄨㄱ㐬ㄬⰹ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬ㄱⰲⰴ〲✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳✬〲㔲ㄭⴲ㘱ㄠ㨶〱㌺✳Ⱙㄨ㌱㐬㈬ⰱ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬㈱ⰴⰶⰱ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㈱ⰵⰶⰲ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㈱ⰶⰶⰳ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㈱ⰷⰶⰴ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㈱ⰸⰶⰵ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㈱ⰹⰶⰶ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㌱ⰰⰶⰷ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㌱ⰱⰶⰸ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㌱ⰲⰶⰹ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㌱ⰳⰶ〱✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙㄨ㐳㘬ㄬⰱ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㌱ⰵⰶ㈱✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙㄨ㘳㘬ㄬⰳ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㌱ⰷⰶ㐱✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙㄨ㠳㘬ㄬⰵ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㌱ⰹⰶ㘱✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙㄨ〴㘬ㄬⰷ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㐱ⰱⰶ㠱✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙㄨ㈴㘬㈬ⰰ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬㐱ⰳⰶㄲ✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙㄨ㐶㠬ㄬ✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㔶㠬㈬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㘶㠬㌬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㜶㠬㐬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㠶㠬㔬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㤶㠬㘬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ〷㠬㜬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨㄷ㠬㠬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㈷㠬㤬✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㌷㠬ㄬⰰ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧⠬㜱ⰴⰸㄱ✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㔷㠬ㄬⰲ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧⠬㜱ⰶⰸ㌱✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㜷㠬ㄬⰴ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧⠬㜱ⰸⰸ㔱✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㤷㠬ㄬⰶ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧⠬㠱ⰰⰸ㜱✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨㄸ㠬ㄬⰸ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧⠬㠱ⰲⰸ㤱✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㌸㠬㈬ⰰ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧⠬㠱ⰴⰸㄲ✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙㄨ㔸㤬ㄬⰹ㈧㈰ⴶ㈰〭‶㜰㐺㨵㔰Ⱗ㈧㈰ⴶ㈰〭‶㜰㐺㨵㔰⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠扵捳楲瑰潩彮敦瑡牵獥⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠扵捳楲瑰潩獮ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠扵捳楲瑰潩獮㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠畳獢牣灩楴湯恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠捳潨汯楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†灠捡慫敧楟恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕ⱌ਍†湠浡恥瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠瑳摵湥彴档牡敧⁠敤楣慭⡬㐶㈬ 低⁔啎䱌ബ 怠瑳晡彦档牡敧⁠敤楣慭⡬㐶㈬ 低⁔啎䱌ബ 怠瑳牡彴慤整⁠慤整丠呏丠䱕ⱌ਍†敠摮摟瑡恥搠瑡⁥低⁔啎䱌ബ 怠慰正条彥祴数⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌ㄠ䌠䵏䕍呎✠‰㸽倠敲慰摩‬‱㸽倠獯灴楡❤ബ 怠潮潟彦瑳摵湥獴⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌〠ബ 怠潮潟彦瑳晡獦⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌〠ബ 怠档牡敧恳搠捥浩污㘨ⰴ⤲丠呏丠䱕ⱌ਍†扠汩楬杮损捹敬⁠湩⡴ㄱ 低⁔啎䱌䐠䙅啁呌〠ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 倠䥒䅍奒䬠奅⠠楠恤Ⱙ਍†䕋⁙獠扵捳楲瑰潩獮獟档潯彬摩晟牯楥湧⁠怨捳潨汯楟恤Ⱙ਍†䕋⁙獠扵捳楲瑰潩獮灟捡慫敧楟彤潦敲杩恮⠠灠捡慫敧楟恤Ⱙ਍†佃华剔䥁呎怠畳獢牣灩楴湯彳慰正条彥摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨慰正条彥摩⥠删䙅剅久䕃⁓灠捡慫敧恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁ⱅ਍†佃华剔䥁呎怠畳獢牣灩楴湯彳捳潨汯楟彤潦敲杩恮䘠剏䥅乇䬠奅⠠獠档潯彬摩⥠删䙅剅久䕃⁓獠档潯獬⁠怨摩⥠传⁎䕄䕌䕔䌠十䅃䕄਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎ㄽ‰䕄䅆䱕⁔䡃剁䕓㵔瑵㡦扭‴佃䱌呁㵅瑵㡦扭弴湵捩摯彥楣഻⼊K〴〱‱䕓⁔档牡捡整彲敳彴汣敩瑮㴠䀠慳敶彤獣损楬湥⁴⼪഻ഊⴊഭⴊ‭畄灭湩⁧慤慴映牯琠扡敬怠畳獢牣灩楴湯恳਍ⴭ਍਍佌䭃吠䉁䕌⁓獠扵捳楲瑰潩獮⁠剗呉㭅਍⨯㐡〰〰䄠呌剅吠䉁䕌怠畳獢牣灩楴湯恳䐠卉䉁䕌䬠奅⁓⼪഻䤊华剅⁔义佔怠畳獢牣灩楴湯恳嘠䱁䕕⁓ㄨㄬ㈬✬牦敥Ⱗ⸰〰〮〬ⰰ㈧㈰ⴵ㈱ㄭ✱✬〲㔲ㄭⴲ〳Ⱗⰰ〱ⰰ㔱ㄬ⸰〰㈬ⰰ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨹㔳Ⱗ㈧㈰ⴵ㈱ㄭ‱㘱㈺㨹㔳⤧⠬ⰲⰳⰲ昧敲❥〮〬ⰰ⸰〰✬〲㔲ㄭⴲ㈱Ⱗ㈧㈰ⴵ㈱㌭✱〬ㄬ〰ㄬⰵ〱〮ⰰ〲✬〲㔲ㄭⴲ㈱㈠㨱㠵㔺✴✬〲㔲ㄭⴲ㈱㈠㨱㠵㔺✴Ⱙ㌨㈬㌬✬牐❯㈬⸰〰㈬⸰〰✬〲㔲ㄭⴲ㈱Ⱗ㈧㈰ⴵ㈱㈭✰ㄬ〮〬〬〬ⰰ〳✬〲㔲ㄭⴲ㈱㈠㨳㈳㔺✹✬〲㔲ㄭⴲ〲ㄠ㨲㠵㌺✸Ⱙ㐨㐬㈬✬牦敥Ⱗ⸰〰〮〬ⰰ㈧㈰ⴵ㈱ㄭ✶✬〲㘲〭ⴱ㐰Ⱗⰰ〱ⰰ㔱ㄬ⸰〰㈬ⰰ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳Ⱗ㈧㈰ⴵ㈱ㄭ‶㘱ㄺ㨰㌳⤧⠬ⰵⰶⰴ倧潲䔠捸畬楳敶Ⱗ㔱〮ⰰ〲〮ⰰ㈧㈰ⴵ㈱㈭✰✬〲㔲ㄭⴲ〲Ⱗⰱⰰⰰ⸰〰㈬〵✬〲㔲ㄭⴲ〲ㄠ㨲㐳㌺✷✬〲㔲ㄭⴲ〲ㄠ㨲㐴㌺✸Ⱙ㘨㘬㐬✬牐⁯硅汣獵癩❥ㄬ⸵〰㈬⸰〰✬〲㔲ㄭⴲ〲Ⱗ㈧㈰ⴶ㠰㈭✶ㄬ〮〬〬〬ⰰ㔲ⰰ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳Ⱗ㈧㈰ⴵ㈱㈭‰㈱㐺㨴㠳⤧⠬ⰷⰲⰴ倧潲䔠捸畬楳敶Ⱗ㔱〮ⰰ〲〮ⰰ㈧㈰ⴵ㈱㈭✰✬〲㘲〭ⴱ㈰Ⱗⰱⰰⰰ⸰〰㈬〵✬〲㔲ㄭⴲ〲ㄠ㨲㠵㌺✸✬〲㘲〭ⴱ㈰ㄠ㨱㌰ㄺ✸Ⱙ㠨㈬㐬✬牐⁯硅汣獵癩❥ㄬ⸵〰㈬⸰〰✬〲㘲〭ⴱ㈰Ⱗ㈧㈰ⴶ㤰〭✸ㄬ〮〬〬〬ⰰ㔲ⰰ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱Ⱗ㈧㈰ⴶ㄰〭′ㄱ〺㨳㠱⤧⠬ⰹⰱⰲ昧敲❥〮〬ⰰ⸰〰✬〲㘲〭ⴲ㘰Ⱗ㈧㈰ⴷ㈰〭✶ㄬ〮〬〬〬ⰰ㘳ⰵ㈧㈰ⴶ㈰〭‶㜰㐺㨵㔰Ⱗ㈧㈰ⴶ㈰〭‶㜰㐺㨵㔰⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠扵捳楲瑰潩獮⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥獠獹整彭敳瑴湩獧ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓獠獹整彭敳瑴湩獧㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠祳瑳浥獟瑥楴杮恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠慮敭⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†摠瑡恡琠硥⁴低⁔啎䱌ബ 怠祴数⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕⁌佃䵍久⁔搧瑡瑡灹⁥楬敫猠牴湩⁧‬楦敬攠捴Ⱗ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙獠獹整彭敳瑴湩獧湟浡彥湵煩敵⁠怨慮敭⥠਍ 久䥇䕎䤽湮䑯⁂啁佔䥟䍎䕒䕍呎㐽ㄳ䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥獠獹整彭敳瑴湩獧ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠祳瑳浥獟瑥楴杮恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠獹整彭敳瑴湩獧⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏獠獹整彭敳瑴湩獧⁠䅖啌卅⠠ⰱ栧牥彯楴汴彥✱✬灏⁴潦⁲慓瑲慨䕫杤⁥捓潨汯慭慮敧敭瑮匠獹整⁭潦⁲㐱‫潲畢瑳映慥畴敲⁳潦⁲湡攠桮湡散⁤摥捵瑡潩慮⁬硥数楲湥散✮✬整瑸⤧⠬ⰲ栧牥彯楴汴彥✲✬潔⁰慒整⁤湉瑳畲瑣牯❳✬整瑸⤧⠬ⰳ愧潢瑵畟彳楴汴❥✬⁁潭敤湲愠摮甠楮畱⁥瑳汹❥✬整瑸⤧⠬ⰴ愧潢瑵畟彳敨摡湩❧✬桗⁹瑩椠⁳敢瑳✿✬整瑸⤧⠬ⰵ愧潢瑵畟彳敤捳楲瑰潩❮✬慓瑲慨䕫杤⁥獩琠敨瀠湩慮汣⁥景猠档潯⁬慭慮敧敭瑮‬景敦楲杮愠癤湡散⁤整档潮潬祧‬獵牥昭楲湥汤⁹敦瑡牵獥‬湡⁤数獲湯污穩摥猠汯瑵潩獮‮瑉猠浩汰晩敩⁳潣浭湵捩瑡潩Ɱ猠牴慥汭湩獥愠浤湩獩牴瑡癩⁥慴歳ⱳ愠摮攠敬慶整⁳桴⁥摥捵瑡潩慮⁬硥数楲湥散映牯愠汬猠慴敫潨摬牥⹳圠瑩⁨慓瑲慨䕫杤ⱥ攠捸汥敬据⁥湩攠畤慣楴湯洠湡条浥湥⁴獩朠慵慲瑮敥⹤Ⱗ琧硥❴Ⱙ㘨✬扡畯彴獵灟楯瑮❳✬晁潦摲扡敬瀠楲散䔬獡⁹潴洠湡条⁥摡業⁮慰敮ⱬ慄慴匠捥牵瑩❹✬整瑸⤧⠬ⰷ挧獵潴彭慰正条彥瑳瑡獵ⰧㄧⰧ琧硥❴Ⱙ㠨✬畣瑳浯灟捡慫敧摟獥牣灩楴湯Ⱗ吧楡潬⁲潹牵攠灸牥敩据⁥楷桴漠牵挠獵潴⁭慰正条⁥灯楴湯⹳䘠潲⁭数獲湯污穩摥猠牥楶散⁳潴戠獥潰敫猠汯瑵潩獮‬敷漠晦牥映敬楸楢楬祴琠⁯敭瑥礠畯⁲湵煩敵渠敥獤✮✬整瑸⤧⠬ⰹ搧睯汮慯彤畯彲灡彰敤捳楲瑰潩❮✬潊湩琠敨爠湡獫漠⁦牴敵琠楲楶⁡档浡楰湯⁳湡⁤畱湥档礠畯⁲桴物瑳映牯欠潮汷摥敧眠瑩⁨慍瑳牥⁳景吠楲楶⁡‭桴⁥汵楴慭整焠極⁺灡⁰敤楳湧摥琠⁯整瑳礠畯⁲楷獴愠摮甠汮捯⁫⁡潷汲⁤景映湵映捡獴‮桃污敬杮⁥潹牵戠慲湩‬潣灭瑥⁥楷桴映楲湥獤‬湡⁤楤捳癯牥映獡楣慮楴杮琠摩楢獴映潲⁭楤敶獲⁥慣整潧楲獥‮潄屮琧洠獩⁳畯⁴湯琠敨攠桸汩牡瑡湩⁧硥数楲湥散琠慨⁴睡楡獴礠畯ⴠ朠瑥猠慴瑲摥渠睯䨡楯⁮桴⁥慲歮⁳景琠畲⁥牴癩慩挠慨灭潩獮愠摮焠敵据⁨潹牵琠楨獲⁴潦⁲湫睯敬杤⁥楷桴䴠獡整獲漠⁦牔癩慩ⴠ琠敨甠瑬浩瑡⁥畱穩愠灰搠獥杩敮⁤潴琠獥⁴潹牵眠瑩⁳湡⁤湵潬正愠眠牯摬漠⁦畦⁮慦瑣⹳Ⱗ琧硥❴Ⱙㄨⰰ琧敨敭灟楲慭祲损汯牯Ⱗ⌧挲攸挲Ⱗ琧硥❴Ⱙㄨⰱ琧敨敭獟捥湯慤祲损汯牯Ⱗ⌧搱愱愱Ⱗ琧硥❴Ⱙㄨⰲ琧敨敭獟捥湯慤祲损汯牯ㅟⰧ⌧攰攰攰Ⱗ琧硥❴Ⱙㄨⰳ琧敨敭灟楲慭祲扟捡杫潲湵彤潣潬❲✬ㄣㄱ㄰✰✬整瑸⤧⠬㐱✬桴浥彥整瑸獟捥湯慤祲损汯牯Ⱗ⌧晦晦晦Ⱗ琧硥❴Ⱙㄨⰵ琧条江湩❥✬Ⱗ琧硥❴Ⱙㄨⰶ洧扯汩❥✬ㄹㄸ㤷〷㠹㠱Ⱗ琧硥❴Ⱙㄨⰷ栧牥彯敤捳楲瑰潩❮✬硅数楲湥散琠敨映瑵牵⁥景攠畤慣楴湯眠瑩⁨畯⁲卥档潯⁬慓卡瀠慬晴牯⹭匠牴慥汭湩⁥瑡整摮湡散‬獡楳湧敭瑮ⱳ攠慸獭‬湡⁤潭敲‮汅癥瑡⁥潹牵猠档潯屬猧攠晦捩敩据⁹湡⁤湥慧敧敭瑮✮✬整瑸⤧⠬㠱✬楤灳慬役捳潨汯江杯獯ⰧㄧⰧ琧硥❴Ⱙㄨⰹ搧獩汰祡损畯瑮牥❳✬Ⱗ琧硥❴Ⱙ㈨ⰰ攧慭汩瑟浥汰瑡彥捳潨汯牟来獩牴瑡潩❮✬氦㭴♰瑧䐻慥⁲獻档潯彬摡業彮慮敭ⱽ氦㭴瀯朦㭴☠瑬瀻朦㭴敗捬浯⁥潴笠祳瑳浥湟浡絥☡瑬⼻♰瑧※氦㭴♰瑧圻⁥牡⁥硥楣整⁤潴栠癡⁥潹⁵獡瀠牡⁴景漠牵攠畤慣楴湯污挠浯畭楮祴‮敂潬⁷牡⁥潹牵爠来獩牴瑡潩⁮敤慴汩⁳潴愠捣獥⁳桴⁥祳瑳浥☺瑬⼻♰瑧※氦㭴牨朦㭴☠瑬瀻朦㭴氦㭴瑳潲杮朦㭴捓潨汯丠浡㩥氦㭴猯牴湯♧瑧※獻档潯彬慮敭♽瑬⼻♰瑧※氦㭴♰瑧☻瑬猻牴湯♧瑧医獹整⁭剕㩌氦㭴猯牴湯♧瑧※畻汲♽瑬⼻♰瑧※氦㭴♰瑧☻瑬猻牴湯♧瑧夻畯⁲潌楧⁮牃摥湥楴污㩳氦㭴猯牴湯♧瑧☻瑬⼻♰瑧※氦㭴汵朦㭴☠瑬氻♩瑧☻瑬猻牴湯♧瑧䔻慭汩☺瑬⼻瑳潲杮朦㭴笠浥楡絬氦㭴氯♩瑧※氦㭴楬朦㭴氦㭴瑳潲杮朦㭴慐獳潷摲☺瑬⼻瑳潲杮朦㭴笠慰獳潷摲♽瑬⼻楬朦㭴☠瑬氻♩瑧☻瑬猻牴湯♧瑧医档潯⁬潃敤☺瑬⼻瑳潲杮朦㭴笠潣敤♽瑬⼻楬朦㭴☠瑬⼻汵朦㭴☠瑬栻♲瑧※氦㭴♰瑧☻瑬猻牴湯♧瑧倻敬獡⁥潦汬睯琠敨敳猠整獰琠⁯潣灭敬整礠畯⁲敲楧瑳慲楴湯☺瑬⼻瑳潲杮朦㭴氦㭴瀯朦㭴☠瑬漻♬瑧※氦㭴楬朦㭴汃捩⁫湯琠敨猠獹整⁭剕⁌牰癯摩摥愠潢敶☮瑬⼻楬朦㭴☠瑬氻♩瑧䔻瑮牥礠畯⁲浥楡⁬湡⁤慰獳潷摲☮瑬⼻楬朦㭴☠瑬氻♩瑧䘻汯潬⁷桴⁥湩瑳畲瑣潩獮琠⁯潣灭敬整礠畯⁲牰景汩⁥敳畴⹰氦㭴氯♩瑧※氦㭴漯♬瑧※氦㭴♰瑧☻瑬猻牴湯♧瑧䤻灭牯慴瑮☺瑬⼻瑳潲杮朦㭴氦㭴瀯朦㭴☠瑬画♬瑧※氦㭴楬朦㭴潆⁲敳畣楲祴爠慥潳獮‬汰慥敳挠慨杮⁥潹牵瀠獡睳牯⁤晡整⁲潹牵映物瑳氠杯湩☮瑬⼻楬朦㭴☠瑬氻♩瑧䤻⁦潹⁵湥潣湵整⁲湡⁹獩畳獥搠牵湩⁧桴⁥敲楧瑳慲楴湯瀠潲散獳‬汰慥敳搠⁯潮⁴敨楳慴整琠⁯潣瑮捡⁴畯⁲畳灰牯⁴整浡愠⁴獻灵潰瑲敟慭汩⁽牯挠污⁬捻湯慴瑣⹽氦㭴氯♩瑧※氦㭴甯♬瑧※氦㭴♰瑧吻慨歮礠畯映牯挠潨獯湩⁧獻獹整彭慮敭⹽圠⁥牡⁥潣浭瑩整⁤潴瀠潲楶楤杮礠畯眠瑩⁨桴⁥敢瑳攠畤慣楴湯污琠潯獬愠摮爠獥畯捲獥☮瑬⼻♰瑧※氦㭴♰瑧䈻獥⁴敲慧摲ⱳ氦㭴瀯朦㭴☠瑬瀻朦㭴獻灵牥慟浤湩湟浡絥氦㭴牢朦㭴獻獹整彭慮敭♽瑬戻♲瑧笻畳灰牯彴浥楡絬氦㭴牢朦㭴畻汲♽瑬⼻♰瑧※氦㭴牢朦㭴☠瑬瀻朦㭴氦㭴瑳潲杮朦㭴桔獩攠慭汩眠獡愠瑵ⵯ敧敮慲整Ɽ猠⁯潤♮〣㤳琻爠灥祬☮瑬⼻瑳潲杮朦㭴氦㭴瀯朦㭴Ⱗ琧硥❴Ⱙ㈨ⰱ猧獹整彭敶獲潩❮✬⸱⸸✰✬瑳楲杮⤧⠬㌲✬浥楡彬整灭慬整瑟潷晟捡潴彲畡桴湥楴慣楴湯损摯❥✬氦㭴♰瑧䐻慥⁲獻档潯彬摡業彮慮敭ⱽ氦㭴瀯朦㭴☠瑬瀻朦㭴敗捬浯⁥潴笠祳瑳浥湟浡絥☡瑬⼻♰瑧※氦㭴♰瑧圻⁥牡⁥硥楣整⁤潴栠癡⁥潹⁵獡瀠牡⁴景漠牵攠畤慣楴湯污挠浯畭楮祴‮潔攠桮湡散琠敨猠捥牵瑩⁹景礠畯⁲捡潣湵ⱴ眠⁥慨敶攠慮汢摥吠潷䘭捡潴⁲畁桴湥楴慣楴湯⠠䘲⥁映牯礠畯⁲潬楧⹮氦㭴瀯朦㭴☠瑬瀻朦㭴氦㭴瑳潲杮朦㭴潙牵嘠牥晩捩瑡潩⁮潃敤☺瑬⼻瑳潲杮朦㭴氦㭴瀯朦㭴☠瑬瀻朦㭴氦㭴瑳潲杮朦㭴登牥晩捩瑡潩彮潣敤♽瑬⼻瑳潲杮朦㭴氦㭴瀯朦㭴☠瑬瀻朦㭴桔獩瘠牥晩捩瑡潩⁮潣敤椠⁳敲畱物摥琠⁯潣灭敬整礠畯⁲潬楧⁮牰捯獥⹳倠敬獡⁥湥整⁲桴⁥潣敤眠瑩楨⁮桴⁥敮瑸笠硥楰慲楴湯瑟浩絥洠湩瑵獥‮晉琠敨挠摯⁥硥楰敲ⱳ礠畯挠湡爠煥敵瑳愠渠睥漠敮戠⁹潦汬睯湩⁧桴⁥慳敭瀠潲散獳☮瑬⼻♰瑧※氦㭴牨朦㭴☠瑬瀻朦㭴氦㭴瑳潲杮朦㭴浉潰瑲湡㩴氦㭴猯牴湯♧瑧☻瑬⼻♰瑧※氦㭴汵朦㭴☠瑬氻♩瑧䤻⁦潹⁵楤⁤潮⁴敲畱獥⁴桴獩瘠牥晩捩瑡潩⁮潣敤‬汰慥敳挠湯慴瑣漠牵猠灵潰瑲琠慥⁭浩敭楤瑡汥⁹瑡笠畳灰牯彴浥楡絬漠⁲慣汬笠畳灰牯彴潣瑮捡絴琠⁯敳畣敲礠畯⁲捡潣湵⹴氦㭴氯♩瑧※氦㭴楬朦㭴潆⁲摡楤楴湯污猠捥牵瑩ⱹ攠獮牵⁥桴瑡渠⁯湯⁥汥敳栠獡愠捣獥⁳潴礠畯⁲浥楡⁬牯搠癥捩⁥桷湥爠瑥楲癥湩⁧潹牵瘠牥晩捩瑡潩⁮潣敤☮瑬⼻楬朦㭴☠瑬⼻汵朦㭴☠瑬瀻朦㭴晉礠畯栠癡⁥湡⁹獩畳獥眠瑩⁨桴⁥䘲⁁牰捯獥⁳牯渠敥⁤獡楳瑳湡散‬畯⁲畳灰牯⁴整浡椠⁳敲摡⁹潴栠汥⁰瑡笠畳灰牯彴浥楡絬漠⁲獻灵潰瑲损湯慴瑣⹽氦㭴瀯朦㭴☠瑬瀻朦㭴桔湡⁫潹⁵潦⁲慴楫杮攠瑸慲猠整獰琠⁯敳畣敲礠畯⁲捡潣湵⹴圠⁥灡牰捥慩整礠畯⁲潣浭瑩敭瑮琠⁯敫灥湩⁧潹牵椠普牯慭楴湯猠晡⹥氦㭴瀯朦㭴☠瑬瀻朦㭴敂瑳爠来牡獤☬瑬⼻♰瑧※氦㭴♰瑧笻畳数彲摡業彮慮敭♽瑬戻♲瑧笻祳瑳浥湟浡絥氦㭴牢朦㭴獻灵潰瑲敟慭汩♽瑬戻♲瑧笻牵絬氦㭴瀯朦㭴☠瑬戻♲瑧※氦㭴♰瑧☻瑬猻牴湯♧瑧吻楨⁳浥楡⁬慷⁳畡潴札湥牥瑡摥‬潳瀠敬獡⁥潤渠瑯爠灥祬☮瑬⼻瑳潲杮朦㭴氦㭴瀯朦㭴Ⱗ琧硥❴Ⱙ㈨ⰴ猧档潯彬湩畱物❹✬✱✬瑳楲杮⤧⠬㔲✬楦敬畟汰慯彤楳敺江浩瑩Ⱗ㈧Ⱗ猧牴湩❧Ⱙ㈨ⰶ眧穩牡彤档捥䵫牡❫✬✱✬湩整敧❲Ⱙ㈨ⰷ猧獹整彭敳瑴湩獧睟穩牡彤档捥䵫牡❫✬✱✬湩整敧❲Ⱙ㈨ⰸ渧瑯晩捩瑡潩彮敳瑴湩獧睟穩牡彤档捥䵫牡❫✬✱✬湩整敧❲Ⱙ㈨ⰹ攧慭汩獟瑥楴杮彳楷慺摲损敨正慍歲ⰧㄧⰧ椧瑮来牥⤧⠬〳✬敶楲祦敟慭汩睟穩牡彤档捥䵫牡❫✬✱✬湩整敧❲Ⱙ㌨ⰱ攧慭汩瑟浥汰瑡彥敳瑴湩獧睟穩牡彤档捥䵫牡❫✬✱✬湩整敧❲Ⱙ㌨ⰲ瀧祡敭瑮獟瑥楴杮彳楷慺摲损敨正慍歲ⰧㄧⰧ椧瑮来牥⤧⠬㌳✬桴物彤慰瑲役灡彩敳瑴湩獧睟穩牡彤档捥䵫牡❫✬✱✬湩整敧❲Ⱙ㌨ⰴ搧瑡扡獡彥潲瑯畟敳❲✬✱✬湩整敧❲Ⱙ㌨ⰵ氧牡癡汥煟敵敵獟瑥灵ⰧㄧⰧ椧瑮来牥⤧⠬㘳✬楷摬慣摲摟浯楡❮✬✱✬湩整敧❲Ⱙ㌨ⰷ眧扥獟捯敫彴敳畴❰✬✱✬湩整敧❲Ⱙ㌨ⰸ渧瑯晩捩瑡潩彮敳瑴湩獧ⰧㄧⰧ椧瑮来牥⤧⠬㤳✬楴敭穟湯❥✬獁慩䬯汯慫慴Ⱗ猧牴湩❧Ⱙ㐨ⰰ搧瑡彥潦浲瑡Ⱗ洧搭夭Ⱗ搧瑡❥Ⱙ㐨ⰱ琧浩彥潦浲瑡Ⱗ栧椺䄠Ⱗ琧浩❥Ⱙ㐨ⰲ琧敨敭损汯牯Ⱗ⌧戳㌱扡Ⱗ猧牴湩❧Ⱙ㐨ⰳ猧獥楳湯祟慥❲✬✱✬瑳楲杮⤧⠬㐴✬浥楡彬敶楲楦摥ⰧㄧⰧ猧牴湩❧Ⱙ㐨ⰵ猧扵捳楲瑰潩彮污牥❴✬✷✬湩整敧❲Ⱙ㐨ⰶ挧牵敲据役潣敤Ⱗ䤧剎Ⱗ猧牴湩❧Ⱙ㐨ⰷ挧牵敲据役祳扭汯Ⱗ錧╣Ⱗ猧牴湩❧Ⱙ㐨ⰸ愧摤瑩潩慮彬楢汬湩彧慤獹Ⱗ㔧Ⱗ椧瑮来牥⤧⠬㤴✬祳瑳浥湟浡❥✬慓瑲慨䕫杤ⱥ愠⁮䥁瀭睯牥摥†捓潨汯䴠湡条浥湥⁴祓瑳浥Ⱗ猧牴湩❧Ⱙ㔨ⰰ愧摤敲獳Ⱗ倧潬⁴潮㔠ⰴ䘠慬⁴潮㌠㘰传⁍敒楳敤据⁹慂異楪慮慧Ⱳ䈠睯湥慰汬ⱹ匠捥湵敤慲慢⁤祈敤慲慢Ɽ敔慬慮慧慮㔠〰㄰✱✬瑳楲杮⤧⠬ㄵ✬楢汬湩彧祣汣彥湩摟祡❳✬〳Ⱗ椧瑮来牥⤧⠬㈵✬畣牲湥彴汰湡敟灸物役慷湲湩彧慤獹Ⱗ㜧Ⱗ椧瑮来牥⤧⠬㌵✬牦湯彴楳整瑟敨敭损汯牯Ⱗ⌧㥥㥦㍦Ⱗ琧硥❴Ⱙ㔨ⰴ瀧楲慭祲损汯牯Ⱗ⌧挳扣戹Ⱗ琧硥❴Ⱙ㔨ⰵ猧捥湯慤祲损汯牯Ⱗ⌧㐲愵昷Ⱗ琧硥❴Ⱙ㔨ⰶ猧潨瑲摟獥牣灩楴湯Ⱗ匧牡桴歡摅敧ⴠ楁瀠睯牥摥猠档潯⁬慭慮敧敭瑮匠獹整⁭‭慍慮敧夠畯⁲捓潨汯Ⱗ琧硥❴Ⱙ㔨ⰷ昧捡扥潯❫✬瑨灴㩳⼯睷⹷慦散潢歯挮浯Ⱗ琧硥❴Ⱙ㔨ⰸ椧獮慴牧浡Ⱗ栧瑴獰⼺眯睷椮獮慴牧浡挮浯Ⱗ琧硥❴Ⱙ㔨ⰹ氧湩敫楤❮✬瑨灴㩳⼯湩氮湩敫楤⹮潣❭✬整瑸⤧⠬〶✬潦瑯牥瑟硥❴✬瀼☾潣祰※慓瑲慨䕫杤⹥䄠汬删杩瑨⁳敒敳癲摥⼼㹰Ⱗ琧硥❴Ⱙ㘨ⰱ琧条楬敮Ⱗ圧⁥牐癯摩⁥桴⁥敢瑳䔠畤慣楴湯Ⱗ琧硥❴Ⱙ㘨ⰲ猧灵牥慟浤湩湟浡❥✬畓数⁲摁業❮✬整瑸⤧⠬㤶✬敷形慭湩整慮据❥✬Ⱗ猧牴湩❧Ⱙㄨ〰✬捳潨汯损摯彥牰晥硩Ⱗ匧䡃Ⱗ猧牴湩❧Ⱙㄨ㌱✬楦敲慢敳灟潲敪瑣楟❤✬捳潨汯灡⵰㝦㕡✷✬瑳楲杮⤧⠬ㄱⰴ洧楡彬慭汩牥Ⱗ猧瑭❰✬瑳楲杮⤧⠬ㄱⰵ洧楡彬潨瑳Ⱗ洧楡⹬浭獴景瑴捥⹨潣❭✬瑳楲杮⤧⠬ㄱⰶ洧楡彬潰瑲Ⱗ㔧㜸Ⱗ猧牴湩❧Ⱙㄨ㜱✬慭汩畟敳湲浡❥✬潮敲汰䁹浭獴景瑴捥⹨潣❭✬瑳楲杮⤧⠬ㄱⰸ洧楡彬慰獳潷摲Ⱗ䴧呍㝀㤸䀡猣❡✬瑳楲杮⤧⠬ㄱⰹ洧楡彬湥牣灹楴湯Ⱗ吧卌Ⱗ猧牴湩❧Ⱙㄨ〲✬慭汩獟湥彤牦浯Ⱗ渧牯灥祬浀瑭潳瑦整档挮浯Ⱗ猧牴湩❧Ⱙㄨ㈲✬捳潨汯牟橥捥彴整灭慬整Ⱗ✧✬瑳楲杮⤧⠬㈱ⰳ猧档潯彬湩畱物役整灭慬整Ⱗ✧✬瑳楲杮⤧⠬㈲ⰰ栧牯穩湯慴彬潬潧Ⱗ猧灵牥愭浤湩猯獹整⵭敳瑴湩獧㘯㌹㜹晣扤挴㌳⸳㌴㈲㜱㈳㜱㔶㜳㈵㤲瀮杮Ⱗ昧汩❥Ⱙ㈨ㄲ✬敶瑲捩污江杯❯✬畳数⵲摡業⽮祳瑳浥猭瑥楴杮⽳㤶㤳挷摦㙢㍢㜵㔮ㄲ㔰㔷ㄹ㘷㌵㔷㈲⸹湰❧✬楦敬⤧⠬㈲ⰲ昧癡捩湯Ⱗ猧灵牥愭浤湩猯獹整⵭敳瑴湩獧㘯㌹㜹晣扤㜷挹⸳㘵㤲㐶㌳㜱㔶㜳㈵㤲瀮杮Ⱗ昧汩❥Ⱙ㈨㌲✬潬楧彮慰敧江杯❯✬畳数⵲摡業⽮祳瑳浥猭瑥楴杮⽳㤶㤳挷摦㝢摤㌰㤮㔵㠰㌶ㄷ㘷㌵㔷㈲⸹湰❧✬楦敬⤧⠬㘲ⰳ猧档潯彬牰晥硩Ⱗ匧䡃❏✬整瑸⤧⠬㘲ⰶ昧物扥獡彥敳癲捩彥楦敬Ⱗ猧灵牥愭浤湩猯獹整⵭敳瑴湩獧㘯㐹㐲㠰㉥㜶㤵⸸ㄷㄶ㤳㘵㜱㔶㐹㔹㈸樮潳❮✬楦敬⤧഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅獠獹整彭敳瑴湩獧⁠久䉁䕌䬠奅⁓⼪഻唊䱎䍏⁋䅔䱂卅഻ഊⴊഭⴊ‭慔汢⁥瑳畲瑣牵⁥潦⁲慴汢⁥畠敳獲ൠⴊഭഊ䐊佒⁐䅔䱂⁅䙉䔠䥘呓⁓畠敳獲㭠਍⨯㐡㄰㄰匠呅䀠慳敶彤獣损楬湥⁴††‽䁀档牡捡整彲敳彴汣敩瑮⨠㬯਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽瑵㡦⨠㬯਍剃䅅䕔吠䉁䕌怠獵牥恳⠠਍†楠恤戠杩湩⡴〲 湵楳湧摥丠呏丠䱕⁌啁佔䥟䍎䕒䕍呎ബ 怠楦獲彴慮敭⁠慶捲慨⡲㈱⤸丠呏丠䱕ⱌ਍†池獡彴慮敭⁠慶捲慨⡲㈱⤸丠呏丠䱕ⱌ਍†浠扯汩恥瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠浥楡恬瘠牡档牡ㄨㄹ 低⁔啎䱌ബ 怠慰獳潷摲⁠慶捲慨⡲㤱⤱丠呏丠䱕ⱌ਍†杠湥敤恲瘠牡档牡ㄨ⤶䐠䙅啁呌丠䱕ⱌ਍†楠慭敧⁠慶捲慨⡲ㄵ⤲䐠䙅啁呌丠䱕ⱌ਍†摠扯⁠慤整䐠䙅啁呌丠䱕ⱌ਍†捠牵敲瑮慟摤敲獳⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†灠牥慭敮瑮慟摤敲獳⁠慶捲慨⡲㤱⤱䐠䙅啁呌丠䱕ⱌ਍†潠捣灵瑡潩恮瘠牡档牡ㄨ㠲 䕄䅆䱕⁔啎䱌ബ 怠瑳瑡獵⁠楴祮湩⡴⤴丠呏丠䱕⁌䕄䅆䱕⁔ⰱ਍†牠獥瑥牟煥敵瑳⁠楴祮湩⡴⤴丠呏丠䱕⁌䕄䅆䱕⁔ⰰ਍†晠浣楟恤瘠牡档牡ㄨ㈰⤴䐠䙅啁呌丠䱕ⱌ਍†獠档潯彬摩⁠楢楧瑮㈨⤰甠獮杩敮⁤䕄䅆䱕⁔啎䱌ബ 怠慬杮慵敧⁠慶捲慨⡲㤱⤱丠呏丠䱕⁌䕄䅆䱕⁔攧❮ബ 怠敲敭扭牥瑟歯湥⁠慶捲慨⡲〱⤰䐠䙅啁呌丠䱕ⱌ਍†敠慭汩癟牥晩敩彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†瑠潷晟捡潴彲湥扡敬恤琠湩楹瑮㐨 低⁔啎䱌䐠䙅啁呌ㄠബ 怠睴彯慦瑣牯獟捥敲恴瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠睴彯慦瑣牯敟灸物獥慟恴瘠牡档牡ㄨㄹ 䕄䅆䱕⁔啎䱌ബ 怠牣慥整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†畠摰瑡摥慟恴琠浩獥慴灭丠䱕⁌䕄䅆䱕⁔啎䱌ബ 怠敤敬整彤瑡⁠楴敭瑳浡⁰啎䱌䐠䙅啁呌丠䱕ⱌ਍†剐䵉剁⁙䕋⁙怨摩⥠ബ 唠䥎啑⁅䕋⁙畠敳獲敟慭汩畟楮畱恥⠠敠慭汩⥠ബ 䬠奅怠獵牥彳捳潨汯楟彤潦敲杩恮⠠獠档潯彬摩⥠ബ 䌠乏呓䅒义⁔畠敳獲獟档潯彬摩晟牯楥湧⁠但䕒䝉⁎䕋⁙怨捳潨汯楟恤 䕒䕆䕒䍎卅怠捳潨汯恳⠠楠恤 乏䐠䱅呅⁅䅃䍓䑁൅⤊䔠䝎义㵅湉潮䉄䄠呕彏义剃䵅久㵔ㄱ䐠䙅啁呌䌠䅈卒呅甽晴洸㑢䌠䱏䅌䕔甽晴洸㑢畟楮潣敤损㭩਍⨯㐡㄰㄰匠呅挠慨慲瑣牥獟瑥损楬湥⁴‽獀癡摥损彳汣敩瑮⨠㬯਍਍ⴭ਍ⴭ䐠浵楰杮搠瑡⁡潦⁲慴汢⁥畠敳獲ൠⴊഭഊ䰊䍏⁋䅔䱂卅怠獵牥恳圠䥒䕔഻⼊K〴〰‰䱁䕔⁒䅔䱂⁅畠敳獲⁠䥄䅓䱂⁅䕋卙⨠㬯਍义䕓呒䤠呎⁏畠敳獲⁠䅖啌卅⠠ⰱ猧灵牥Ⱗ愧浤湩Ⱗ✧✬畳数慲浤湩杀慭汩挮浯Ⱗ␧礲ㄤ␰㕔灍橤穖圵晵圲剗㝄䜶敪䡫⹴晥晘㉓⸰楄潋睹佺洰癧偋渷祺❥✬慭敬Ⱗ氧杯⹯癳❧丬䱕ⱌ啎䱌丬䱕ⱌ啎䱌ㄬ〬丬䱕ⱌ啎䱌✬湥Ⱗ啎䱌✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴〬丬䱕ⱌ啎䱌✬〲㔲ㄭⴲ㤰ㄠ㨹㈰㔺✴✬〲㘲〭ⴱㄱ㈠㨳㔳ㄺ✹丬䱕⥌⠬ⰲ䐧浥❯✬摁業❮✬㈱㐳㘵㠷〹Ⱗ搧浥䁯捳潨汯挮浯Ⱗ␧礲ㄤ␰瑇乴䝚捴奯畳倸特㡪䴹⸶栰浇獹洲睤䥴圵奨摢穬䙨䍬啳朸堰❗丬䱕ⱌ搧浵祭江杯⹯灪❧丬䱕ⱌ啎䱌丬䱕ⱌ啎䱌ㄬ〬丬䱕ⱌⰱ攧❮丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㔱㈺㨳㜴Ⱗⰰ啎䱌丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㔱㈺㨳㜴Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㔺㨶㐰Ⱗ啎䱌Ⱙ㌨✬捓潨汯Ⱗ䄧浤湩Ⱗ〧㌹㈹ㄵㄱ㘷Ⱗ猧楡畳灰ㅵ杀慭汩挮浯Ⱗ␧礲ㄤ␰济䑥瑩䑦歘䙶㝺头䌳潸⹹煳晢㥯兦祌䑫呏䩺督䵊㍙奔摗瑰橹✶丬䱕ⱌ✧丬䱕ⱌ啎䱌丬䱕ⱌ啎䱌ㄬ〬丬䱕ⱌⰲ攧❮丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‱㠱〺㨲㠵Ⱗⰰ啎䱌丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㤱㈺㨶〳Ⱗ㈧㈰ⴵ㈱ㄭ‱㔱㔺㨸㌵Ⱗ啎䱌Ⱙ㐨✬捓潨汯Ⱗ䄧浤湩Ⱗ㜧〲㤷ㄷ㠹✴✬浭獴景瑴捥䁨浧楡⹬潣❭✬㈤⑹〱嘤汷噮煨㠸㥖⹦剅捧䡸㕲㝏戸㍧晡祙牂噬奫さ㥬㍦楋癏失䴹浲Ⱗ啎䱌✬畳数⵲摡業⽮獵牥㘯㌹㜹㕥愹昸㍦⸰㤰㈸ㄳ㜸㜱㔶㜳㔵㜷瀮杮Ⱗ啎䱌丬䱕ⱌ啎䱌丬䱕ⱌⰱⰰ啎䱌㌬✬湥Ⱗ啎䱌丬䱕ⱌⰰ啎䱌丬䱕ⱌ㈧㈰ⴵ㈱ㄭ‰㤱㌺㨶㜱Ⱗ㈧㈰ⴵ㈱ㄭ‰㤱㌺㨶㜱Ⱗ啎䱌Ⱙ㔨✬捓潨汯Ⱗ䄧浤湩Ⱗ㜧㤸㔴㌶ㄲⰧ砧杀慭汩挮浯Ⱗ␧礲ㄤ␰䙪㍊丱㍓求匲䠳㕬摐欮低央噏潏托偵杘婎湭手㕧乁杣⹧猯塆✲丬䱕ⱌ猧灵牥愭浤湩甯敳⽲㤶㤳㌸㝥改㤶ㄳ㘮㈰㜲㔳ㄶ㘷㌵㘷㤹⸹湰❧丬䱕ⱌ啎䱌丬䱕ⱌ啎䱌ㄬ〬丬䱕ⱌⰴ攧❮丬䱕ⱌ啎䱌〬丬䱕ⱌ啎䱌✬〲㔲ㄭⴲ〱ㄠ㨹㤵㔺✹✬〲㔲ㄭⴲ㘱ㄠ㨶〲ㄺ✶✬〲㔲ㄭⴲ㘱ㄠ㨶〲ㄺ✶Ⱙ㜨✬捓潨汯Ⱗ䄧浤湩Ⱗ㠧㜱㜹㤰ㄸ✸✬湩潦獀牡桴歡摥敧挮浯Ⱗ␧礲ㄤ␰昱兌䰶は灣偣剖祪效偉畦⽦㙹㙱漹穗氱㡬內睪捉剥塋匸慙礯❃丬䱕ⱌ猧灵牥愭浤湩甯敳⽲㤶㘴㔴㝤戵攲㠷〮㔶㠳㤷ㄵ㘷㈶㌱㜰⸹湰❧丬䱕ⱌ啎䱌丬䱕ⱌ啎䱌ㄬ〬丬䱕ⱌⰶ攧❮丬䱕ⱌ㈧㈰ⴵ㈱㈭‰㈱ㄺ㨸㌰Ⱗⰰ啎䱌丬䱕ⱌ㈧㈰ⴵ㈱㈭‰㈱ㄺ㨴㤳Ⱗ㈧㈰ⴵ㈱㈭‰㈱ㄺ㨴㤳Ⱗ啎䱌Ⱙ㠨✬慳瑲慨敫杤❥✬摡業❮✬㈱㐳㘵㠷✹✬湩潦䀱慳瑲慨敫杤⹥潣❭✬㈤⑹〱㘤煡搸灹㕍戮䙣捈⹹䍖ぁ㙥ㅈ瘮奓唴扮穱漶塮䱎留砳䌯䍯䱢⹥Ⱗ洧污❥丬䱕ⱌ㈧〰ⴰ㌰〭✵✬祈敤慲慢❤✬祈敤慲慢❤丬䱕ⱌⰱⰰ啎䱌丬䱕ⱌ攧❮丬䱕ⱌ啎䱌〬丬䱕ⱌ啎䱌✬〲㘲〭ⴱ㌱ㄠ㨲㠱〺✲✬〲㘲〭ⴱ㐱㈠㨰㈵〺✱丬䱕⥌⠬ⰹ猧牡桴歡Ⱗ攧杤❥✬㠷㐹㘵㈱✳✬慳瑲慨䁫浧楡⹬潣❭✬㈤⑹〱匤㍗慺杋婒䬰䅘婊併䵯䠰煥㤰㙮剪歅䜹㠷摧䩃坡捕牱乨兏㙔华Ⱗ啎䱌丬䱕ⱌ㈧〰ⴰ㔰〭✳丬䱕ⱌ啎䱌丬䱕ⱌⰱⰰ啎䱌丬䱕ⱌ攧❮丬䱕ⱌ啎䱌〬丬䱕ⱌ啎䱌✬〲㘲〭ⴱ㐱㈠㨰㐵㌺✵✬〲㘲〭ⴱ㐱㈠㨰㐵㌺✵丬䱕⥌⠬〱✬捓潨汯Ⱗ䄧浤湩Ⱗ〧㌹㈹ㄵㄱ㘷Ⱗ戧穩祢牡癡湩䁤浧楡⹬潣❭✬㈤⑹〱稤义商摧煫杚㜳䥐灂确㈮剥歍歑朸㥲睖ㅣ煷牖浳爵奲䄴䡉兢敫Ⱗ啎䱌✬畳数⵲摡業⽮獵牥㘯㠹戴㝣挸㤶㤲⸳㌷㌶㔹㈰㜱〷〳㘶〸瀮杮Ⱗ啎䱌丬䱕ⱌ啎䱌丬䱕ⱌⰱⰰ啎䱌㜬✬湥Ⱗ啎䱌丬䱕ⱌⰰ啎䱌丬䱕ⱌ㈧㈰ⴶ㈰〭‵㔱㔺㨱〲Ⱗ㈧㈰ⴶ㈰〭‵㔱㔺㨱〲Ⱗ啎䱌㬩਍⨯㐡〰〰䄠呌剅吠䉁䕌怠獵牥恳䔠䅎䱂⁅䕋卙⨠㬯਍乕佌䭃吠䉁䕌㭓਍⨯㐡㄰㌰匠呅吠䵉彅佚䕎䀽䱏彄䥔䕍婟乏⁅⼪഻ഊ⼊K〴〱‱䕓⁔兓彌位䕄䀽䱏彄兓彌位䕄⨠㬯਍⨯㐡〰㐱匠呅䘠剏䥅乇䭟奅䍟䕈䭃㵓佀䑌䙟剏䥅乇䭟奅䍟䕈䭃⁓⼪഻⼊K〴㄰‴䕓⁔乕光䕕䍟䕈䭃㵓佀䑌啟䥎啑彅䡃䍅卋⨠㬯਍⨯㐡㄰㄰匠呅䌠䅈䅒呃剅卟呅䍟䥌久㵔佀䑌䍟䅈䅒呃剅卟呅䍟䥌久⁔⼪഻⼊K〴〱‱䕓⁔䡃剁䍁䕔归䕓彔䕒啓呌㵓佀䑌䍟䅈䅒呃剅卟呅剟卅䱕協⨠㬯਍⨯㐡㄰㄰匠呅䌠䱏䅌䥔乏䍟乏䕎呃佉㵎佀䑌䍟䱏䅌䥔乏䍟乏䕎呃佉⁎⼪഻⼊K〴ㄱ‱䕓⁔兓彌低䕔㵓佀䑌卟䱑也呏卅⨠㬯਍਍ⴭ䐠浵⁰潣灭敬整⁤湯㈠㈰ⴶ㈰ㄭ‶㈲㐺㨰㌲਍
