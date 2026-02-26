@@ -20,16 +20,19 @@
                             <h4 class="card-title">
                                 {{ __('create') . ' ' . __('faqs') }}
                             </h4>
-                            <form class="create-form pt-3" id="create-form" action="{{route('faqs.store')}}" method="POST" novalidate="novalidate">
+                            <form class="create-form pt-3" id="create-form" action="{{route('faqs.store')}}" method="POST"
+                                novalidate="novalidate">
                                 @csrf
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control']) !!}
+                                        <input type="text" name="title" class="form-control" placeholder="{{ __('title') }}"
+                                            required>
                                     </div>
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('description', null, ['required','rows' => '2', 'placeholder' => __('description'), 'class' => 'form-control']) !!}
+                                        <textarea name="description" rows="2" class="form-control"
+                                            placeholder="{{ __('description') }}" required></textarea>
                                     </div>
                                 </div>
                                 {{-- <input class="btn btn-theme" type="submit" value={{ __('submit') }}> --}}
@@ -50,26 +53,28 @@
                             <div class="row">
                                 <div class="col-12">
                                     <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
-                                           data-url="{{ route('faqs.show',1) }}" data-click-to-select="true"
-                                           data-side-pagination="server" data-pagination="true"
-                                           data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true"
-                                           data-toolbar="#toolbar" data-show-columns="true" data-show-refresh="true"
-                                           data-fixed-columns="false" data-fixed-number="2" data-fixed-right-number="1"
-                                           data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
-                                           data-sort-order="desc" data-maintain-selected="true"
-                                           data-export-data-type='all' data-show-export="true"
-                                           data-export-options='{ "fileName": "faqs-list-<?= date('d-m-y') ?>","ignoreColumn": ["operate"]}'
-                                           data-query-params="queryParams" data-escape="true">
+                                        data-url="{{ route('faqs.show', 1) }}" data-click-to-select="true"
+                                        data-side-pagination="server" data-pagination="true"
+                                        data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-toolbar="#toolbar"
+                                        data-show-columns="true" data-show-refresh="true" data-fixed-columns="false"
+                                        data-fixed-number="2" data-fixed-right-number="1" data-trim-on-search="false"
+                                        data-mobile-responsive="true" data-sort-name="id" data-sort-order="desc"
+                                        data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
+                                        data-export-options='{ "fileName": "faqs-list-<?= date('d-m-y') ?>","ignoreColumn": ["operate"]}'
+                                        data-query-params="queryParams" data-escape="true">
                                         <thead>
-                                        <tr>
-                                            <th scope="col" data-field="id" data-sortable="true" data-visible="false"> {{ __('id') }} </th>
-                                            <th scope="col" data-field="no"> {{ __('no.') }} </th>
-                                            <th scope="col" data-field="title">{{ __('title') }} </th>
-                                            <th scope="col" data-field="description" data-formatter='descriptionFormatter' data-events="tableDescriptionEvents" >{{ __('description') }}</th>
-                                            @if (Auth::user()->can('faqs-edit') || Auth::user()->can('faqs-delete'))
-                                                <th data-events="faqsEvents" data-width="150" scope="col" data-field="operate" data-escape="false">{{ __('action') }}</th>
-                                            @endif
-                                        </tr>
+                                            <tr>
+                                                <th scope="col" data-field="id" data-sortable="true" data-visible="false">
+                                                    {{ __('id') }} </th>
+                                                <th scope="col" data-field="no"> {{ __('no.') }} </th>
+                                                <th scope="col" data-field="title">{{ __('title') }} </th>
+                                                <th scope="col" data-field="description" data-formatter='descriptionFormatter'
+                                                    data-events="tableDescriptionEvents">{{ __('description') }}</th>
+                                                @if (Auth::user()->can('faqs-edit') || Auth::user()->can('faqs-delete'))
+                                                    <th data-events="faqsEvents" data-width="150" scope="col" data-field="operate"
+                                                        data-escape="false">{{ __('action') }}</th>
+                                                @endif
+                                            </tr>
                                         </thead>
                                     </table>
                                 </div>
@@ -83,7 +88,7 @@
 
 
     <div class="modal fade" id="editModal" data-backdrop="static" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -99,13 +104,15 @@
                         <div class="row form-group">
                             <div class="col-sm-12 col-md-12">
                                 <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control', 'id' => 'edit-title']) !!}
+                                <input type="text" name="title" id="edit-title" class="form-control"
+                                    placeholder="{{ __('title') }}" required>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12 col-md-12">
                                 <label>{{ __('description') }}</label>
-                                {!! Form::textarea('description', null, ['placeholder' => __('description'), 'class' => 'form-control', 'id' => 'edit-description']) !!}
+                                <textarea name="description" id="edit-description" class="form-control"
+                                    placeholder="{{ __('description') }}"></textarea>
                             </div>
                         </div>
                     </div>

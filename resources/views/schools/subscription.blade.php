@@ -96,22 +96,17 @@
                         <div id="toolbar" class="row">
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu">{{ __('status') }}</label>
-                                {!! Form::select(
-        'status',
-        [
-            '0' => __('all'),
-            'Current Cycle' => __('current_cycle'),
-            'Paid' => __('paid'),
-            'Over Due' => __('over_due'),
-            'Failed' => __('failed'),
-            'Pending' => __('pending'),
-            'Next Billing Cycle' => __('next_billing_cycle'),
-            'Unpaid' => __('unpaid'),
-            'Bill Not Generated' => __('bill_not_generated'),
-        ],
-        null,
-        ['class' => 'form-control', 'id' => 'status'],
-    ) !!}
+                                <select name="status" id="status" class="form-control">
+                                    <option value="0">{{ __('all') }}</option>
+                                    <option value="Current Cycle">{{ __('current_cycle') }}</option>
+                                    <option value="Paid">{{ __('paid') }}</option>
+                                    <option value="Over Due">{{ __('over_due') }}</option>
+                                    <option value="Failed">{{ __('failed') }}</option>
+                                    <option value="Pending">{{ __('pending') }}</option>
+                                    <option value="Next Billing Cycle">{{ __('next_billing_cycle') }}</option>
+                                    <option value="Unpaid">{{ __('unpaid') }}</option>
+                                    <option value="Bill Not Generated">{{ __('bill_not_generated') }}</option>
+                                </select>
                             </div>
                         </div>
                         <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
@@ -230,7 +225,11 @@
 
                             <div class="form-group">
                                 <label>{{ __('package') }} <span class="text-danger">*</span></label>
-                                {!! Form::select('package_id', $packages, null, ['class' => 'form-control', 'id' => 'update_package_id']) !!}
+                                <select name="package_id" id="update_package_id" class="form-control">
+                                    @foreach($packages as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">

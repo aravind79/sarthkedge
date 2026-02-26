@@ -66,7 +66,7 @@
                                             <label>{{ __('option') }} <span class="option-number">0</span> <span
                                                     class="text-danger">*</span></label>
                                             <textarea class="editor_options" name="option" required placeholder="{{ __('enter') . ' ' . __('option') }}"></textarea>
-                                            {!! Form::hidden('number', '', ['class' => 'option-number']) !!}
+                                            <input type="hidden" name="number" value="" class="option-number">
                                             <button type="button"
                                                 class="btn btn-inverse-danger mt-2 btn-icon remove-option"
                                                 data-repeater-delete>
@@ -134,10 +134,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="form-group p-1">
-                                    <label>{{ __('note') }}</label>
-                                    <input type="text" name="note" class="form-control">
-                                </div> --}}
+
                                 <input class="btn btn-theme mt-4" id="new-question-add" type="submit"
                                     value={{ __('add') }}>
                             </div>

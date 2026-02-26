@@ -24,12 +24,21 @@
 
                                 <div class="form-group col-md-4 col-sm-12">
                                     <label for="roll-number-order">{{__("holiday_days")}} <span class="text-danger">*</span></label>
-                                    {!! Form::select('holiday_days[]', ["Sunday" => "Sunday", "Monday" => "Monday", "Tuesday" => "Tuesday", "Wednesday" => "Wednesday", "Thursday" => "Thursday", "Friday" => "Friday", "Saturday" => "Saturday"], $settings['holiday_days'] ?? '', ['required','class' => 'form-control select2-dropdown select2-hidden-accessible','multiple']) !!}
+                                    <select name="holiday_days[]" class="form-control select2-dropdown select2-hidden-accessible" multiple required>
+                                        @foreach(["Sunday" => "Sunday", "Monday" => "Monday", "Tuesday" => "Tuesday", "Wednesday" => "Wednesday", "Thursday" => "Thursday", "Friday" => "Friday", "Saturday" => "Saturday"] as $key => $day)
+                                            <option value="{{ $key }}" {{ in_array($key, (array)($settings['holiday_days'] ?? [])) ? 'selected' : '' }}>{{ $day }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label for="">{{ __('session_year') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('session_year_id', $sessionYear, null, ['required','class' => 'form-control', 'placeholder' => __('session_year')]) !!}
+                                    <select name="session_year_id" class="form-control" required>
+                                        <option value="">{{ __('session_year') }}</option>
+                                        @foreach($sessionYear as $key => $sy)
+                                            <option value="{{ $key }}">{{ $sy }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit" value={{ __('submit') }}>
@@ -90,12 +99,21 @@
     
                                     <div class="form-group col-md-12 col-sm-12">
                                         <label for="roll-number-order">{{__("holiday_days")}} <span class="text-danger">*</span></label>
-                                        {!! Form::select('holiday_days[]', ["Sunday" => "Sunday", "Monday" => "Monday", "Tuesday" => "Tuesday", "Wednesday" => "Wednesday", "Thursday" => "Thursday", "Friday" => "Friday", "Saturday" => "Saturday"], $settings['holiday_days'] ?? '', ['required','class' => 'form-control select2-dropdown select2-hidden-accessible','multiple', 'id' => 'edit_holiday_days']) !!}
+                                        <select name="holiday_days[]" id="edit_holiday_days" class="form-control select2-dropdown select2-hidden-accessible" multiple required>
+                                            @foreach(["Sunday" => "Sunday", "Monday" => "Monday", "Tuesday" => "Tuesday", "Wednesday" => "Wednesday", "Thursday" => "Thursday", "Friday" => "Friday", "Saturday" => "Saturday"] as $key => $day)
+                                                <option value="{{ $key }}" {{ in_array($key, (array)($settings['holiday_days'] ?? [])) ? 'selected' : '' }}>{{ $day }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
     
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label for="">{{ __('session_year') }} <span class="text-danger">*</span></label>
-                                        {!! Form::select('session_year_id', $sessionYear, null, ['required','class' => 'form-control', 'placeholder' => __('session_year'), 'id' => 'edit_session_year_id']) !!}
+                                        <select name="session_year_id" id="edit_session_year_id" class="form-control" required>
+                                            <option value="">{{ __('session_year') }}</option>
+                                            @foreach($sessionYear as $key => $sy)
+                                                <option value="{{ $key }}">{{ $sy }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>

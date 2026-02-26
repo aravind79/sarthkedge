@@ -11,93 +11,24 @@
                 {{ __('manage') . ' ' . __('form-fields') }}
             </h3>
         </div>
+
         <div class="row">
-            <div class="col-md-12 grid-margin stretch-card search-container">
+            <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">
-                            {{ __('create') . ' ' . __('form-fields') }}
-                        </h4>
-                        <form class="pt-3 mt-6 create-form" method="POST" data-success-function="formSuccessFunction"
-                            action="{{ url('form-fields') }}">
-                            <div class="row">
-                                <div class="form-group col-sm-12 col-md-5">
-                                    <label>{{ __('name') }} <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" onkeypress="validateInput(event)"
-                                        placeholder="{{__('name')}}" class="form-control" required>
-                                </div>
-                                <div class="form-group col-sm-12 col-md-5">
-                                    <label>{{ __('type') }} <span class="text-danger">*</span></label>
-                                    <select name="type" id="type-field" class="form-control type-field">
-                                        <option value="text" selected>{{__('Text')}}</option>
-                                        <option value="number">{{ __('Numeric') }}</option>
-                                        <option value="dropdown">{{ __('Dropdown') }}</option>
-                                        <option value="radio">{{ __('Radio Button') }}</option>
-                                        <option value="checkbox">{{ __('Checkbox') }}</option>
-                                        <option value="textarea">{{ __('TextArea') }}</option>
-                                        <option value="file">{{ __('File Upload') }}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-sm-12 col-md-2">
-                                    <label>{{ __('required') }} </label>
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input required-field" name="required"
-                                            id="customSwitch1">
-                                        <label class="custom-control-label" for="customSwitch1"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-12 col-md-2">
-                                    <label>{{ __('user_type') }} <span class="text-danger">*</span></label>
-                                    <select name="user_type" class="form-control"> {{-- 1 => Student, 2 => Teacher/Staff
-                                        --}}
-                                        <option value="" selected>{{ __('select_user_type') }}</option>
-                                        <option value="1">{{__('Student')}}</option>
-                                        <option value="2">{{__('Teacher')}}/{{__('Staff')}}</option>
-                                    </select>
-                                </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="card-title">
+                                {{ __('list') . ' ' . __('form-fields') }}
+                            </h4>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-secondary mr-2" id="preview-fields" data-toggle="modal"
+                                    data-target="#previewFieldModal">{{__('preview') . ' ' . __('form-fields')}}</button>
+                                <button type="button" class="btn btn-theme" data-toggle="modal" data-target="#createModal">
+                                    <i class="fa fa-plus-circle mr-1"></i> {{ __('create') . ' ' . __('form-fields') }}
+                                </button>
                             </div>
+                        </div>
 
-                            {{-- Option Section --}}
-                            <div class="default-values-section" style="display: none">
-                                <div class="mt-4" data-repeater-list="default_data">
-                                    <div class="col-md-5 pl-0 mb-4">
-                                        <button type="button" class="btn btn-success add-new-option" data-repeater-create
-                                            title="Add new row">
-                                            <span><i class="fa fa-plus"></i> {{__('add_new_option')}}</span>
-                                        </button>
-                                    </div>
-                                    <div class="row option-section" data-repeater-item>
-                                        <div class="form-group col-md-5">
-                                            <label>{{ __('option') }} - <span class="option-number">1</span> <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" name="option" placeholder="{{__('text')}}"
-                                                class="form-control" required>
-                                        </div>
-                                        <div class="form-group col-md-1 pl-0 mt-4">
-                                            <button data-repeater-delete type="button"
-                                                class="btn btn-icon btn-inverse-danger remove-default-option"
-                                                title="{{__('remove') . ' ' . __('option')}}" disabled>
-                                                <i class="fa fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- End Of Option Section --}}
-
-                            <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit" value={{ __('submit') }}>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 grid-margin stretch-card search-container">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            {{ __('list') . ' ' . __('form-fields') }}
-                        </h4>
                         <div class="row mt-3" id="toolbar">
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu">{{ __('user_type') }} <span class="text-danger">*</span></label>
@@ -108,19 +39,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary" id="preview-fields" data-toggle="modal"
-                                data-target="#previewFieldModal">{{__('preview') . ' ' . __('form-fields')}}</button>
-                        </div>
-                        <div class="d-block">
-                            <div class="">
 
-                                <div class="col-12 text-right d-flex justify-content-end text-right align-items-end">
-                                    <b><a href="#" class="table-list-type active mr-2" data-id="0">{{__('all')}}</a></b> |
-                                    <a href="#" class="ml-2 table-list-type" data-id="1">{{__("Trashed")}}</a>
-                                </div>
-                            </div>
+                        <div class="col-12 text-right d-flex justify-content-end mb-2">
+                            <b><a href="#" class="table-list-type active mr-2" data-id="0">{{__('all')}}</a></b> |
+                            <a href="#" class="ml-2 table-list-type" data-id="1">{{__("Trashed")}}</a>
                         </div>
+
                         <table aria-describedby="mydesc" class='table reorder-table-row' id='table_list' data-toggle="table"
                             data-url="{{ route('form-fields.show', 1) }}" data-click-to-select="true"
                             data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
@@ -158,14 +82,100 @@
         </div>
     </div>
 
+    {{-- Create Modal --}}
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">{{ __('create') . ' ' . __('form-fields') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="pt-3 create-form" method="POST" data-success-function="formSuccessFunction"
+                    action="{{ url('form-fields') }}">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-md-4">
+                                <label>{{ __('name') }} <span class="text-danger">*</span></label>
+                                <input type="text" name="name" onkeypress="validateInput(event)"
+                                    placeholder="{{__('name')}}" class="form-control" required>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4">
+                                <label>{{ __('type') }} <span class="text-danger">*</span></label>
+                                <select name="type" id="type-field" class="form-control type-field">
+                                    <option value="text" selected>{{__('Text')}}</option>
+                                    <option value="number">{{ __('Numeric') }}</option>
+                                    <option value="dropdown">{{ __('Dropdown') }}</option>
+                                    <option value="radio">{{ __('Radio Button') }}</option>
+                                    <option value="checkbox">{{ __('Checkbox') }}</option>
+                                    <option value="textarea">{{ __('TextArea') }}</option>
+                                    <option value="file">{{ __('File Upload') }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4">
+                                <label>{{ __('user_type') }} <span class="text-danger">*</span></label>
+                                <select name="user_type" class="form-control" required>
+                                    <option value="" selected disabled>{{ __('select_user_type') }}</option>
+                                    <option value="1">{{__('Student')}}</option>
+                                    <option value="2">{{__('Teacher')}}/{{__('Staff')}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-2">
+                                <label>{{ __('required') }} </label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input required-field" name="required"
+                                        id="customSwitchCreate">
+                                    <label class="custom-control-label" for="customSwitchCreate"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Option Section --}}
+                        <div class="default-values-section" style="display: none">
+                            <div class="mt-4" data-repeater-list="default_data">
+                                <div class="col-md-5 pl-0 mb-4">
+                                    <button type="button" class="btn btn-success add-new-option" data-repeater-create
+                                        title="Add new row">
+                                        <span><i class="fa fa-plus"></i> {{__('add_new_option')}}</span>
+                                    </button>
+                                </div>
+                                <div class="row option-section" data-repeater-item>
+                                    <div class="form-group col-md-5">
+                                        <label>{{ __('option') }} - <span class="option-number">1</span> <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="option" placeholder="{{__('text')}}" class="form-control"
+                                            required>
+                                    </div>
+                                    <div class="form-group col-md-1 pl-0 mt-4">
+                                        <button data-repeater-delete type="button"
+                                            class="btn btn-icon btn-inverse-danger remove-default-option"
+                                            title="{{__('remove') . ' ' . __('option')}}" disabled>
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('close')}}</button>
+                        <input class="btn btn-theme" id="create-btn" type="submit" value={{ __('submit') }}>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     {{-- Preview Fields Model --}}
-    <div class="modal fade" id="previewFieldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="previewFieldModal" tabindex="-1" role="dialog" aria-labelledby="previewFieldModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{__('preview') . ' ' . __('form-fields')}}</h5>
+                    <h5 class="modal-title" id="previewFieldModalLabel">{{__('preview') . ' ' . __('form-fields')}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"><i class="fa fa-close"></i></span>
                     </button>
@@ -173,28 +183,15 @@
                 <div class="modal-body">
                     <div class="row preview-content">
                         @if(!empty($formFields))
-
-                            {{-- Loop the FormData --}}
                             @foreach ($formFields as $data)
                                 <div class='form-group col-md-4 col-sm-12'>
-                                    {{-- Label For Field --}}
-                                    <label>{{$data->name}} @if($data->is_required)
-                                        <span class="text-danger">*</span>
-                                    @endif</label>
-
-                                    {{-- Text Field --}}
+                                    <label>{{$data->name}} @if($data->is_required) <span class="text-danger">*</span> @endif</label>
                                     @if($data->type == 'text')
-                                        <input type="text" name="{{$data->name}}" class="form-control" placeholder="{{$data->name}}"
-                                            @if($data->is_required) required @endif>
-
-                                        {{-- Number Field --}}
+                                        <input type="text" class="form-control" placeholder="{{$data->name}}">
                                     @elseif($data->type == 'number')
-                                        <input type="number" min="0" name="{{$data->name}}" class="form-control"
-                                            placeholder="{{$data->name}}" @if($data->is_required) required @endif>
-
-                                        {{-- Dropdown Field --}}
+                                        <input type="number" min="0" class="form-control" placeholder="{{$data->name}}">
                                     @elseif($data->type == 'dropdown')
-                                        <select class="form-control" @if($data->is_required) required @endif>
+                                        <select class="form-control">
                                             <option value="" disabled selected>Select {{$data->name}}</option>
                                             @if(!empty($data->default_values))
                                                 @foreach ($data->default_values as $value)
@@ -202,48 +199,35 @@
                                                 @endforeach
                                             @endif
                                         </select>
-
-                                        {{-- Radio Field --}}
                                     @elseif($data->type == 'radio')
                                         <div class="d-flex">
                                             @if(!empty($data->default_values))
                                                 @foreach ($data->default_values as $value)
                                                     <div class="form-check form-check-inline">
                                                         <label class="form-check-label">
-                                                            <input type="radio" name="{{$data->name}}" value="{{$value}}">
-                                                            {{$value}}
+                                                            <input type="radio" name="{{$data->name}}" value="{{$value}}"> {{$value}}
                                                         </label>
                                                     </div>
                                                 @endforeach
                                             @endif
                                         </div>
-
-                                        {{-- Checkbox Field --}}
                                     @elseif($data->type == 'checkbox')
                                         <div class="row form-check-inline">
                                             @foreach ($data->default_values as $value)
                                                 <div class="col-6 col-md-4 form-check mr-4">
-                                                    <label class="form-check-label" style="white-space: normal; word-wrap: break-word;">
-                                                        <input type="checkbox" class="form-check-input chkclass" value="{{ $value }}">
-                                                        {{ $value }}
+                                                    <label class="form-check-label">
+                                                        <input type="checkbox" class="form-check-input" value="{{ $value }}"> {{ $value }}
                                                     </label>
                                                 </div>
                                             @endforeach
                                         </div>
-
-
-                                        {{-- Textarea Field --}}
                                     @elseif($data->type == 'textarea')
-                                        <textarea placeholder="{{ $data->name }}" class="form-control" @if($data->is_required) required
-                                        @endif></textarea>
-
-                                        {{-- File Upload Field --}}
+                                        <textarea placeholder="{{ $data->name }}" class="form-control" rows="2"></textarea>
                                     @elseif($data->type == 'file')
                                         <div class="input-group col-xs-12">
-                                            <input type="file" name="admin_image" class="file-upload-default" @if($data->is_required)
-                                            required @endif />
-                                            <input type="text" class="form-control file-upload-info" disabled=""
-                                                placeholder="{{ __('image') }}" required />
+                                            <input type="file" class="file-upload-default" />
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                placeholder="{{ __('image') }}" />
                                             <span class="input-group-append">
                                                 <button class="file-upload-browse btn btn-theme"
                                                     type="button">{{ __('upload') }}</button>
@@ -259,17 +243,12 @@
         </div>
     </div>
 
-
-
     <!-- Edit Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                        {{ __('edit') . ' ' . __('form-fields') }}
-                    </h5>
+                    <h5 class="modal-title" id="editModalLabel">{{ __('edit') . ' ' . __('form-fields') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -294,14 +273,15 @@
                                 <option value="textarea">TextArea</option>
                                 <option value="file">File Upload</option>
                             </select>
-
-                            {!! Form::hidden('type', "", ['id' => 'edit-type-field-value']) !!}
+                            <input type="hidden" name="type" id="edit-type-field-value" value="">
                         </div>
-                        <div class="form-group col-sm-12 col-md-2">
+                        <div class="form-group col-sm-12 col-md-4">
                             <label>{{ __('required') }} </label>
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" name="edit_required" id="customSwitch2">
-                                <label class="custom-control-label" id="edit-required-toggle" for="customSwitch2"></label>
+                                <input type="checkbox" class="custom-control-input" name="edit_required"
+                                    id="customSwitchEditToggle">
+                                <label class="custom-control-label" id="edit-required-toggle"
+                                    for="customSwitchEditToggle"></label>
                             </div>
                         </div>
 
@@ -331,7 +311,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- End Option Section --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('close') }}</button>
@@ -342,6 +321,7 @@
         </div>
     </div>
 @endsection
+
 @section('script')
     <script>
         $('#table_list').on('load-success.bs.table', function (e, data) {
@@ -351,38 +331,35 @@
                 $('#change-order-form-field').hide();
             }
         });
+
         function formSuccessFunction() {
+            $('#createModal').modal('hide');
             $('#type-field').val('text').trigger('change');
             $('[data-repeater-item]').slice(2).remove();
         }
 
         function validateInput(event) {
-            // Get the ASCII code of the key that was pressed
             var charCode = event.which || event.keyCode;
-
-            // Allow letters (A-Z, a-z) and space (ASCII code 32)
             if (!(charCode >= 65 && charCode <= 90) && !(charCode >= 97 && charCode <= 122) && !(charCode === 32)) {
-                event.preventDefault(); // Prevent invalid character input
+                event.preventDefault();
             }
         }
-        // Event delegation for dynamically generated action buttons
+
         $(document).on('click', '.edit-data, .delete-form', function (e) {
             e.preventDefault();
-            e.stopPropagation(); // stop TableDnD interference
-            let targetModal = $(this).data('target'); // e.g., "#editModal"
+            e.stopPropagation();
+            let targetModal = $(this).data('target');
             if (targetModal) {
-                $(targetModal).modal('show'); // Open modal
+                $(targetModal).modal('show');
             }
         });
 
-        // TableDnD setup after table is rendered
         $('#table_list').on('post-body.bs.table', function () {
             $('#table_list').tableDnD({
                 onDragClass: "drag-row",
                 dragHandle: 'td:not([data-field="operate"])'
             });
 
-            // Prevent drag on action column (desktop & mobile)
             $('#table_list td[data-field="operate"], .card-view .card-view-value')
                 .off('mousedown touchstart')
                 .on('mousedown touchstart', function (e) {

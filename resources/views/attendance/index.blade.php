@@ -22,7 +22,8 @@
                             @csrf
                             <div class="row" id="toolbar">
                                 <div class="form-group col-sm-12 col-md-4">
-                                    <select required name="class_section_id" id="timetable_class_section" class="form-control select2" style="width:100%;" tabindex="-1" aria-hidden="true">
+                                    <select required name="class_section_id" id="timetable_class_section"
+                                        class="form-control select2" style="width:100%;" tabindex="-1" aria-hidden="true">
                                         <option value="">{{ __('select') . ' ' . __('Class') }}</option>
                                         @foreach ($classSections as $section)
                                             <option value="{{ $section->id }}" data-class="{{ $section->class->id }}">
@@ -32,13 +33,15 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-4">
-                                    {!! Form::text('date', null, ['required', 'placeholder' => __('date'), 'class' => 'datepicker-popup form-control', 'id' => 'date','data-date-end-date'=>"0d"]) !!}
+                                    <input type="text" name="date" id="date" class="datepicker-popup form-control"
+                                        placeholder="{{ __('date') }}" data-date-end-date="0d" required>
                                     <span class="input-group-addon input-group-append"></span>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-3 holiday-div">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" name="holiday" id="holiday" value="0">
+                                            <input type="checkbox" class="form-check-input" name="holiday" id="holiday"
+                                                value="0">
                                             {{ __('holiday') }}
                                             <i class="input-helper"></i>
                                         </label>
@@ -51,11 +54,12 @@
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text py-2">
-                                                <input type="checkbox" name="absent_notification" class="cursor-pointer" 
+                                                <input type="checkbox" name="absent_notification" class="cursor-pointer"
                                                     aria-label="Checkbox for following text input" id="gridCheck">
                                             </div>
                                         </div>
-                                        <label class="form-control d-flex align-items-center min-height-auto cursor-pointer" for="gridCheck">
+                                        <label class="form-control d-flex align-items-center min-height-auto cursor-pointer"
+                                            for="gridCheck">
                                             {{ __('send_a_notification_to_the_guardian_if_the_student_is_absent') }}
                                         </label>
                                     </div>
@@ -64,27 +68,35 @@
 
                             <div class="show_student_list">
                                 <table aria-describedby="mydesc" class='table student_table' id='table_list'
-                                       data-toggle="table" data-url="{{ route('attendance.show',[1]) }}" data-click-to-select="true"
-                                       data-side-pagination="server" data-pagination="false"
-                                       data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-show-refresh="true"
-                                       data-toolbar="#toolbar" data-show-columns="true" data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="roll_number"
-                                       data-sort-order="asc" data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
-                                       data-export-options='{ "fileName": "attendance-<?= date('d-m-y') ?>" ,"ignoreColumn": ["operate"]}'
-                                       data-query-params="attendanceQueryParams" data-escape="true">
+                                    data-toggle="table" data-url="{{ route('attendance.show', [1]) }}"
+                                    data-click-to-select="true" data-side-pagination="server" data-pagination="false"
+                                    data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-show-refresh="true"
+                                    data-toolbar="#toolbar" data-show-columns="true" data-trim-on-search="false"
+                                    data-mobile-responsive="true" data-sort-name="roll_number" data-sort-order="asc"
+                                    data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
+                                    data-export-options='{ "fileName": "attendance-<?= date('d-m-y') ?>" ,"ignoreColumn": ["operate"]}'
+                                    data-query-params="attendanceQueryParams" data-escape="true">
                                     <thead>
-                                    <tr>
-                                        <th scope="col" data-field="id" data-sortable="false" data-visible="false"> {{ __('id') }}</th>
-                                        <th scope="col" data-field="no">{{ __('no.') }}</th>
-                                        <th scope="col" data-field="student_id" data-sortable="false" data-visible="false" data-formatter="addStudentIdInputAttendance"> {{ __('student_id') }}</th>
-                                        <th scope="col" data-field="admission_no" data-sortable="false"> {{ __('admission_no') }}</th>
-                                        <th scope="col" data-field="roll_no" data-sortable="false">{{ __('roll_no') }} </th>
-                                        <th scope="col" data-field="name" data-escape="false">{{ __('name') }} </th>
-                                        <th scope="col" data-field="type" data-formatter="addRadioInputAttendance">{{ __('type') }} </th>
-                                    </tr>
+                                        <tr>
+                                            <th scope="col" data-field="id" data-sortable="false" data-visible="false">
+                                                {{ __('id') }}</th>
+                                            <th scope="col" data-field="no">{{ __('no.') }}</th>
+                                            <th scope="col" data-field="student_id" data-sortable="false"
+                                                data-visible="false" data-formatter="addStudentIdInputAttendance">
+                                                {{ __('student_id') }}</th>
+                                            <th scope="col" data-field="admission_no" data-sortable="false">
+                                                {{ __('admission_no') }}</th>
+                                            <th scope="col" data-field="roll_no" data-sortable="false">{{ __('roll_no') }}
+                                            </th>
+                                            <th scope="col" data-field="name" data-escape="false">{{ __('name') }} </th>
+                                            <th scope="col" data-field="type" data-formatter="addRadioInputAttendance">
+                                                {{ __('type') }} </th>
+                                        </tr>
                                     </thead>
                                 </table>
                             </div>
-                            <input class="btn btn-theme btn_attendance mt-4 float-right" id="create-btn" type="submit" value={{ __('submit') }}>
+                            <input class="btn btn-theme btn_attendance mt-4 float-right" id="create-btn" type="submit"
+                                value={{ __('submit') }}>
                         </form>
                     </div>
                 </div>
@@ -192,32 +204,32 @@
     </script>
 
 
-{{-- =================== --}}
+    {{-- =================== --}}
 
-<script>
-    let attendanceState = {};
-    // Save state when attendance changes
-    $('#table_list').on('change', 'input[type="radio"]', function () {
-        // let studentNo = $(this).attr('name').match(/\d+/)[0];
-        let studentNo = $(this).data('id');
-        let attendanceType = $(this).val();
-        attendanceState[studentNo] = attendanceType;
-    });
-    
+    <script>
+        let attendanceState = {};
+        // Save state when attendance changes
+        $('#table_list').on('change', 'input[type="radio"]', function () {
+            // let studentNo = $(this).attr('name').match(/\d+/)[0];
+            let studentNo = $(this).data('id');
+            let attendanceType = $(this).val();
+            attendanceState[studentNo] = attendanceType;
+        });
 
-    // Initialize table and restore attendance state
-    $('#table_list').on('load-success.bs.table', function () {
-        restoreAttendanceState();
-    });
 
-    // Function to restore attendance state
-    function restoreAttendanceState() {
-        for (let studentNo in attendanceState) {
-            // $(`input[name="attendance_data[${studentNo}][type]"][value="${attendanceState[studentNo]}"]`).prop('checked', true);
-            // form-check-input
-            $(`input[type="radio"][data-id="`+studentNo+`"][value="${attendanceState[studentNo]}"]`).prop('checked', true);
+        // Initialize table and restore attendance state
+        $('#table_list').on('load-success.bs.table', function () {
+            restoreAttendanceState();
+        });
+
+        // Function to restore attendance state
+        function restoreAttendanceState() {
+            for (let studentNo in attendanceState) {
+                // $(`input[name="attendance_data[${studentNo}][type]"][value="${attendanceState[studentNo]}"]`).prop('checked', true);
+                // form-check-input
+                $(`input[type="radio"][data-id="` + studentNo + `"][value="${attendanceState[studentNo]}"]`).prop('checked', true);
+            }
         }
-    }
-</script>
+    </script>
 
 @endsection

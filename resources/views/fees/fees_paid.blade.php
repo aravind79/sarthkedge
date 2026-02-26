@@ -131,13 +131,14 @@
                             <div class="row paid-filter" style="display: none">
                                 <div class="form-group col-md-3">
                                     <label class="filter-menu" for="filter_paid_status"> {{ __('month') }} </label>
-                                    {!! Form::select('month', $months, date('n'), ['class' => 'form-control paid-month','placeholder' => __('all')]) !!}
+                                    <select name="month" class="form-control paid-month">
+                                        <option value="">{{ __('all') }}</option>
+                                        @foreach($months as $key => $month)
+                                            <option value="{{ $key }}" {{ $key == date('n') ? 'selected' : '' }}>{{ $month }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
-                                {{-- <div class="form-group col-md-3">
-                                    <label for="filter_gateway" class="filter-menu">{{ __('payment_type') }}</label>
-                                    {!! Form::select('payment_type', ['' => __('All'), 'cash_cheque' => __('cash_cheque'),'stripe_razorpay' => __('stripe_razorpay')], 0, ['class' => 'form-control payment-gateway' ,'id' => 'filter_gateway']) !!}
-                                </div> --}}
                                 
                                 <div class="form-group col-md-3">
                                     <label for="filter_online_offline_payment" class="filter-menu">{{ __('online_offline_payment') }}</label>

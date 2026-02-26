@@ -20,7 +20,7 @@
                             {{ __('create_notification') }}
                         </h4>
                         <form id="create-form" class="pt-3" action="{{ url('notifications') }}" method="POST"
-                              novalidate="novalidate" data-success-function="formSuccessFunction">
+                            novalidate="novalidate" data-success-function="formSuccessFunction">
                             @csrf
                             <div class="row">
 
@@ -29,13 +29,15 @@
                                     <div class="d-flex">
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {{ Form::radio('type', 'Roles', true, ['id' => 'roles_type', 'class' => 'form-check-input type']) }}
+                                                <input type="radio" name="type" value="Roles" id="roles_type"
+                                                    class="form-check-input type" checked>
                                                 {{ __('Roles') }}
                                             </label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {{ Form::radio('type', 'OverDueFees', false, ['id' => 'over_due_fees_type', 'class' => 'form-check-input type']) }}
+                                                <input type="radio" name="type" value="OverDueFees" id="over_due_fees_type"
+                                                    class="form-check-input type">
                                                 {{ __('Over Due Fees') }}
                                             </label>
                                         </div>
@@ -44,34 +46,49 @@
 
                                 <div class="form-group col-sm-12 col-md-12 roles">
                                     <label for="">{{ __('roles') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('roles[]', $roles, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible','multiple', 'id' => 'roles']) !!}
+                                    <select name="roles[]" id="roles"
+                                        class="form-control select2-dropdown select2-hidden-accessible" multiple>
+                                        @foreach($roles as $key => $role)
+                                            <option value="{{ $key }}">{{ $role }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-12 over_due_fees_roles" style="display: none;">
                                     <label for="">{{ __('roles') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('roles[]', $over_due_fees_roles, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible','multiple', 'id' => 'over_due_fees_roles']) !!}
+                                    <select name="roles[]" id="over_due_fees_roles"
+                                        class="form-control select2-dropdown select2-hidden-accessible" multiple>
+                                        @foreach($over_due_fees_roles as $key => $role)
+                                            <option value="{{ $key }}">{{ $role }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-12">
                                     <label for="">{{ __('title') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('title', null, ['required','class' => 'form-control','placeholder' => __('title')]) !!}
+                                    <input type="text" name="title" class="form-control" placeholder="{{ __('title') }}"
+                                        required>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-12">
                                     <label for="">{{ __('message') }} <span class="text-danger">*</span></label>
-                                    {!! Form::textarea('message', null, ['required','class' => 'form-control','placeholder' => __('message'), 'rows' => 3]) !!}
+                                    <textarea name="message" class="form-control" placeholder="{{ __('message') }}" rows="3"
+                                        required></textarea>
                                 </div>
 
                                 <textarea id="user_id" name="user_id" style="display: none"></textarea>
 
-                                {{-- <textarea name="all_users" id="" cols="30" rows="10" hidden>{{ $all_users }}</textarea> --}}
+                                {{-- <textarea name="all_users" id="" cols="30" rows="10" hidden>{{ $all_users }}</textarea>
+                                --}}
 
                                 <div class="form-group col-sm-6 col-md-12">
                                     <label>{{ __('image') }} </label>
-                                    <input type="file" name="image" accept="image/*" class="file-upload-default"/>
+                                    <input type="file" name="image" accept="image/*" class="file-upload-default" />
                                     <div class="input-group col-xs-12">
-                                        <input type="text" id="image" class="form-control file-upload-info" disabled="" placeholder="{{ __('image') }}"/>
+                                        <input type="text" id="image" class="form-control file-upload-info" disabled=""
+                                            placeholder="{{ __('image') }}" />
                                         <span class="input-group-append">
-                                            <button class="file-upload-browse btn btn-theme" type="button">{{ __('upload') }}</button>
+                                            <button class="file-upload-browse btn btn-theme"
+                                                type="button">{{ __('upload') }}</button>
                                         </span>
                                     </div>
                                 </div>
@@ -88,41 +105,44 @@
             <div class="col-md-6 col-sm-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        
+
                         {{-- <div class="row" id="toolbar-user">
                             <div class="form-group col-sm-12 col-md-12">
-                                <label class="filter-menu">{{ __('Class Section') }} <span class="text-danger">*</span></label>
-                                
+                                <label class="filter-menu">{{ __('Class Section') }} <span
+                                        class="text-danger">*</span></label>
+
                             </div>
                             <div class="form-group col-sm-12 col-md-4">
-                                
+
                             </div>
                         </div> --}}
                         <table aria-describedby="mydesc" class='table' id='table_user_list' data-toggle="table"
-                               data-url="{{ route('notifications.user.show') }}" data-click-to-select="true"
-                               data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
-                               data-search="true" data-toolbar="#toolbar" data-show-columns="false" data-show-refresh="true"
-                               data-fixed-columns="false" data-fixed-number="2" data-fixed-right-number="1"
-                               data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
-                               data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all' data-show-export="false" data-check-on-init="true" data-response-handler="responseHandler"
-                               data-export-options='{ "fileName": "notification-list-<?= date('d-m-y') ?>","ignoreColumn":["operate"]}'
-                               data-escape="true" data-query-params="NotificationUserqueryParams">
+                            data-url="{{ route('notifications.user.show') }}" data-click-to-select="true"
+                            data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
+                            data-search="true" data-toolbar="#toolbar" data-show-columns="false" data-show-refresh="true"
+                            data-fixed-columns="false" data-fixed-number="2" data-fixed-right-number="1"
+                            data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
+                            data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all'
+                            data-show-export="false" data-check-on-init="true" data-response-handler="responseHandler"
+                            data-export-options='{ "fileName": "notification-list-<?= date('d-m-y') ?>","ignoreColumn":["operate"]}'
+                            data-escape="true" data-query-params="NotificationUserqueryParams">
                             <thead>
-                            <tr>
-                                <th data-field="state" data-checkbox="true"></th>
-                                <th scope="col" data-field="id" data-sortable="true" data-visible="false">{{ __('id') }}</th>
-                                <th scope="col" data-field="no">{{ __('no.') }}</th>
-                                <th scope="col" data-field="full_name">{{ __('name') }}</th>
-                                
-                                {{-- <th scope="col" data-field="operate" data-escape="false">{{ __('action') }} --}}
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th data-field="state" data-checkbox="true"></th>
+                                    <th scope="col" data-field="id" data-sortable="true" data-visible="false">{{ __('id') }}
+                                    </th>
+                                    <th scope="col" data-field="no">{{ __('no.') }}</th>
+                                    <th scope="col" data-field="full_name">{{ __('name') }}</th>
+
+                                    {{-- <th scope="col" data-field="operate" data-escape="false">{{ __('action') }} --}}
+                                    </th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -131,25 +151,29 @@
                         </h4>
 
                         <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
-                               data-url="{{ route('notifications.show', [1]) }}" data-click-to-select="true"
-                               data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
-                               data-search="true" data-toolbar="#toolbar" data-show-columns="true" data-show-refresh="true"
-                               data-fixed-columns="false" data-fixed-number="2" data-fixed-right-number="1"
-                               data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
-                               data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
-                               data-export-options='{ "fileName": "notification-list-<?= date('d-m-y') ?>","ignoreColumn":["operate"]}'
-                               data-escape="true" data-query-params="queryParams">
+                            data-url="{{ route('notifications.show', [1]) }}" data-click-to-select="true"
+                            data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
+                            data-search="true" data-toolbar="#toolbar" data-show-columns="true" data-show-refresh="true"
+                            data-fixed-columns="false" data-fixed-number="2" data-fixed-right-number="1"
+                            data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
+                            data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all'
+                            data-show-export="true"
+                            data-export-options='{ "fileName": "notification-list-<?= date('d-m-y') ?>","ignoreColumn":["operate"]}'
+                            data-escape="true" data-query-params="queryParams">
                             <thead>
-                            <tr>
-                                <th scope="col" data-field="id" data-sortable="true" data-visible="false">{{ __('id') }}</th>
-                                <th scope="col" data-field="no">{{ __('no.') }}</th>
-                                <th scope="col" data-field="image" data-formatter="imageFormatter">{{ __('image') }}</th>
-                                <th scope="col" data-field="title">{{ __('title') }}</th>
-                                <th scope="col" data-field="message" data-events="tableDescriptionEvents" data-formatter="descriptionFormatter">{{ __('message') }}</th>
-                                <th scope="col" data-visible="false" data-field="send_to">{{ __('type') }}</th>
-                                <th scope="col" data-field="operate" data-escape="false">{{ __('action') }}
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th scope="col" data-field="id" data-sortable="true" data-visible="false">{{ __('id') }}
+                                    </th>
+                                    <th scope="col" data-field="no">{{ __('no.') }}</th>
+                                    <th scope="col" data-field="image" data-formatter="imageFormatter">{{ __('image') }}
+                                    </th>
+                                    <th scope="col" data-field="title">{{ __('title') }}</th>
+                                    <th scope="col" data-field="message" data-events="tableDescriptionEvents"
+                                        data-formatter="descriptionFormatter">{{ __('message') }}</th>
+                                    <th scope="col" data-visible="false" data-field="send_to">{{ __('type') }}</th>
+                                    <th scope="col" data-field="operate" data-escape="false">{{ __('action') }}
+                                    </th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -180,13 +204,13 @@
                 $('input[type="file"]').val(''); // Clear file input
             }, 500);
         }
-        
-        $('#reset').click(function (e) { 
+
+        $('#reset').click(function (e) {
             // e.preventDefault();
             $('.default-all').prop('checked', true);
             $('.type').trigger('change');
         });
-        
+
 
         $('.type').change(function (e) {
             var selectedType = $('input[name="type"]:checked').val();
@@ -197,14 +221,14 @@
             $('.over_due_fees_roles').hide();
             $('.user-list').hide();
             $('.role-list').hide();
-            
+
             $('#table_user_list').bootstrapTable('uncheckAll');
-            
+
             if (selectedType == 'Roles') {
                 $('.roles').show();
                 $('.role-list').show();
 
-                $("#roles").prop("disabled", false); 
+                $("#roles").prop("disabled", false);
                 $("#over_due_fees_roles").prop("disabled", true);
 
                 // reset roles
@@ -214,21 +238,21 @@
                 $('.over_due_fees_roles').show();
                 $('.user-list').show();
 
-                $("#roles").prop("disabled", true); 
+                $("#roles").prop("disabled", true);
                 $("#over_due_fees_roles").prop("disabled", false);
-                
+
                 // reset roles
                 $("#over_due_fees_roles").val('').trigger('change');
             }
-            
+
         });
 
-        $('#roles').change(function (e) { 
+        $('#roles').change(function (e) {
             e.preventDefault();
             $('#table_user_list').bootstrapTable('refresh');
         });
 
-        $('#over_due_fees_roles').change(function (e) { 
+        $('#over_due_fees_roles').change(function (e) {
             e.preventDefault();
             $('#table_user_list').bootstrapTable('refresh');
         });
@@ -236,7 +260,7 @@
         $('.type').change(function (e) {
             e.preventDefault();
             $('#table_user_list').bootstrapTable('refresh');
-            
+
         });
 
         var $tableList = $('#table_user_list')

@@ -23,10 +23,10 @@
                               data-success-function="formSuccessFunction">
                             @csrf
                             <div class="row">
-                                {!! Form::hidden('leave_master_id', $leaveMaster->id ?? '', ['class' => 'form-control']) !!}
+                                <input type="hidden" name="leave_master_id" class="form-control" value="{{ $leaveMaster->id ?? '' }}">
                                 {{-- holiday --}}
-                                {!! Form::hidden('holiday_days', $leaveMaster->holiday ?? '', ['class' => 'form-control holiday_days']) !!}
-                                {!! Form::hidden('public_holiday', $holiday ?? '', ['class' => 'form-control public_holiday']) !!}
+                                <input type="hidden" name="holiday_days" class="form-control holiday_days" value="{{ $leaveMaster->holiday ?? '' }}">
+                                <input type="hidden" name="public_holiday" class="form-control public_holiday" value="{{ $holiday ?? '' }}">
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label>{{ __('reason') }} <span class="text-danger">*</span></label>
@@ -35,22 +35,12 @@
 
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label>{{ __('from_date') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('from_date', null, [
-                                        'required',
-                                        'id' => 'from_date',
-                                        'class' => 'form-control leave-date',
-                                        'placeholder' => __('from_date'),
-                                    ]) !!}
+                                    <input type="text" name="from_date" id="from_date" class="form-control leave-date" placeholder="{{ __('from_date') }}" required>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label>{{ __('to_date') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('to_date', null, [
-                                        'required',
-                                        'id' => 'to_date',
-                                        'class' => 'form-control leave-date',
-                                        'placeholder' => __('to_date'),
-                                    ]) !!}
+                                    <input type="text" name="to_date" id="to_date" class="form-control leave-date" placeholder="{{ __('to_date') }}" required>
                                 </div>
 
                                 <div class="form-group col-sm-6 col-md-6">
@@ -89,20 +79,31 @@
                         <div class="row" id="toolbar">
                             <div class="form-group col-sm-12 col-md-3">
                                 <label for="" class="filter-menu">{{ __('session_year') }}</label>
-                                {!! Form::select('session_year_id', $sessionYear, $current_session_year->id, [
-                                    'class' => 'form-control',
-                                    'id' => 'session_year_id',
-                                ]) !!}
+                                <select name="session_year_id" id="session_year_id" class="form-control">
+                                    @foreach($sessionYear as $key => $sy)
+                                        <option value="{{ $key }}" {{ $key == $current_session_year->id ? 'selected' : '' }}>{{ $sy }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-3">
                                 <label for="filter" class="filter-menu">{{ __('filter') }}</label>
-                                {!! Form::select('filter', ['All' => 'All','Today' => 'Today', 'Tomorrow' => 'Tomorrow', 'Upcoming' => 'Upcoming'], 'All', ['class' => 'form-control', 'id' => 'filter_upcoming']) !!}
+                                <select name="filter" id="filter_upcoming" class="form-control">
+                                    <option value="All" selected>All</option>
+                                    <option value="Today">Today</option>
+                                    <option value="Tomorrow">Tomorrow</option>
+                                    <option value="Upcoming">Upcoming</option>
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-3">
                                 <label for="month" class="filter-menu">{{ __('month') }}</label>
-                                {!! Form::select('month', $months, null, ['class' => 'form-control',' id' => 'filter_month_id', 'placeholder' => __('all')]) !!}
+                                <select name="month" id="filter_month_id" class="form-control">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach($months as $key => $month)
+                                        <option value="{{ $key }}">{{ $month }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
@@ -161,26 +162,14 @@
                             <div class="row form-group">
                                 <div class="col-sm-12 col-md-12">
                                     <label>{{ __('from_date') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('from_date', null, [
-                                        'required',
-                                        'class' => 'form-control datepicker-popup datepicker-popup-no-past',
-                                        'placeholder' => __('from_date'),
-                                        'id' => 'edit_from_date',
-                                        'disabled',
-                                    ]) !!}
+                                    <input type="text" name="from_date" id="edit_from_date" class="form-control datepicker-popup datepicker-popup-no-past" placeholder="{{ __('from_date') }}" disabled required>
                                 </div>
                             </div>
 
                             <div class="row form-group">
                                 <div class="col-sm-12 col-md-12">
                                     <label>{{ __('to_date') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('to_date', null, [
-                                        'required',
-                                        'class' => 'form-control datepicker-popup datepicker-popup-no-past',
-                                        'placeholder' => __('to_date'),
-                                        'id' => 'edit_to_date',
-                                        'disabled',
-                                    ]) !!}
+                                    <input type="text" name="to_date" id="edit_to_date" class="form-control datepicker-popup datepicker-popup-no-past" placeholder="{{ __('to_date') }}" disabled required>
                                 </div>
                             </div>
 

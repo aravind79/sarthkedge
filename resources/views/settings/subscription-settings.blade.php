@@ -54,7 +54,7 @@
                                     <div class="form-group col-sm-12 col-md-12 mt-3">
                                         <label for=""><strong>{{ __('Cron Job URL') }}</strong> :</label>
 
-                                        {!! Form::text('info-link', url('subscription/cron-job'), ['class' => 'form-control', 'readonly']) !!}
+                                        <input type="text" name="info-link" value="{{ url('subscription/cron-job') }}" class="form-control" readonly>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-12">
@@ -128,7 +128,7 @@
                                     <div class="col-sm-12 col-md-2 mt-4">
                                         <div class="form-check">
                                             <label class="form-check-label d-inline">
-                                                {!! Form::checkbox('highlight', 1, $package ? $package->highlight : false, ['class' => 'form-check-input']) !!}
+                                                <input type="checkbox" name="highlight" value="1" {{ $package && $package->highlight ? 'checked' : '' }} class="form-check-input">
                                                 {{ __('highlight') }} {{ __('package') }}
                                             </label>
                                         </div>

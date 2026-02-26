@@ -53,36 +53,23 @@
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label for="">{{ __('name') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('name', null, [
-                                        'required',
-                                        'class' => 'form-control',
-                                        'placeholder' => __('package') . ' ' . __('name'),
-                                    ]) !!}
+                                    <input required type="text" name="name" class="form-control" placeholder="{{ __('package') . ' ' . __('name') }}">
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label for="">{{ __('description') }}</label>
-                                    {!! Form::textarea('description', null, [
-                                        'class' => 'form-control',
-                                        'placeholder' => __('description'),
-                                        'rows' => '3',
-                                    ]) !!}
+                                    <textarea name="description" class="form-control" placeholder="{{ __('description') }}" rows="3"></textarea>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label for="">{{ __('tagline') }}</label>
-                                    {!! Form::text('tagline', null, ['class' => 'form-control', 'placeholder' => __('tagline')]) !!}
+                                    <input type="text" name="tagline" class="form-control" placeholder="{{ __('tagline') }}">
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-2">
                                     <label for="" class="day-label">{{ __('days') }}</label> <span
                                         class="text-danger">*</span>
-                                    {!! Form::number('days', null, [
-                                        'required',
-                                        'class' => 'form-control days',
-                                        'min' => 1,
-                                        'placeholder' => __('days'),
-                                    ]) !!}
+                                    <input required type="number" name="days" class="form-control days" min="1" placeholder="{{ __('days') }}">
                                 </div>
 
                                 {{-- Postpaid --}}
@@ -92,24 +79,14 @@
                                             <label for=""
                                                 class="student-label">{{ __('per_active_student_charges') }}</label> <span
                                                 class="text-danger">*</span>
-                                            {!! Form::number('student_charge', null, [
-                                                'required',
-                                                'class' => 'form-control student-input',
-                                                'min' => 0,
-                                                'placeholder' => __('per_active_student_charges'),
-                                            ]) !!}
+                                            <input required type="number" name="student_charge" class="form-control student-input" min="0" placeholder="{{ __('per_active_student_charges') }}">
                                         </div>
 
                                         <div class="form-group col-sm-12 col-md-6">
                                             <label for=""
                                                 class="staff-label">{{ __('per_active_staff_charges') }}</label>
                                             <span class="text-danger">*</span>
-                                            {!! Form::number('staff_charge', null, [
-                                                'required',
-                                                'class' => 'form-control staff-input',
-                                                'min' => 0,
-                                                'placeholder' => __('per_active_staff_charges'),
-                                            ]) !!}
+                                            <input required type="number" name="staff_charge" class="form-control staff-input" min="0" placeholder="{{ __('per_active_staff_charges') }}">
                                         </div>
                                     </div>
 
@@ -122,36 +99,21 @@
                                             <label for="" class="staff-label">{{ __('no_of_students') }} <span
                                                     class="text-small text-info"> ({{ __('active') }})</span></label>
                                             <span class="text-danger">*</span>
-                                            {!! Form::number('no_of_students', null, [
-                                                'required',
-                                                'class' => 'form-control',
-                                                'min' => 1,
-                                                'placeholder' => __('no_of_students'),
-                                            ]) !!}
+                                            <input required type="number" name="no_of_students" class="form-control" min="1" placeholder="{{ __('no_of_students') }}">
                                         </div>
 
                                         <div class="form-group col-sm-12 col-md-6">
                                             <label for="" class="staff-label">{{ __('no_of_staffs') }} <span
                                                     class="text-small text-info"> ({{ __('active') }})</span></label>
                                             <span class="text-danger">*</span>
-                                            {!! Form::number('no_of_staffs', null, [
-                                                'required',
-                                                'class' => 'form-control',
-                                                'min' => 1,
-                                                'placeholder' => __('no_of_staffs'),
-                                            ]) !!}
+                                            <input required type="number" name="no_of_staffs" class="form-control" min="1" placeholder="{{ __('no_of_staffs') }}">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="prepaid form-group col-sm-12 col-md-2" style="display: none">
                                     <label for="" class="staff-label">{{ __('charges') }}</label>
                                     <span class="text-danger">*</span>
-                                    {!! Form::number('charges', null, [
-                                        'required',
-                                        'class' => 'form-control',
-                                        'min' => 1,
-                                        'placeholder' => __('charges'),
-                                    ]) !!}
+                                    <input required type="number" name="charges" class="form-control" min="1" placeholder="{{ __('charges') }}">
                                 </div>
 
                             </div>

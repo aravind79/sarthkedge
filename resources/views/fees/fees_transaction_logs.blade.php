@@ -127,7 +127,12 @@
                                 <label class="filter-menu small font-weight-bold" for="filter_month">
                                     {{ __('Month') }}
                                 </label>
-                                {!! Form::select('month', $months, date('n'), ['class' => 'form-control form-control-sm paid-month', 'id' => 'filter_month', 'placeholder' => __('All')]) !!}
+                                <select name="month" id="filter_month" class="form-control form-control-sm paid-month">
+                                    <option value="">{{ __('All') }}</option>
+                                    @foreach($months as $key => $month)
+                                        <option value="{{ $key }}" {{ $key == date('n') ? 'selected' : '' }}>{{ $month }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Session Year -->

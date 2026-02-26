@@ -21,7 +21,7 @@
                         <form class="pt-3 add-lesson-form" id="create-form" data-success-function="formSuccessFunction"
                             action="{{ route('lesson.store') }}" method="POST" novalidate="novalidate">
                             <div class="row">
-                                {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
+                                <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label>{{ __('Class') . ' ' . __('section') }} <span
                                             class="text-danger">*</span></label>
@@ -45,7 +45,7 @@
 
                                 <div class="form-group col-md-6">
                                     <label>{{ __('subject') }} <span class="text-danger">*</span></label>
-                                    {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
+                                    <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
                                     <select required name="subject_id" id="subject-id" class="form-control">
                                         <option value="">-- {{ __('Select Subject') }} --</option>
                                         <option value="data-not-found">-- {{ __('no_data_found') }} --</option>

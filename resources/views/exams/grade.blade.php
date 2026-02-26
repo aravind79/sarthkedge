@@ -25,33 +25,23 @@
                                 <div class="grade-content">
                                     <div data-repeater-list="grade_data">
                                         <div class="row" data-repeater-item>
-                                            {!! Form::hidden('id') !!}
+                                            <input type="hidden" name="id">
                                             <div class="form-group col-md-4">
                                                 <label>{{ __('starting_range') }} </label>
-                                                {!! Form::text('starting_range', 0, [
-                                                    'class' => 'starting-range form-control',
-                                                    'placeholder' => trans('starting_range'),
-                                                    'required' => true,
-                                                    'data-convert' => 'number',
-                                                ]) !!}
+                                                <input type="text" name="starting_range" value="0"
+                                                    class="starting-range form-control"
+                                                    placeholder="{{ __('starting_range') }}" required data-convert="number">
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label>{{ __('ending_range') }} </label>
-                                                {!! Form::text('ending_range', null, [
-                                                    'class' => 'ending-range form-control',
-                                                    'placeholder' => trans('ending_range'),
-                                                    'required' => true,
-                                                    'max' => 100,
-                                                    'data-convert' => 'number',
-                                                ]) !!}
+                                                <input type="text" name="ending_range" class="ending-range form-control"
+                                                    placeholder="{{ __('ending_range') }}" required max="100"
+                                                    data-convert="number">
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label>{{ __('grade') }} </label>
-                                                {!! Form::text('grades', null, [
-                                                    'class' => 'grade form-control',
-                                                    'placeholder' => trans('grade'),
-                                                    'required' => true,
-                                                ]) !!}
+                                                <input type="text" name="grades" class="grade form-control"
+                                                    placeholder="{{ __('grade') }}" required>
                                             </div>
                                             <div class="form-group col-md-1 pl-0 mt-4 remove-grades-div"
                                                 data-repeater-delete>
@@ -80,22 +70,22 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             @if (isset($grades) && !empty($grades->toArray()))
                 gradesRepeater.setList([
                     @foreach ($grades as $data)
-                        {
+                                    {
                             id: "{{ $data->id }}",
                             starting_range: "{{ $data->starting_range }}",
                             ending_range: "{{ $data->ending_range }}",
                             grades: "{{ $data->grade }}",
                         },
                     @endforeach
-                ]);
+                        ]);
             @endif
-        });
+            });
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             @foreach ($grades as $key => $data)
                 $('#remove-grades-' + {{ $key }}).attr('data-id', {{ $data->id }});
             @endforeach

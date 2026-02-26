@@ -25,7 +25,13 @@
 
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu">{{ __('category') }}</label>
-                                {!! Form::select('category_id', $expenseCategory + ['salary' => __('salary'), 'transportation' => __('transportation')], null, ['class' => 'form-control select2-dropdown select2-hidden-accessible', 'id' => 'filter_category_id', 'placeholder' => __('all')]) !!}
+                                <select name="category_id" id="filter_category_id"
+                                    class="form-control select2-dropdown select2-hidden-accessible">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach($expenseCategory + ['salary' => __('salary'), 'transportation' => __('transportation')] as $key => $label)
+                                        <option value="{{ $key }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-4">
@@ -44,7 +50,13 @@
 
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu"> {{ __('month') }}</label>
-                                {!! Form::select('month', $months, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible', 'id' => 'filter_month', 'placeholder' => __('all')]) !!}
+                                <select name="month" id="filter_month"
+                                    class="form-control select2-dropdown select2-hidden-accessible">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach($months as $key => $label)
+                                        <option value="{{ $key }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                         </div>

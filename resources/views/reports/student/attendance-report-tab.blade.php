@@ -4,7 +4,13 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="month">{{ __('Select Month') }} <span class="text-danger">*</span></label>
-                {!! Form::selectMonth('month', now()->month, ['class' => 'form-control', 'id' => 'attendance_month']) !!}
+                <select name="month" id="attendance_month" class="form-control">
+                    @foreach(range(1, 12) as $m)
+                        <option value="{{ $m }}" {{ $m == now()->month ? 'selected' : '' }}>
+                            {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
         </div>
     </div>
@@ -91,7 +97,7 @@
             const month = document.getElementById('attendance_month').value;
             const year = new Date().getFullYear(); // Use current year
             const studentId = '{{ $student->user_id ?? $student->id }}'; // Get student ID from the parent view
-            const sessionYearId = '{{ $session_year_id }}'; 
+            const sessionYearId = '{{ $session_year_id }}';
 
             // Show loading state
             document.getElementById('attendance_data').innerHTML = '<tr><td colspan="32" class="text-center">Loading...</td></tr>';
@@ -136,7 +142,7 @@
                 for (let i = 1; i <= 31; i++) {
                     const cell = document.createElement('td');
                     cell.classList.add('text-center', 'p-1');
-                    
+
                     if (i <= daysInMonth) {
                         // Format date to match API date format (YYYY-MM-DD)
                         const currentDate = `${year}-${month.toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
@@ -156,7 +162,7 @@
                             // Holiday
                             cell.innerHTML = '<span class="badge badge-info text-white" data-toggle="tooltip" title="' +
                                 (holiday.title || 'Holiday') + '">H</span>';
-                                cell.classList.add('bg-info-light');
+                            cell.classList.add('bg-info-light');
                         } else if (attendance) {
                             if (attendance.type === 1 || attendance.type === '1') {
                                 // Present

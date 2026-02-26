@@ -23,38 +23,46 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>{{ __('Class Section') }} <span class="text-danger">*</span></label>
-                                    <select name="class_section_id[]" required id="class-section-id" class="form-control select2 online-exam-class-section-id select2-dropdown select2-hidden-accessible" style="width:100%;" tabindex="-1" aria-hidden="true" multiple>
-                                        {{-- <option value="">--- {{ __('select') . ' ' . __('Class Section') }} ---</option> --}}
+                                    <select name="class_section_id[]" required id="class-section-id"
+                                        class="form-control select2 online-exam-class-section-id select2-dropdown select2-hidden-accessible"
+                                        style="width:100%;" tabindex="-1" aria-hidden="true" multiple>
+                                        {{-- <option value="">--- {{ __('select') . ' ' . __('Class Section') }} ---
+                                        </option> --}}
                                         @foreach ($classSections as $data)
-                                            <option value="{{ $data->id }}" data-class-id="{{ $data->class_id }}" data-section-id="{{ $data->section_id }}">
+                                            <option value="{{ $data->id }}" data-class-id="{{ $data->class_id }}"
+                                                data-section-id="{{ $data->section_id }}">
                                                 {{ $data->full_name }}
                                             </option>
                                         @endforeach
                                     </select>
                                     <div class="form-check w-fit-content">
                                         <label class="form-check-label user-select-none">
-                                            <input type="checkbox" class="form-check-input" id="select-all" value="1">{{__("Select All")}}
+                                            <input type="checkbox" class="form-check-input" id="select-all"
+                                                value="1">{{__("Select All")}}
                                         </label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    
+
                                     <label>{{ __('subject') }} <span class="text-danger">*</span></label>
                                     @if (Auth::user()->hasRole('School Admin'))
                                         <select required name="subject_id" id="subject-id" class="form-control">
                                             <option value="">-- {{ __('Select Subject') }} --</option>
                                             <option value="data-not-found">-- {{ __('no_data_found') }} --</option>
                                             @foreach ($classSubjects as $item)
-                                                <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_id }}">{{ $item->subject_with_name}}</option>
+                                                <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_id }}">
+                                                    {{ $item->subject_with_name}}</option>
                                             @endforeach
                                         </select>
                                     @else
-                                    {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
+                                        <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
                                         <select required name="subject_id" id="subject-id" class="form-control">
                                             <option value="">-- {{ __('Select Subject') }} --</option>
                                             <option value="data-not-found">-- {{ __('no_data_found') }} --</option>
                                             @foreach ($subjectTeachers as $item)
-                                                <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_section_id }}" data-user="{{ Auth::user()->id }}">{{ $item->subject_with_name}}</option>
+                                                <option value="{{ $item->subject_id }}"
+                                                    data-class-section="{{ $item->class_section_id }}"
+                                                    data-user="{{ Auth::user()->id }}">{{ $item->subject_with_name}}</option>
                                             @endforeach
                                         </select>
                                     @endif
@@ -89,7 +97,8 @@
                             <span style="font-size: 14px">
                                 <b>{{ __('note') }} :-</b><br>
                                 1. {{ __('First download dummy file and convert to .csv file then upload it') }}. <br>
-                                2. {{ __('If want more question options, then add after option_d column into csv file. e.g.- option_e, option_f') }}.</span>
+                                2.
+                                {{ __('If want more question options, then add after option_d column into csv file. e.g.- option_e, option_f') }}.</span>
                         </div>
                     </div>
                 </div>

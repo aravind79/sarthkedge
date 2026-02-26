@@ -61,17 +61,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('about_us_title', $settings['about_us_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="about_us_title" value="{{ $settings['about_us_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('about_us_heading', $settings['about_us_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading'), ' required']) !!}
+                                        <input type="text" name="about_us_heading" value="{{ $settings['about_us_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('about_us_description', $settings['about_us_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="about_us_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['about_us_description'] ?? null }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
@@ -114,17 +114,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('education_program_title', $settings['education_program_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="education_program_title" value="{{ $settings['education_program_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('education_program_heading', $settings['education_program_heading'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('heading'), ' required', ]) !!}
+                                        <input type="text" name="education_program_heading" value="{{ $settings['education_program_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('education_program_description', $settings['education_program_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="education_program_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['education_program_description'] ?? null }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-6 col-md-4">
@@ -151,17 +151,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('announcement_title', $settings['announcement_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="announcement_title" value="{{ $settings['announcement_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('announcement_heading', $settings['announcement_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading'), ' required']) !!}
+                                        <input type="text" name="announcement_heading" value="{{ $settings['announcement_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('announcement_description', $settings['announcement_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="announcement_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['announcement_description'] ?? null }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
@@ -206,19 +206,19 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('counter_title', $settings['counter_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="counter_title" value="{{ $settings['counter_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('counter_heading', $settings['counter_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading'), ' required']) !!}
+                                        <input type="text" name="counter_heading" value="{{ $settings['counter_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <div class="row">
                                             <div class="form-group col-sm-12 col-md-12">
                                                 <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                                {!! Form::textarea('counter_description', $settings['counter_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                                <textarea name="counter_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['counter_description'] ?? null }}</textarea>
                                             </div>
 
                                             <div class="form-group col-sm-12 col-md-12">
@@ -318,17 +318,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('expert_teachers_title', $settings['expert_teachers_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="expert_teachers_title" value="{{ $settings['expert_teachers_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('expert_teachers_heading', $settings['expert_teachers_heading'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('heading'), ' required', ]) !!}
+                                        <input type="text" name="expert_teachers_heading" value="{{ $settings['expert_teachers_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('expert_teachers_description', $settings['expert_teachers_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="expert_teachers_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['expert_teachers_description'] ?? null }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-6 col-md-4">
@@ -355,17 +355,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('gallery_title', $settings['gallery_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="gallery_title" value="{{ $settings['gallery_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('gallery_heading', $settings['gallery_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading'), ' required']) !!}
+                                        <input type="text" name="gallery_heading" value="{{ $settings['gallery_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('gallery_description', $settings['gallery_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="gallery_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['gallery_description'] ?? null }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-6 col-md-4">
@@ -394,17 +394,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('our_mission_title', $settings['our_mission_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="our_mission_title" value="{{ $settings['our_mission_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('our_mission_heading', $settings['our_mission_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading'), ' required']) !!}
+                                        <input type="text" name="our_mission_heading" value="{{ $settings['our_mission_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('our_mission_description', $settings['our_mission_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="our_mission_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['our_mission_description'] ?? null }}</textarea>
                                     </div>
 
 
@@ -454,12 +454,12 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label>{{ __('heading') }} </label>
-                                        {!! Form::text('contact_us_heading', $settings['contact_us_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading')]) !!}
+                                        <input type="text" name="contact_us_heading" value="{{ $settings['contact_us_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}">
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label>{{ __('description') }} </label>
-                                        {!! Form::textarea('contact_us_description', $settings['contact_us_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description') ]) !!}
+                                        <textarea name="contact_us_description" class="form-control" placeholder="{{ __('description') }}">{{ $settings['contact_us_description'] ?? null }}</textarea>
                                     </div>
                                     <div class="form-group col-sm-6 col-md-4">
                                         <label>{{ __('status') }} <span class="text-danger">*</span></label><br>
@@ -484,17 +484,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('faqs_title', $settings['faqs_title'] ?? null, ['class' => 'form-control', 'placeholder' => __('title'), ' required']) !!}
+                                        <input type="text" name="faqs_title" value="{{ $settings['faqs_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('faqs_heading', $settings['faqs_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading'), ' required']) !!}
+                                        <input type="text" name="faqs_heading" value="{{ $settings['faqs_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('faqs_description', $settings['faqs_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="faqs_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['faqs_description'] ?? null }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-6 col-md-4">
@@ -520,17 +520,17 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('online_registration_title', $settings['online_registration_title'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('title'), ' required', ]) !!}
+                                        <input type="text" name="online_registration_title" value="{{ $settings['online_registration_title'] ?? null }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('online_registration_heading', $settings['online_registration_heading'] ?? null, ['class' => 'form-control', 'placeholder' => __('heading'), ' required']) !!}
+                                        <input type="text" name="online_registration_heading" value="{{ $settings['online_registration_heading'] ?? null }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label>{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('online_registration_description', $settings['online_registration_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('description'), 'required', ]) !!}
+                                        <textarea name="online_registration_description" class="form-control" placeholder="{{ __('description') }}" required>{{ $settings['online_registration_description'] ?? null }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
@@ -576,7 +576,7 @@
                                         <div class="row">
                                             <div class="form-group col-sm-12 col-md-12">
                                                 <label>{{ __('short_description') }} </label>
-                                                {!! Form::textarea('short_description', $settings['short_description'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('short_description') ]) !!}
+                                                <textarea name="short_description" class="form-control" placeholder="{{ __('short_description') }}">{{ $settings['short_description'] ?? null }}</textarea>
                                             </div>
 
                                             <div class="form-group col-sm-12 col-md-12">
@@ -597,7 +597,7 @@
 
                                             <div class="form-group col-sm-12 col-md-12">
                                                 <label>{{ __('footer_text') }} </label>
-                                                {!! Form::text('footer_text', $settings['footer_text'] ?? null, [ 'class' => 'form-control', 'placeholder' => __('footer_text') ]) !!}
+                                                <input type="text" name="footer_text" value="{{ $settings['footer_text'] ?? null }}" class="form-control" placeholder="{{ __('footer_text') }}">
                                             </div>
                                         </div>
                                         
@@ -607,19 +607,19 @@
                                         <div class="row">
                                             <div class="form-group col-sm-12 col-md-12">
                                                 <label>{{ __('facebook') }}</label>
-                                                {!! Form::text('facebook', $settings['facebook'] ?? null, ['class' => 'form-control', 'placeholder' => __('facebook')]) !!}
+                                                <input type="text" name="facebook" value="{{ $settings['facebook'] ?? null }}" class="form-control" placeholder="{{ __('facebook') }}">
                                             </div>
                                             <div class="form-group col-sm-12 col-md-12">
                                                 <label>{{ __('instagram') }}</label>
-                                                {!! Form::text('instagram', $settings['instagram'] ?? null, ['class' => 'form-control', 'placeholder' => __('instagram')]) !!}
+                                                <input type="text" name="instagram" value="{{ $settings['instagram'] ?? null }}" class="form-control" placeholder="{{ __('instagram') }}">
                                             </div>
                                             <div class="form-group col-sm-12 col-md-12">
                                                 <label>{{ __('linkedin') }}</label>
-                                                {!! Form::text('linkedin', $settings['linkedin'] ?? null, ['class' => 'form-control', 'placeholder' => __('linkedin')]) !!}
+                                                <input type="text" name="linkedin" value="{{ $settings['linkedin'] ?? null }}" class="form-control" placeholder="{{ __('linkedin') }}">
                                             </div>
                                             <div class="form-group col-sm-12 col-md-12">
                                                 <label>{{ __('twitter') }}</label>
-                                                {!! Form::text('twitter', $settings['twitter'] ?? null, ['class' => 'form-control', 'placeholder' => __('twitter')]) !!}
+                                                <input type="text" name="twitter" value="{{ $settings['twitter'] ?? null }}" class="form-control" placeholder="{{ __('twitter') }}">
                                             </div>
                                         </div>
                                     </div>

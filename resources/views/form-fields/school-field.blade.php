@@ -275,7 +275,7 @@
                                 <option value="file">File Upload</option>
                             </select>
 
-                            {!! Form::hidden('type', "", ['id' => 'edit-type-field-value']) !!}
+                            <input type="hidden" name="type" id="edit-type-field-value" value="">
                         </div>
                         <div class="form-group col-sm-12 col-md-2">
                             <label>{{ __('required') }} </label>

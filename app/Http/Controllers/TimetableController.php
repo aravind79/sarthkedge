@@ -325,7 +325,8 @@ class TimetableController extends Controller
         $rows = array();
         $no = 1;
         foreach ($res as $row) {
-            $operate = BootstrapTableService::editButton(route('timetable.edit', $row->id), false);
+            $operate = '<button class="btn btn-xs btn-gradient-info btn-view-timetable mr-1" title="' . trans("View Detailed Timetable") . '"><i class="fa fa-eye"></i></button>';
+            $operate .= BootstrapTableService::editButton(route('timetable.edit', $row->id), false);
             $operate .= BootstrapTableService::button('fa fa-trash', '#', ['delete-class-timetable', 'btn-gradient-danger'], ['title' => trans("Delete Class Timetable"), 'data-id' => $row->id]);
             $tempRow = $row->toArray();
             $timetable = $row->timetable->groupBy('day')->sortBy('start_time');

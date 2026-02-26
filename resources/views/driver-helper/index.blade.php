@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('dob') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('dob', null, ['required', 'placeholder' => __('dob'), 'class' => 'datepicker-popup-no-future form-control', 'autocomplete' => 'off']) !!}
+                                    <input type="text" name="dob" placeholder="{{ __('dob') }}" class="datepicker-popup-no-future form-control" autocomplete="off" required>
                                     <span class="input-group-addon input-group-append">
                                     </span>
                                 </div>
@@ -106,27 +106,31 @@
                                 @if (!Auth::user()->school_id)
                                     <div class="form-group col-sm-12 col-md-4">
                                         <label for="assign_schools">{{__('assign') }} {{ __('schools') }}</label>
-                                        {!! Form::select('school_id[]', $schools, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible', 'multiple']) !!}
+                                        <select name="school_id[]" class="form-control select2-dropdown select2-hidden-accessible" multiple>
+                                            @foreach ($schools as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 @endif
 
                                 @hasFeature('Transportation Module')
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label for="joining_date">{{ __('joining_date') }}</label>
-                                    {!! Form::text('joining_date', null, ['placeholder' => __('joining_date'), 'class' => 'datepicker-popup form-control', 'autocomplete' => 'off']) !!}
+                                    <input type="text" name="joining_date" placeholder="{{ __('joining_date') }}" class="datepicker-popup form-control" autocomplete="off">
                                 </div>
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('status') }} <span class="text-danger">*</span></label><br>
                                     <div class="d-flex">
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {!! Form::radio('status', 1) !!}
+                                                <input type="radio" name="status" value="1">
                                                 {{ __('Active') }}
                                             </label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {!! Form::radio('status', 0, true) !!}
+                                                <input type="radio" name="status" value="0" checked>
                                                 {{ __('Inactive') }}
                                             </label>
                                         </div>
@@ -141,10 +145,10 @@
                                     @foreach ($extraFields as $key => $data)
                                         <div class="form-group col-sm-12 col-md-4">
                                             {{-- Edit Extra Details ID --}}
-                                            {{ Form::hidden('extra_fields[' . $key . '][id]', '', ['id' => $data->type . '_' . $key . '_id']) }}
+                                            <input type="hidden" name="extra_fields[{{ $key }}][id]" id="{{ $data->type . '_' . $key }}_id" value="">
 
                                             {{-- Form Field ID --}}
-                                            {{ Form::hidden('extra_fields[' . $key . '][form_field_id]', $data->id, ['id' => $data->type . '_' . $key . '_id']) }}
+                                            <input type="hidden" name="extra_fields[{{ $key }}][form_field_id]" value="{{ $data->id }}" id="{{ $data->type . '_' . $key }}_id">
 
 
                                             {{-- Add lable to all the elements excluding checkbox --}}
@@ -156,24 +160,19 @@
 
                                             {{-- Text Field --}}
                                             @if($data->type == 'text')
-                                                {{ Form::text('extra_fields[' . $key . '][data]', '', ['class' => 'form-control text-fields', 'id' => $data->type . '_' . $key, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                <input type="text" name="extra_fields[{{ $key }}][data]" class="form-control text-fields" id="{{ $data->type . '_' . $key }}" placeholder="{{ $data->name }}" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                 {{-- Number Field --}}
                                             @elseif($data->type == 'number')
-                                                {{ Form::number('extra_fields[' . $key . '][data]', '', ['min' => 0, 'class' => 'form-control number-fields', 'id' => $data->type . '_' . $key, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                <input type="number" name="extra_fields[{{ $key }}][data]" class="form-control number-fields" id="{{ $data->type . '_' . $key }}" placeholder="{{ $data->name }}" min="0" {{ $data->is_required == 1 ? 'required' : '' }}>
 
                                                 {{-- Dropdown Field --}}
                                             @elseif($data->type == 'dropdown')
-                                                                    {{ Form::select(
-                                                    'extra_fields[' . $key . '][data]',
-                                                    $data->default_values,
-                                                    null,
-                                                    [
-                                                        'id' => $data->type . '_' . $key,
-                                                        'class' => 'form-control select-fields',
-                                                        ($data->is_required == 1 ? 'required' : ''),
-                                                        'placeholder' => 'Select ' . $data->name
-                                                    ]
-                                                )}}
+                                                                <select name="extra_fields[{{ $key }}][data]" id="{{ $data->type . '_' . $key }}" class="form-control select-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                    <option value="">Select {{ $data->name }}</option>
+                                                    @foreach ($data->default_values as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
 
                                                                     {{-- Radio Field --}}
                                             @elseif($data->type == 'radio')
@@ -185,7 +184,7 @@
                                                         @foreach ($data->default_values as $keyRadio => $value)
                                                             <div class="form-check mr-2">
                                                                 <label class="form-check-label">
-                                                                    {{ Form::radio('extra_fields[' . $key . '][data]', $value, null, ['id' => $data->type . '_' . $keyRadio, 'class' => 'radio-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                    <input type="radio" name="extra_fields[{{ $key }}][data]" value="{{ $value }}" class="radio-fields" id="{{ $data->type . '_' . $keyRadio }}" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                     {{$value}}
                                                                 </label>
                                                             </div>
@@ -203,7 +202,7 @@
                                                         @foreach ($data->default_values as $chkKey => $value)
                                                             <div class="mr-2 form-check">
                                                                 <label class="form-check-label">
-                                                                    {{ Form::checkbox('extra_fields[' . $key . '][data][]', $value, null, ['id' => $data->type . '_' . $chkKey, 'class' => 'form-check-input chkclass checkbox-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                    <input type="checkbox" name="extra_fields[{{ $key }}][data][]" value="{{ $value }}" id="{{ $data->type . '_' . $chkKey }}" class="form-check-input chkclass checkbox-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                     {{ $value }}
 
                                                                 </label>
@@ -214,13 +213,13 @@
 
                                                 {{-- Textarea Field --}}
                                             @elseif($data->type == 'textarea')
-                                                {{ Form::textarea('extra_fields[' . $key . '][data]', '', ['placeholder' => $data->name, 'id' => $data->type . '_' . $key, 'class' => 'form-control textarea-fields', ($data->is_required ? 'required' : ''), 'rows' => 3]) }}
+                                                <textarea name="extra_fields[{{ $key }}][data]" placeholder="{{ $data->name }}" id="{{ $data->type . '_' . $key }}" class="form-control textarea-fields" rows="3" {{ $data->is_required ? 'required' : '' }}></textarea>
 
                                                 {{-- File Upload Field --}}
                                             @elseif($data->type == 'file')
                                                 <div class="input-group col-xs-12">
-                                                    {{ Form::file('extra_fields[' . $key . '][data]', ['class' => 'file-upload-default', 'id' => $data->type . '_' . $key, ($data->is_required ? 'required' : '')]) }}
-                                                    {{ Form::text('', '', ['class' => 'form-control file-upload-info', 'disabled' => '', 'placeholder' => __('image')]) }}
+                                                    <input type="file" name="extra_fields[{{ $key }}][data]" class="file-upload-default" id="{{ $data->type . '_' . $key }}" {{ $data->is_required ? 'required' : '' }}>
+                                                    <input type="text" class="form-control file-upload-info" disabled placeholder="{{ __('image') }}">
                                                     <span class="input-group-append">
                                                         <button class="file-upload-browse btn btn-theme"
                                                             type="button">{{ __('upload') }}</button>
@@ -516,7 +515,7 @@
                                     </div>
                                     <div class="form-group col-sm-12 col-md-4">
                                         <label>{{ __('dob') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('dob', null, ['required', 'placeholder' => __('dob'), 'class' => 'datepicker-popup-no-future form-control edit-dob', 'autocomplete' => 'off']) !!}
+                                        <input type="text" name="dob" placeholder="{{ __('dob') }}" class="datepicker-popup-no-future form-control edit-dob" autocomplete="off" required>
                                         <span class="input-group-addon input-group-append">
                                         </span>
                                     </div>
@@ -531,7 +530,7 @@
 
                                         <div class="form-group col-sm-12 col-md-4">
                                             <label for="joining_date">{{ __('joining_date') }}</label>
-                                            {!! Form::text('joining_date', null, ['placeholder' => __('joining_date'), 'class' => 'datepicker-popup form-control', 'autocomplete' => 'off', 'id' => 'edit_joining_date']) !!}
+                                            <input type="text" name="joining_date" id="edit_joining_date" placeholder="{{ __('joining_date') }}" class="datepicker-popup form-control" autocomplete="off">
                                         </div>
                                     @endif
 
@@ -539,7 +538,11 @@
                                     @if (!Auth::user()->school_id)
                                         <div class="form-group col-sm-12 col-md-4">
                                             <label for="assign_schools">{{__('assign') }} {{ __('schools') }}</label>
-                                            {!! Form::select('school_id[]', $schools, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible', 'multiple', 'id' => 'edit_school_id']) !!}
+                                            <select name="school_id[]" id="edit_school_id" class="form-control select2-dropdown select2-hidden-accessible" multiple>
+                                                @foreach ($schools as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     @endif
 
@@ -551,13 +554,13 @@
                                             @foreach ($extraFields as $key => $data)
                                                 @php $fieldName = str_replace(' ', '_', $data->name) @endphp
                                                 {{-- Edit Extra Details ID --}}
-                                                {{ Form::hidden('edit_extra_fields[' . $key . '][id]', '', ['class' => 'edit_extra_fields_id', 'id' => 'edit_' . $fieldName . '_id']) }}
+                                                <input type="hidden" name="edit_extra_fields[{{ $key }}][id]" class="edit_extra_fields_id" id="edit_{{ $fieldName }}_id" value="">
 
                                                 {{-- Form Field ID --}}
-                                                {{ Form::hidden('edit_extra_fields[' . $key . '][form_field_id]', $data->id) }}
+                                                <input type="hidden" name="edit_extra_fields[{{ $key }}][form_field_id]" value="{{ $data->id }}">
 
                                                 {{-- FormFieldType --}}
-                                                {{ Form::hidden('edit_extra_fields[' . $key . '][input_type]', $data->type) }}
+                                                <input type="hidden" name="edit_extra_fields[{{ $key }}][input_type]" value="{{ $data->type }}">
 
                                                 <div class='form-group col-md-12 col-lg-6 col-xl-4 col-sm-12'>
 
@@ -570,24 +573,19 @@
 
                                                     {{-- Text Field --}}
                                                     @if($data->type == 'text')
-                                                        {{ Form::text('edit_extra_fields[' . $key . '][data]', '', ['class' => 'form-control text-fields', 'id' => 'edit_' . $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                        <input type="text" name="edit_extra_fields[{{ $key }}][data]" class="form-control text-fields" id="edit_{{ $fieldName }}" placeholder="{{ $data->name }}" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                         {{-- Number Field --}}
                                                     @elseif($data->type == 'number')
-                                                        {{ Form::number('edit_extra_fields[' . $key . '][data]', '', ['min' => 0, 'class' => 'form-control number-fields', 'id' => 'edit_' . $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                        <input type="number" name="edit_extra_fields[{{ $key }}][data]" class="form-control number-fields" id="edit_{{ $fieldName }}" placeholder="{{ $data->name }}" min="0" {{ $data->is_required == 1 ? 'required' : '' }}>
 
                                                         {{-- Dropdown Field --}}
                                                     @elseif($data->type == 'dropdown')
-                                                                                    {{ Form::select(
-                                                            'edit_extra_fields[' . $key . '][data]',
-                                                            $data->default_values,
-                                                            null,
-                                                            [
-                                                                'id' => 'edit_' . $fieldName,
-                                                                'class' => 'form-control select-fields',
-                                                                ($data->is_required == 1 ? 'required' : ''),
-                                                                'placeholder' => 'Select ' . $data->name
-                                                            ]
-                                                        )}}
+                                                                                    <select name="edit_extra_fields[{{ $key }}][data]" id="edit_{{ $fieldName }}" class="form-control select-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                    <option value="">Select {{ $data->name }}</option>
+                                                    @foreach ($data->default_values as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
 
                                                                                     {{-- Radio Field --}}
                                                     @elseif($data->type == 'radio')
@@ -598,7 +596,7 @@
                                                             @foreach ($data->default_values as $keyRadio => $value)
                                                                 <div class="col-md-12 col-lg-12 col-xl-6 col-sm-12 form-check">
                                                                     <label class="form-check-label">
-                                                                        {{ Form::radio('edit_extra_fields[' . $key . '][data]', $value, null, ['id' => 'edit_' . $fieldName . '_' . $keyRadio, 'class' => 'edit-radio-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                        <input type="radio" name="edit_extra_fields[{{ $key }}][data]" value="{{ $value }}" id="edit_{{ $fieldName }}_{{ $keyRadio }}" class="edit-radio-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                         {{$value}}
                                                                     </label>
                                                                 </div>
@@ -614,7 +612,7 @@
                                                             @foreach ($data->default_values as $chkKey => $value)
                                                                 <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12 form-check">
                                                                     <label class="form-check-label">
-                                                                        {{ Form::checkbox('edit_extra_fields[' . $key . '][data][]', $value, null, ['id' => 'edit_' . $fieldName . '_' . $chkKey, 'class' => 'form-check-input chkclass checkbox-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                        <input type="checkbox" name="edit_extra_fields[{{ $key }}][data][]" value="{{ $value }}" id="edit_{{ $fieldName }}_{{ $chkKey }}" class="form-check-input chkclass checkbox-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                         {{ $value }}
                                                                     </label>
                                                                 </div>
@@ -623,13 +621,13 @@
 
                                                         {{-- Textarea Field --}}
                                                     @elseif($data->type == 'textarea')
-                                                        {{ Form::textarea('edit_extra_fields[' . $key . '][data]', '', ['placeholder' => $data->name, 'id' => 'edit_' . $fieldName, 'class' => 'form-control textarea-fields', ($data->is_required ? 'required' : ''), 'rows' => 3]) }}
+                                                        <textarea name="edit_extra_fields[{{ $key }}][data]" placeholder="{{ $data->name }}" id="edit_{{ $fieldName }}" class="form-control textarea-fields" rows="3" {{ $data->is_required ? 'required' : '' }}></textarea>
 
                                                         {{-- File Upload Field --}}
                                                     @elseif($data->type == 'file')
                                                         <div class="input-group col-xs-12">
-                                                            {{ Form::file('edit_extra_fields[' . $key . '][data]', ['class' => 'file-upload-default', 'id' => 'edit_' . $fieldName, ($data->is_required == 1 ? 'required' : '')]) }}
-                                                            {{ Form::text('', '', ['class' => 'form-control file-upload-info', 'disabled' => '', 'placeholder' => __('image')]) }}
+                                                            <input type="file" name="edit_extra_fields[{{ $key }}][data]" class="file-upload-default" id="edit_{{ $fieldName }}" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                            <input type="text" class="form-control file-upload-info" disabled placeholder="{{ __('image') }}">
                                                             <span class="input-group-append">
                                                                 <button class="file-upload-browse btn btn-theme"
                                                                     type="button">{{ __('upload') }}</button>

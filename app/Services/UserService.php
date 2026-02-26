@@ -16,13 +16,15 @@ use Illuminate\Support\Str;
 use JsonException;
 use Throwable;
 
-class UserService {
+class UserService
+{
     private UserInterface $user;
     private StudentInterface $student;
     private ExtraFormFieldsInterface $extraFormFields;
     private SessionYearsTrackingsService $sessionYearsTrackingsService;
-    
-    public function __construct(UserInterface $user, StudentInterface $student, ExtraFormFieldsInterface $extraFormFields, SessionYearsTrackingsService $sessionYearsTrackingsService) {
+
+    public function __construct(UserInterface $user, StudentInterface $student, ExtraFormFieldsInterface $extraFormFields, SessionYearsTrackingsService $sessionYearsTrackingsService)
+    {
         $this->user = $user;
         $this->student = $student;
         $this->extraFormFields = $extraFormFields;
@@ -33,7 +35,8 @@ class UserService {
      * @param $mobile
      * @return string
      */
-    public function makeParentPassword($mobile) {
+    public function makeParentPassword($mobile)
+    {
         return $mobile;
     }
 
@@ -41,7 +44,8 @@ class UserService {
      * @param $dob
      * @return string
      */
-    public function makeStudentPassword($dob) {
+    public function makeStudentPassword($dob)
+    {
         return str_replace('-', '', date('d-m-Y', strtotime($dob)));
     }
 
@@ -54,15 +58,16 @@ class UserService {
      * @param null $image
      * @return Model|null
      */
-    public function createOrUpdateParent($first_name, $last_name, $email, $mobile, $gender, $image = null, $reset_password = null) {
+    public function createOrUpdateParent($first_name, $last_name, $email, $mobile, $gender, $image = null, $reset_password = null)
+    {
         $password = $this->makeParentPassword($mobile);
 
         $parent = array(
             'first_name' => $first_name,
-            'last_name'  => $last_name,
-            'mobile'     => $mobile,
-            'gender'     => $gender,
-            'school_id'  => Auth::user()->school_id
+            'last_name' => $last_name,
+            'mobile' => $mobile,
+            'gender' => $gender,
+            'school_id' => Auth::user()->school_id
         );
 
         //NOTE : This line will return the old values if the user is already exists
@@ -80,7 +85,7 @@ class UserService {
                 $parent['password'] = Hash::make($password);
             }
             $user->assignRole('Guardian');
-            
+
             $user->update($parent);
         } else {
             $parent['password'] = Hash::make($password);
@@ -113,23 +118,24 @@ class UserService {
      * @throws Throwable
      */
 
-    public function createStudentUser(string $first_name, string $last_name, string $admission_no, string|null $mobile, string $dob, string $gender, \Symfony\Component\HttpFoundation\File\UploadedFile|null $image, int $classSectionID, string $admissionDate, $current_address = null, $permanent_address = null, int $sessionYearID, int $guardianID, array $extraFields = [], int $status, $is_send_notification = null) {
+    public function createStudentUser(string $first_name, string $last_name, string $admission_no, string|null $mobile, string $dob, string $gender, \Symfony\Component\HttpFoundation\File\UploadedFile|null $image, int $classSectionID, string $admissionDate, $current_address = null, $permanent_address = null, int $sessionYearID, int $guardianID, array $extraFields = [], int $status, $is_send_notification = null)
+    {
         $password = $this->makeStudentPassword($dob);
         //Create Student User First
         $user = $this->user->create([
-            'first_name'        => $first_name,
-            'last_name'         => $last_name,
-            'email'             => $admission_no,
-            'mobile'            => $mobile,
-            'dob'               => date('Y-m-d', strtotime($dob)),
-            'gender'            => $gender,
-            'password'          => Hash::make($password),
-            'school_id'         => Auth::user()->school_id,
-            'image'             => $image,
-            'status'            => $status,
-            'current_address'   => $current_address,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $admission_no,
+            'mobile' => $mobile,
+            'dob' => date('Y-m-d', strtotime($dob)),
+            'gender' => $gender,
+            'password' => Hash::make($password),
+            'school_id' => Auth::user()->school_id,
+            'image' => $image,
+            'status' => $status,
+            'current_address' => $current_address,
             'permanent_address' => $permanent_address,
-            'deleted_at'        => $status == 1 ? null : '1970-01-01 01:00:00'
+            'deleted_at' => $status == 1 ? null : '1970-01-01 01:00:00'
         ]);
         $user->assignRole('Student');
 
@@ -137,16 +143,16 @@ class UserService {
         $roll_number_db = $roll_number_db['max(roll_number)'];
         $roll_number = $roll_number_db + 1;
 
-        $student = $this->student->updateOrCreate( ['user_id' => $user->id] ,[
-            'user_id'          => $user->id,
+        $student = $this->student->updateOrCreate(['user_id' => $user->id], [
+            'user_id' => $user->id,
             'class_section_id' => $classSectionID,
-            'admission_no'     => $admission_no,
-            'roll_number'      => $roll_number,
-            'admission_date'   => date('Y-m-d', strtotime($admissionDate)),
-            'guardian_id'      => $guardianID,
-            'session_year_id'  => $sessionYearID,
+            'admission_no' => $admission_no,
+            'roll_number' => $roll_number,
+            'admission_date' => date('Y-m-d', strtotime($admissionDate)),
+            'guardian_id' => $guardianID,
+            'session_year_id' => $sessionYearID,
             'join_session_year_id' => $sessionYearID,
-            'leave_session_year_id' => null 
+            'leave_session_year_id' => null
         ]);
 
         // Store Session Years Tracking
@@ -157,12 +163,17 @@ class UserService {
         foreach ($extraFields as $fields) {
             $data = null;
             if (isset($fields['data'])) {
-                $data = (is_array($fields['data']) ? json_encode($fields['data'], JSON_THROW_ON_ERROR) : $fields['data']);
+                if ($fields['data'] instanceof \Illuminate\Http\UploadedFile) {
+                    // If the data is a file, store it and save the path
+                    $data = $fields['data']->store('extra_fields', 'public');
+                } else {
+                    $data = (is_array($fields['data']) ? json_encode($fields['data'], JSON_THROW_ON_ERROR) : $fields['data']);
+                }
             }
             $extraDetails[] = array(
-                'user_id'    => $student->user_id,
+                'user_id' => $user->id,
                 'form_field_id' => $fields['form_field_id'],
-                'data'          => $data,
+                'data' => $data,
             );
         }
         if (!empty($extraDetails)) {
@@ -197,15 +208,16 @@ class UserService {
      * @return Model|null
      * @throws JsonException
      */
-    public function updateStudentUser($userID, $first_name, $last_name, $mobile, $dob, $gender, $image, $sessionYearID, array $extraFields = [], $guardianID = null, $current_address = null, $permanent_address = null, $reset_password = null, $classSectionID) {
+    public function updateStudentUser($userID, $first_name, $last_name, $mobile, $dob, $gender, $image, $sessionYearID, array $extraFields = [], $guardianID = null, $current_address = null, $permanent_address = null, $reset_password = null, $classSectionID)
+    {
         $studentUserData = array(
-            'first_name'        => $first_name,
-            'last_name'         => $last_name,
-            'mobile'            => $mobile,
-            'dob'               => date('Y-m-d', strtotime($dob)),
-            'current_address'   => $current_address,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'mobile' => $mobile,
+            'dob' => date('Y-m-d', strtotime($dob)),
+            'current_address' => $current_address,
             'permanent_address' => $permanent_address,
-            'gender'            => $gender,
+            'gender' => $gender,
         );
 
         if (!empty($current_address)) {
@@ -228,7 +240,7 @@ class UserService {
         $user = $this->user->update($userID, $studentUserData);
 
         $studentData = array(
-            'guardian_id'     => $guardianID,
+            'guardian_id' => $guardianID,
             'session_year_id' => $sessionYearID,
             'class_section_id' => $classSectionID
         );
@@ -239,10 +251,10 @@ class UserService {
             if ($fields['input_type'] == 'file') {
                 if (isset($fields['data']) && $fields['data'] instanceof UploadedFile) {
                     $extraDetails[] = array(
-                        'id'            => $fields['id'],
-                        'user_id'    => $student->user_id,
+                        'id' => $fields['id'],
+                        'user_id' => $student->user_id,
                         'form_field_id' => $fields['form_field_id'],
-                        'data'          => $fields['data']
+                        'data' => $fields['data']
                     );
                 }
             } else {
@@ -251,10 +263,10 @@ class UserService {
                     $data = (is_array($fields['data']) ? json_encode($fields['data'], JSON_THROW_ON_ERROR) : $fields['data']);
                 }
                 $extraDetails[] = array(
-                    'id'            => $fields['id'],
-                    'user_id'    => $student->user_id,
+                    'id' => $fields['id'],
+                    'user_id' => $student->user_id,
                     'form_field_id' => $fields['form_field_id'],
-                    'data'          => $data,
+                    'data' => $data,
                 );
             }
         }
@@ -274,17 +286,18 @@ class UserService {
      * @return void
      * @throws Throwable
      */
-    public function sendRegistrationEmail($guardian, $child, $childAdmissionNumber, $childPlainTextPassword) {
+    public function sendRegistrationEmail($guardian, $child, $childAdmissionNumber, $childPlainTextPassword)
+    {
         try {
 
-         
+
             $school_name = Auth::user()->school->name;
 
             $email_body = $this->replacePlaceholders($guardian, $child, $childAdmissionNumber, $childPlainTextPassword);
             $data = [
-                'subject'                => 'Admission Application Approved - Welcome to ' . $school_name,
-                'email'                  => $guardian->email,
-                'email_body'             => $email_body
+                'subject' => 'Admission Application Approved - Welcome to ' . $school_name,
+                'email' => $guardian->email,
+                'email_body' => $email_body
             ];
 
             Mail::send('students.email', $data, static function ($message) use ($data) {
@@ -345,9 +358,9 @@ class UserService {
             $schoolSettings = $cache->getSchoolSettings();
             $email_body = $this->replaceStaffPlaceholders($user, $password, $schoolSettings);
             $data = [
-                'subject'     => 'Welcome to ' . $schoolSettings['school_name'],
-                'email'       => $user->email,
-                'email_body'  => $email_body
+                'subject' => 'Welcome to ' . $schoolSettings['school_name'],
+                'email' => $user->email,
+                'email_body' => $email_body
             ];
 
             Mail::send('teacher.email', $data, static function ($message) use ($data) {
@@ -376,7 +389,7 @@ class UserService {
             '{email}' => $user->email,
             '{password}' => $password,
             '{school_name}' => $schoolSettings['school_name'],
-            
+
             '{support_email}' => $schoolSettings['school_email'] ?? '',
             '{support_contact}' => $schoolSettings['school_phone'] ?? '',
 
@@ -403,9 +416,9 @@ class UserService {
             $schoolSettings = $cache->getSchoolSettings();
             $email_body = $this->replaceApplicationRejectPlaceholders($user, $class_name, $schoolSettings, $guardian);
             $data = [
-                'subject'     => 'Admission Application Rejected - ' . $schoolSettings['school_name'],
-                'email'       => $guardian->email,
-                'email_body'  => $email_body
+                'subject' => 'Admission Application Rejected - ' . $schoolSettings['school_name'],
+                'email' => $guardian->email,
+                'email_body' => $email_body
             ];
 
             Mail::send('students.email', $data, static function ($message) use ($data) {

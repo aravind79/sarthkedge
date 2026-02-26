@@ -108,7 +108,8 @@
                                         </th>
                                         <th scope="col" data-field="components_count" data-sortable="false"
                                             data-align="center" data-formatter="componentsCountFormatter">
-                                            {{ __('Components') }}</th>
+                                            {{ __('Components') }}
+                                        </th>
                                         <th scope="col" data-field="description" data-sortable="false">
                                             {{ __('description') }}
                                         </th>
@@ -204,11 +205,13 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="edit_name">{{ __('name') }} <span class="text-danger">*</span></label>
-                            {!! Form::text('edit_name', null, ['required', 'class' => 'form-control edit_name', 'id' => 'edit_name', 'placeholder' => __('name')]) !!}
+                            <input type="text" name="edit_name" id="edit_name" class="form-control edit_name"
+                                placeholder="{{ __('name') }}" required>
                         </div>
                         <div class="form-group">
                             <label for="edit_description">{{ __('description') }}</label>
-                            {!! Form::textarea('edit_description', null, ['class' => 'form-control edit_description', 'id' => 'edit_description', 'placeholder' => __('description'), 'rows' => 3]) !!}
+                            <textarea name="edit_description" id="edit_description" class="form-control edit_description"
+                                placeholder="{{ __('description') }}" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -272,21 +275,21 @@
         // ---- Component Row Template ----
         function createComponentRow(index) {
             return `
-            <div class="component-row" id="component-row-${index}">
-                <button type="button" class="remove-component" data-index="${index}" title="${window.trans['delete'] || 'Remove'}">
-                    <i class="fa fa-times"></i>
-                </button>
-                <div class="row">
-                    <div class="form-group col-md-6 mb-2">
-                        <label class="small font-weight-bold">{{ __('Component Name') }} <span class="text-danger">*</span></label>
-                        <input type="text" name="components[${index}][name]" class="form-control form-control-sm" placeholder="{{ __('e.g. Library Fee') }}" required>
+                <div class="component-row" id="component-row-${index}">
+                    <button type="button" class="remove-component" data-index="${index}" title="${window.trans['delete'] || 'Remove'}">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <div class="row">
+                        <div class="form-group col-md-6 mb-2">
+                            <label class="small font-weight-bold">{{ __('Component Name') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="components[${index}][name]" class="form-control form-control-sm" placeholder="{{ __('e.g. Library Fee') }}" required>
+                        </div>
+                        <div class="form-group col-md-6 mb-2">
+                            <label class="small font-weight-bold">{{ __('Description') }}</label>
+                            <input type="text" name="components[${index}][description]" class="form-control form-control-sm" placeholder="{{ __('Optional') }}">
+                        </div>
                     </div>
-                    <div class="form-group col-md-6 mb-2">
-                        <label class="small font-weight-bold">{{ __('Description') }}</label>
-                        <input type="text" name="components[${index}][description]" class="form-control form-control-sm" placeholder="{{ __('Optional') }}">
-                    </div>
-                </div>
-            </div>`;
+                </div>`;
         }
 
         // ---- Add Component ----

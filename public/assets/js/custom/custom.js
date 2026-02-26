@@ -1,4 +1,6 @@
 "use strict";
+var createTimetable;
+var teacherTimetable;
 const $table = $("#table_list"); // "table" accordingly
 $(function () {
     // $("#sortable-row").sortable({
@@ -57,7 +59,7 @@ $(function () {
     });
 
     let layout_direction = 'ltl';
-    if(isRTL()) {
+    if (isRTL()) {
         layout_direction = 'rtl';
     } else {
         layout_direction = 'ltl';
@@ -65,7 +67,7 @@ $(function () {
 
     if ($('#tinymce_message').length) {
         tinymce.init({
-            directionality : layout_direction,
+            directionality: layout_direction,
             height: "500",
             selector: '#tinymce_message',
             relative_urls: false,
@@ -191,14 +193,14 @@ $(function () {
 });
 
 // date range picker
-$(function() {
+$(function () {
     $(".daterange").daterangepicker({
         opens: 'right',
         autoUpdateInput: false,
-    }).on('apply.daterangepicker', function(ev, picker) {
+    }).on('apply.daterangepicker', function (ev, picker) {
         $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format('DD-MM-YYYY'));
         $('#table_list').bootstrapTable('refresh');
-    }).on('cancel.daterangepicker', function(ev, picker) {
+    }).on('cancel.daterangepicker', function (ev, picker) {
         $(this).val('');
     });
 });
@@ -225,7 +227,7 @@ $(function() {
 // })
 
 // 'Start-trial-Pacakge' Display and Hide
-$("#trialBtn").on("click", function() {
+$("#trialBtn").on("click", function () {
     $("#trialCheckboxContainer").show();
 });
 
@@ -418,7 +420,7 @@ $('#edit_resubmission_allowed').on('change', function () {
 
 $('.checkbox_add_url').on('change', function () {
     if ($(this).is(':checked')) {
-        $(this).val(1);      
+        $(this).val(1);
         // $('#fileOption').hide(500);
         $('#add_url').show(500);
     } else {
@@ -430,7 +432,7 @@ $('.checkbox_add_url').on('change', function () {
 
 $('.edit_checkbox_add_url').on('change', function () {
     if ($(this).is(':checked')) {
-        $(this).val(1);      
+        $(this).val(1);
         // $('#fileOption').hide(500);
         $('#edit_add_url').show(500);
     } else {
@@ -596,7 +598,7 @@ $(document).on('submit', '.email-template-setting-form', function (e) {
     $.ajax({
         type: "PUT",
         url: url,
-        data: {email_template_school_registration: email_template_school_registration, school_reject_template: school_reject_template, school_inquiry_template: school_inquiry_template},
+        data: { email_template_school_registration: email_template_school_registration, school_reject_template: school_reject_template, school_inquiry_template: school_inquiry_template },
         beforeSend: function () {
             submitButtonElement.val(window.trans["Please Wait..."]).attr('disabled', true);
         },
@@ -623,7 +625,7 @@ $(document).on('submit', '.setting-form', function (e) {
     $.ajax({
         type: "PUT",
         url: url,
-        data: {data: data, name: name},
+        data: { data: data, name: name },
         beforeSend: function () {
             submitButtonElement.val(window.trans["Please Wait..."]).attr('disabled', true);
         },
@@ -653,7 +655,7 @@ $(document).on('submit', '.school-email-template', function (e) {
     $.ajax({
         type: "PUT",
         url: url,
-        data: {staff_data: staff_data, parent_data: parent_data, reject_email_data:reject_email_data, template: template},
+        data: { staff_data: staff_data, parent_data: parent_data, reject_email_data: reject_email_data, template: template },
         beforeSend: function () {
             submitButtonElement.val(window.trans["Please Wait..."]).attr('disabled', true);
         },
@@ -691,7 +693,7 @@ $('#edit_class_section_id').on('change', function (e, subject_id) {
     // let class_id = $(this).find(':selected').data('class');
     let class_section_id = $(this).val();
     let url = baseUrl + '/subject-by-class-section';
-    let data = {class_section_id: class_section_id};
+    let data = { class_section_id: class_section_id };
 
     function successCallback(response) {
         if (response.length > 0) {
@@ -1058,17 +1060,17 @@ $('#bank_transfer_status').on('change', function (e) {
 });
 
 // Paystack toggle for new UI
-$(document).ready(function() {
-    $('#Paystack').on('change', function() {
+$(document).ready(function () {
+    $('#Paystack').on('change', function () {
         if ($(this).is(':checked')) {
             $('#PaystackForm').removeClass('d-none');
-            
+
             // Disable other payment methods
             $('#stripe_status').val(0);
             $('#razorpay_status').val(0);
             $('#flutterwave_status').val(0);
             $('#bank_transfer_status').val(0);
-            
+
             // Uncheck other toggles
             $('#Flutterwave').prop('checked', false);
             $('#FlutterwaveForm').addClass('d-none');
@@ -1076,18 +1078,18 @@ $(document).ready(function() {
             $('#PaystackForm').addClass('d-none');
         }
     });
-    
+
     // Flutterwave toggle for new UI
-    $('#Flutterwave').on('change', function() {
+    $('#Flutterwave').on('change', function () {
         if ($(this).is(':checked')) {
             $('#FlutterwaveForm').removeClass('d-none');
-            
+
             // Disable other payment methods
             $('#stripe_status').val(0);
             $('#razorpay_status').val(0);
             $('#paystack_status').val(0);
             $('#bank_transfer_status').val(0);
-            
+
             // Uncheck other toggles
             $('#Paystack').prop('checked', false);
             $('#PaystackForm').addClass('d-none');
@@ -1391,7 +1393,7 @@ $(document).on('click', '.remove-row', function () {
         })
     } else {
         $(this).parent().parent().parent().remove();
-        $('#table_list_exam_questions').bootstrapTable('uncheckBy', {field: 'question_id', values: [id]})
+        $('#table_list_exam_questions').bootstrapTable('uncheckBy', { field: 'question_id', values: [id] })
     }
 })
 $('#store-assign-questions-form').on('submit', function (e) {
@@ -2012,13 +2014,13 @@ const transportationFeeRepeater = $('.duration-amount-repeater').repeater({
     show: function () {
         let $this = $(this);
         $this.slideDown();
-        
+
         // Set unique ID for the remove button
         $this.find('.remove-duration-amount').attr('id', 'remove-transportation-fee-' + idTransportationFeeCounter);
-        
+
         // Ensure number inputs are properly typed
         $this.find('input[type="number"]').removeAttr('type').attr('type', "number");
-        
+
         idTransportationFeeCounter++;
     },
     hide: function (deleteElement) {
@@ -2033,7 +2035,7 @@ const routePickupPointRepeater = $('.pickup-points-repeater').repeater({
     show: function () {
         let $this = $(this);
         $this.slideDown(); // Add Another Data Down
-        
+
         // Initialize Select2 for pickup point dropdown if available
         if (typeof $.fn.select2 !== 'undefined') {
             $this.find('.pickup-point-select').select2({
@@ -2041,13 +2043,13 @@ const routePickupPointRepeater = $('.pickup-points-repeater').repeater({
                 allowClear: true
             });
         }
-        
+
         // Set unique ID for remove button
         $this.find('.remove-pickup-point').attr('id', 'remove-pickup-point-' + idRoutePickupPointCounter);
-        
+
         // Convert input types
         $this.find('input[data-convert="time"]').removeAttr('type').attr('type', "time");
-        
+
         idRoutePickupPointCounter++;
     },
     hide: function (deleteElement) {
@@ -2147,7 +2149,7 @@ function checkSubjectTypeCompatibility(existingEvent, newEvent) {
     // Get subject type from extendedProps
     let existingSubjectType = existingEvent.extendedProps?.subject_type;
     let newSubjectType = newEvent.extendedProps?.subject_type;
-  
+
     // If either subject is not elective, don't allow overlap
     if (existingSubjectType !== 'Elective' || newSubjectType !== 'Elective') {
         return false;
@@ -2158,7 +2160,7 @@ function checkSubjectTypeCompatibility(existingEvent, newEvent) {
 }
 
 if (calendarEl !== null) {
-    var createTimetable = new FullCalendar.Calendar(calendarEl, {
+    createTimetable = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         contentHeight: 1500,
         direction: layout_direction,
@@ -2169,9 +2171,9 @@ if (calendarEl !== null) {
             // end: 'listDay,listWeek,timeGridWeek' // will normally be on the right. if RTL, will be on the left
         },
         views: {
-            listDay: {buttonText: 'Today'},
-            listWeek: {buttonText: 'List'},
-            timeGridWeek: {buttonText: 'Calendar'}
+            listDay: { buttonText: 'Today' },
+            listWeek: { buttonText: 'List' },
+            timeGridWeek: { buttonText: 'Calendar' }
         },
         slotMinTime: "00:00:00",
         slotMaxTime: "00:00:00",
@@ -2188,10 +2190,10 @@ if (calendarEl !== null) {
         eventDurationEditable: true,
         eventResizableFromStart: true,
         eventDidMount: function (event) {
-            let subjectType = event.event.extendedProps.subject_type;   
+            let subjectType = event.event.extendedProps.subject_type;
             $(event.el).find('.fc-event-main .fc-event-main-frame')
-            .append("<div class='text-right'><span class='fa fa-times remove-timetable' data-id=" + event.event.id + "></span></div>")
-            .attr('data-subject-type', subjectType);
+                .append("<div class='text-right'><span class='fa fa-times-circle remove-timetable' style='cursor:pointer; font-size: 14px; margin: 4px;' data-id='" + event.event.id + "'></span></div>")
+                .attr('data-subject-type', subjectType);
         },
         eventReceive: function (event) {
             let subject_teacher_id = $(event.draggedEl).data('subject_teacher_id');
@@ -2207,25 +2209,25 @@ if (calendarEl !== null) {
             let endTime24Hr = end_time.getHours() + ":" + end_time.getMinutes() + ":" + end_time.getSeconds();
 
             // Check for overlapping events
-            let overlappingEvents = createTimetable.getEvents().filter(function(existingEvent) {
+            let overlappingEvents = createTimetable.getEvents().filter(function (existingEvent) {
                 if (existingEvent.id === event.event.id) return false;
-                
+
                 let existingDate = new Date(existingEvent.start);
                 if (existingDate.getDay() !== date.getDay()) return false;
-                
+
                 let existingStart = new Date(existingEvent.start);
                 let existingEnd = new Date(existingEvent.end);
                 let newStart = new Date(event.event.start);
                 let newEnd = new Date(event.event.end);
-                
+
                 let hasOverlap = (newStart < existingEnd && newEnd > existingStart);
-                
+
                 if (hasOverlap) {
                     // Add subject type to the event properties
                     event.event.setExtendedProp('subject_type', subject_type);
                     return !checkSubjectTypeCompatibility(existingEvent, event.event);
                 }
-                
+
                 return false;
             });
 
@@ -2283,26 +2285,26 @@ if (calendarEl !== null) {
             let timetable_id = event.event.id;
 
             // Check for overlapping events
-            let overlappingEvents = createTimetable.getEvents().filter(function(existingEvent) {
+            let overlappingEvents = createTimetable.getEvents().filter(function (existingEvent) {
                 // Skip the current event being dragged
                 if (existingEvent.id === event.event.id) return false;
-                
+
                 // Check if events are on the same day
                 let existingDate = new Date(existingEvent.start);
                 if (existingDate.getDay() !== date.getDay()) return false;
-                
+
                 // Check for time overlap
                 let existingStart = new Date(existingEvent.start);
                 let existingEnd = new Date(existingEvent.end);
                 let newStart = new Date(event.event.start);
                 let newEnd = new Date(event.event.end);
-                
+
                 let hasOverlap = (newStart < existingEnd && newEnd > existingStart);
-                
+
                 if (hasOverlap) {
                     return !checkSubjectTypeCompatibility(existingEvent, event.event);
                 }
-                
+
                 return false;
             });
 
@@ -2330,26 +2332,26 @@ if (calendarEl !== null) {
             let timetable_id = event.event.id;
 
             // Check for overlapping events
-            let overlappingEvents = createTimetable.getEvents().filter(function(existingEvent) {
+            let overlappingEvents = createTimetable.getEvents().filter(function (existingEvent) {
                 // Skip the current event being resized
                 if (existingEvent.id === event.event.id) return false;
-                
+
                 // Check if events are on the same day
                 let existingDate = new Date(existingEvent.start);
                 if (existingDate.getDay() !== date.getDay()) return false;
-                
+
                 // Check for time overlap
                 let existingStart = new Date(existingEvent.start);
                 let existingEnd = new Date(existingEvent.end);
                 let newStart = new Date(event.event.start);
                 let newEnd = new Date(event.event.end);
-                
+
                 let hasOverlap = (newStart < existingEnd && newEnd > existingStart);
-                
+
                 if (hasOverlap) {
                     return !checkSubjectTypeCompatibility(existingEvent, event.event);
                 }
-                
+
                 return false;
             });
 
@@ -2369,7 +2371,7 @@ if (calendarEl !== null) {
     })
     createTimetable.render();
 
-    var teacherTimetable = new FullCalendar.Calendar(calendarEl, {
+    teacherTimetable = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         contentHeight: 1500,
         headerToolbar: {
@@ -2379,9 +2381,9 @@ if (calendarEl !== null) {
             // end: 'listDay,listWeek,timeGridWeek' // will normally be on the right. if RTL, will be on the left
         },
         views: {
-            listDay: {buttonText: 'Today'},
-            listWeek: {buttonText: 'List'},
-            timeGridWeek: {buttonText: 'Calendar'}
+            listDay: { buttonText: 'Today' },
+            listWeek: { buttonText: 'List' },
+            timeGridWeek: { buttonText: 'Calendar' }
         },
         slotMinTime: "00:00:00",
         slotMaxTime: "00:00:00",
@@ -2405,10 +2407,22 @@ if (calendarEl !== null) {
     $(document).on('click', '.remove-timetable', function (e) {
         e.preventDefault();
         let timetable_id = $(this).data('id');
-        let event = createTimetable.getEventById(timetable_id)
+        if (!timetable_id) {
+            showErrorToast(window.trans["Unable to identify timetable entry"]);
+            return;
+        }
+
+        let event = createTimetable.getEventById(timetable_id);
+
         showDeletePopupModal(baseUrl + '/timetable/' + timetable_id, {
             successCallBack: function () {
-                event.remove();
+                if (event) {
+                    event.remove();
+                } else {
+                    // Fallback if event object not found in calendar
+                    createTimetable.refetchEvents();
+                    window.location.reload(); // Hard refresh as last resort
+                }
             }
         })
     })
@@ -2525,7 +2539,7 @@ $('#filter_fees_id').on('change', function () {
 
 $('#edit-class-section-id').on('change', function () {
     var user_id = $('#user_id').val() ?? '';
-    
+
     getSubjectOptionsList('#edit-subject-id', $(this), user_id)
 });
 
@@ -2840,8 +2854,8 @@ $('#subject-id').on('change', function () {
     let lessonOptionsFound = false;
 
     // Iterate through each class section ID
-    $('#class-section-id').val().forEach(function(classSectionId) {
-        $('#topic-lesson-id option').each(function() {
+    $('#class-section-id').val().forEach(function (classSectionId) {
+        $('#topic-lesson-id option').each(function () {
             let lessonId = $(this).val();
             // Check if the option matches the selected subject and is not already shown
             if ($(this).data('subject') == selectedSubjectId && !shownLessonIds.has(lessonId)) {
@@ -3132,20 +3146,20 @@ $('#tags').tagsInput({
     'placeholderColor': '#666666'
 });
 
-$('.filter_birthday').change(function (e) { 
+$('.filter_birthday').change(function (e) {
     e.preventDefault();
     let type = $(this).val();
     $.ajax({
         type: "get",
-        url: baseUrl + '/users/birthday/'+ type,
+        url: baseUrl + '/users/birthday/' + type,
         success: function (response) {
             let html = '';
             if (response.data.length) {
-                $.each(response.data, function (index, value) { 
-                    html += '<tr> <td> <img src="'+value.image+'" onerror="onErrorImage(event)" class="me-2" alt="image"> </td> <td>'+value.full_name+' </td> <td class="text-right">'+value.dob_date+'</td> </tr>';
+                $.each(response.data, function (index, value) {
+                    html += '<tr> <td> <img src="' + value.image + '" onerror="onErrorImage(event)" class="me-2" alt="image"> </td> <td>' + value.full_name + ' </td> <td class="text-right">' + value.dob_date + '</td> </tr>';
                 });
             } else {
-                html += '<tr> <td colspan="2" class="text-center"> '+window.trans['no_data_found']+' </td> </tr>';
+                html += '<tr> <td colspan="2" class="text-center"> ' + window.trans['no_data_found'] + ' </td> </tr>';
             }
             setTimeout(() => {
                 $('.birthday-list').html(html);
@@ -3167,19 +3181,19 @@ $('.filter_leaves').change(function (e) {
         if (response.data.length > 0) {
             $.each(response.data, function (index, value) {
                 if (value.type == "Full") {
-                    html += '<tr> <td>'+value.leave.user.full_name+'<span class="m-2 text-white text-small leave-type leave-full">'+value.type+' Day</span> </td> <td class="text-right">'+value.leave_date+'</td> </tr>';
+                    html += '<tr> <td>' + value.leave.user.full_name + '<span class="m-2 text-white text-small leave-type leave-full">' + value.type + ' Day</span> </td> <td class="text-right">' + value.leave_date + '</td> </tr>';
                 }
                 if (value.type == "First Half") {
-                    html += '<tr> <td>'+value.leave.user.full_name+'<span class="m-2 text-white text-small leave-type leave-half">'+value.type+'</span> </td> <td class="text-right">'+value.leave_date+'</td> </tr>';
+                    html += '<tr> <td>' + value.leave.user.full_name + '<span class="m-2 text-white text-small leave-type leave-half">' + value.type + '</span> </td> <td class="text-right">' + value.leave_date + '</td> </tr>';
                 }
                 if (value.type == "Second Half") {
-                    html += '<tr> <td>'+value.leave.user.full_name+'<span class="m-2 text-white text-small leave-type leave-half">'+value.type+'</span> </td> <td class="text-right">'+value.leave_date+'</td> </tr>';
+                    html += '<tr> <td>' + value.leave.user.full_name + '<span class="m-2 text-white text-small leave-type leave-half">' + value.type + '</span> </td> <td class="text-right">' + value.leave_date + '</td> </tr>';
                 }
-                
+
             });
         } else {
             // 
-            html += '<tr> <td colspan="2" class="text-center"> '+window.trans['All are presents']+' </td> </tr>';
+            html += '<tr> <td colspan="2" class="text-center"> ' + window.trans['All are presents'] + ' </td> </tr>';
         }
         $('.leave-list').html(html);
     }
@@ -3187,13 +3201,13 @@ $('.filter_leaves').change(function (e) {
     ajaxRequest('GET', url, data, null, successCallback, null, null, true);
 });
 
-$('#filter_expense_session_year_id').change(function(e) {
+$('#filter_expense_session_year_id').change(function (e) {
     e.preventDefault();
     let session_year_id = $(this).val();
     $.ajax({
         type: "get",
         url: baseUrl + '/expense/filter/' + session_year_id,
-        success: function(response) {
+        success: function (response) {
             if (response.data) {
                 setTimeout(() => {
                     expense_graph(response.data.expense_months, response.data.expense_amount);
@@ -3210,45 +3224,45 @@ $('#exam_result_session_year_id,#exam_reuslt_exam_name').on('change', function (
     if (exam_name && session_year_id) {
         $.ajax({
             type: "get",
-            url: baseUrl + '/exams/result-report/'+session_year_id+'/'+exam_name,
-            success: function (response) {                
+            url: baseUrl + '/exams/result-report/' + session_year_id + '/' + exam_name,
+            success: function (response) {
                 let html = '';
                 if (response.data.length) {
-                    let bg_colors = ['bg-success','bg-info','bg-primary','bg-warning','bg-danger'];
-                    $.each(response.data, function (index, value) { 
-                         let total_students = parseInt(value.total_students);
-                         let total_pass = parseInt(value.pass_students);
-                         let per = (total_pass*100) / total_students;
-                         per = per.toFixed(2);
-                         html += '<div class="d-flex justify-content-between mt-3"> <small class="font-weight-bold">'+window.trans['Class']+': '+value.class_name+'</small> <small class="font-weight-bold">'+per+'%</small> </div> <div class="progress progress-lg mt-2"> <div class="progress-bar '+bg_colors[index]+'" role="progressbar" style="width: '+per+'%" aria-valuenow="'+per+'" aria-valuemin="0" aria-valuemax="100"></div> </div>';
+                    let bg_colors = ['bg-success', 'bg-info', 'bg-primary', 'bg-warning', 'bg-danger'];
+                    $.each(response.data, function (index, value) {
+                        let total_students = parseInt(value.total_students);
+                        let total_pass = parseInt(value.pass_students);
+                        let per = (total_pass * 100) / total_students;
+                        per = per.toFixed(2);
+                        html += '<div class="d-flex justify-content-between mt-3"> <small class="font-weight-bold">' + window.trans['Class'] + ': ' + value.class_name + '</small> <small class="font-weight-bold">' + per + '%</small> </div> <div class="progress progress-lg mt-2"> <div class="progress-bar ' + bg_colors[index] + '" role="progressbar" style="width: ' + per + '%" aria-valuenow="' + per + '" aria-valuemin="0" aria-valuemax="100"></div> </div>';
 
                     });
                 } else {
-                    html += '<div class="text-center"> <span class="text-small"> '+window.trans['no_exam_result_found']+' </span> </div>';
+                    html += '<div class="text-center"> <span class="text-small"> ' + window.trans['no_exam_result_found'] + ' </span> </div>';
                 }
                 $('#class-progress-report').html(html);
             }
-        });    
+        });
     } else {
-        $('#class-progress-report').html('<div class="text-center"> <span class="text-small"> '+window.trans['no_exam_result_found']+' </span> </div>');
+        $('#class-progress-report').html('<div class="text-center"> <span class="text-small"> ' + window.trans['no_exam_result_found'] + ' </span> </div>');
     }
 })
 
-$('.class-section-attendance').change(function (e) { 
+$('.class-section-attendance').change(function (e) {
     e.preventDefault();
     let class_id = $(this).val();
 
     $.ajax({
         type: "get",
         url: baseUrl + '/class/attendance/' + class_id,
-        success: function(response) {
+        success: function (response) {
             if (response.data) {
                 setTimeout(() => {
                     class_attendance(response.data.section, response.data.data);
                 }, 1000);
             } else {
                 setTimeout(() => {
-                    class_attendance(['A','B','C','D','E'], []);
+                    class_attendance(['A', 'B', 'C', 'D', 'E'], []);
                 }, 1000);
             }
         }
@@ -3256,35 +3270,35 @@ $('.class-section-attendance').change(function (e) {
 });
 
 
-$('.year-filter').change(function (e) { 
+$('.year-filter').change(function (e) {
     e.preventDefault();
     let year = $(this).val();
 
     $.ajax({
         type: "get",
         url: baseUrl + '/subscriptions/transaction/' + year,
-        success: function(response) {
+        success: function (response) {
 
             if (response.data) {
                 setTimeout(() => {
                     subscription_transaction(Object.keys(response.data), Object.values(response.data));
-                }, 1000);    
+                }, 1000);
             } else {
                 setTimeout(() => {
                     subscription_transaction(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], []);
-                }, 1000); 
+                }, 1000);
             }
         }
     });
 });
 
-$('.page_layout').change(function (e) { 
+$('.page_layout').change(function (e) {
     e.preventDefault();
     let layout = $(this).val();
     if (layout == 'A4 Landscape') {
         $('.height').val(210);
         $('.width').val(297);
-    } else if(layout == 'A4 Portrait') {
+    } else if (layout == 'A4 Portrait') {
         $('.height').val(297);
         $('.width').val(210);
 
@@ -3294,7 +3308,7 @@ $('.page_layout').change(function (e) {
     }
 });
 
-$('.certificate_type').change(function (e) { 
+$('.certificate_type').change(function (e) {
     e.preventDefault();
     var type = $('input[name="type"]:checked').val();
     if (type == 'Student') {
@@ -3307,7 +3321,7 @@ $('.certificate_type').change(function (e) {
 });
 
 
-$('.btn_tag').click(function (e) { 
+$('.btn_tag').click(function (e) {
     e.preventDefault();
     var value = $(this).data('value');
     if (tinymce.activeEditor) { // Check if editor is active
@@ -3330,22 +3344,22 @@ $('#stripe_status').on('change', function (e) {
     }
 });
 
-$('.fees-over-due-class').change(function (e) { 
+$('.fees-over-due-class').change(function (e) {
     e.preventDefault();
     let class_section_id = $(this).val();
-   
+
     $.ajax({
         type: "get",
         url: baseUrl + '/fees/fees-over-due/' + class_section_id,
-        success: function(response) {
+        success: function (response) {
             let html = '';
             if (response.data.length) {
-                $.each(response.data, function (index, value) { 
-                    html += '<tr> <td> <img src="'+ value.user.image +'"/></td><td>' + value.full_name + '</td> <td> <input type="checkbox" name="studentids[]" data-id="' + value.user.id + '"> </td> </tr>';
+                $.each(response.data, function (index, value) {
+                    html += '<tr> <td> <img src="' + value.user.image + '"/></td><td>' + value.full_name + '</td> <td> <input type="checkbox" name="studentids[]" data-id="' + value.user.id + '"> </td> </tr>';
                 });
                 $('.fees-overdue-btn').removeClass('d-none');
             } else {
-                html += '<tr> <td colspan="2" class="text-center"> '+ window.trans['no_data_found'] +' </td> </tr>';
+                html += '<tr> <td colspan="2" class="text-center"> ' + window.trans['no_data_found'] + ' </td> </tr>';
                 $('.fees-overdue-btn').addClass('d-none');
             }
             setTimeout(() => {
@@ -3355,10 +3369,10 @@ $('.fees-over-due-class').change(function (e) {
     });
 });
 
-$('#fees-overdue-form').on('submit', function(e) {
+$('#fees-overdue-form').on('submit', function (e) {
     // Collect checked checkbox IDs
     var checkedIds = [];
-    $('input[type="checkbox"]:checked').each(function() {
+    $('input[type="checkbox"]:checked').each(function () {
         checkedIds.push($(this).data('id'));
     });
 
@@ -3383,11 +3397,11 @@ $('#fees-overdue-form').on('submit', function(e) {
     }
 
     formAjaxRequest('POST', url, data, formElement, submitButtonElement, successCallback);
-            
+
 });
 
-$(document).ready(function() {
-    $('.domain-pattern').on('input', function() {
+$(document).ready(function () {
+    $('.domain-pattern').on('input', function () {
         // Replace spaces with dashes
         var inputVal = $(this).val().replace(/ /g, '-');
         // Allow only letters, numbers, and dashes
@@ -3401,7 +3415,7 @@ $('#edit_student_class_id').on('change', function () {
 
     let class_id = $(this).val();
     let url = baseUrl + '/students/get-class-section-by-class/' + class_id;
-  
+
     $('#edit_student_class_section_id option').hide();
 
     function successCallback(response) {
@@ -3410,7 +3424,7 @@ $('#edit_student_class_id').on('change', function () {
         if (response.data) {
             // html = '<option value="">Select Exam</option>';
             $.each(response.data, function (key, data) {
-                html += '<option value=' + data.id + '>' + data.full_name +  '</option>';
+                html += '<option value=' + data.id + '>' + data.full_name + '</option>';
             });
         } else {
             html = '<option>No Class Section Found</option>';
@@ -3433,7 +3447,7 @@ $('#filter_class_id').on('change', function () {
     }
 
     let url = baseUrl + '/students/get-class-section-by-class/' + class_id;
-  
+
     $('#filter_class_section_id option').hide();
 
     function successCallback(response) {
@@ -3441,7 +3455,7 @@ $('#filter_class_id').on('change', function () {
         html = '<option value="">Select Class Section</option>';
         if (response.data) {
             $.each(response.data, function (key, data) {
-                html += '<option value=' + data.id + '>' + data.full_name +  '</option>';
+                html += '<option value=' + data.id + '>' + data.full_name + '</option>';
             });
         } else {
             html = '<option>No Class Section Found</option>';
@@ -3453,24 +3467,24 @@ $('#filter_class_id').on('change', function () {
 });
 
 
-$('.edit_default').on('change', function(){
+$('.edit_default').on('change', function () {
 
     $('.defaultDomain').show().find('input').prop('disabled', false);
     $('.customDomain').hide().find('input').prop('disabled', true);
 
 });
 
-$('.edit_custom').on('change', function(){
+$('.edit_custom').on('change', function () {
 
     $('.customDomain').show().find('input').prop('disabled', false);
     $('.defaultDomain').hide().find('input').prop('disabled', true);
-    
+
 });
 
 $('#class_section_id').on('change', function () {
 
     let class_section_id = $(this).val();
-   
+
     let url = baseUrl + '/exams/get-exams/' + class_section_id;
     $('#exam_id option').hide();
     $('#subject_id option').hide();
@@ -3480,7 +3494,7 @@ $('#class_section_id').on('change', function () {
         if (response.data) {
             html = '<option value="">Select Exam</option>';
             $.each(response.data, function (key, data) {
-                html += '<option value=' + data.id + '>' + data.name +  '</option>';
+                html += '<option value=' + data.id + '>' + data.name + '</option>';
             });
         } else {
             html += '<option>No Exams Found</option>';
@@ -3496,7 +3510,7 @@ $('#exam_id').on('change', function () {
     let class_section_id = $('#class_section_id').val();
     let exam_id = $(this).val();
 
-    let url = baseUrl + '/exams/get-subjects/' + exam_id + '?class_section_id=' + class_section_id; 
+    let url = baseUrl + '/exams/get-subjects/' + exam_id + '?class_section_id=' + class_section_id;
 
     $('#subject_id option').hide();
 
@@ -3517,16 +3531,15 @@ $('#exam_id').on('change', function () {
     ajaxRequest('GET', url, null, null, successCallback, null);
 });
 
-$('#subject_id').on('change', function(){
+$('#subject_id').on('change', function () {
     let subject_id = $('#subject_id').val();
 
-    if(!subject_id)
-    {
+    if (!subject_id) {
         $('#downloadDummyFile').hide();
-    }else{
+    } else {
         $('#downloadDummyFile').show();
     }
-   
+
 });
 
 $('#change-order-school-form-field').click(async function () {
@@ -3555,12 +3568,12 @@ $('#change-order-school-form-field').click(async function () {
 });
 
 // Payment gateway toggle interactions
-$(document).ready(function() {
+$(document).ready(function () {
     // Stripe toggle
-    $('#Stripe').on('change', function() {
+    $('#Stripe').on('change', function () {
         if ($(this).is(':checked')) {
             $('#StripeForm').removeClass('d-none');
-            
+
             // Uncheck other toggles
             $('#Paystack').prop('checked', false);
             $('#PaystackForm').addClass('d-none');
@@ -3568,7 +3581,7 @@ $(document).ready(function() {
             $('#RazorpayForm').addClass('d-none');
             $('#Flutterwave').prop('checked', false);
             $('#FlutterwaveForm').addClass('d-none');
-            
+
             // For legacy dropdowns
             $('#razorpay_status').val(0);
             $('#paystack_status').val(0);
@@ -3578,12 +3591,12 @@ $(document).ready(function() {
             $('#StripeForm').addClass('d-none');
         }
     });
-    
+
     // Razorpay toggle
-    $('#Razorpay').on('change', function() {
+    $('#Razorpay').on('change', function () {
         if ($(this).is(':checked')) {
             $('#RazorpayForm').removeClass('d-none');
-            
+
             // Uncheck other toggles
             $('#Stripe').prop('checked', false);
             $('#StripeForm').addClass('d-none');
@@ -3591,7 +3604,7 @@ $(document).ready(function() {
             $('#PaystackForm').addClass('d-none');
             $('#Flutterwave').prop('checked', false);
             $('#FlutterwaveForm').addClass('d-none');
-            
+
             // For legacy dropdowns
             $('#stripe_status').val(0);
             $('#paystack_status').val(0);
@@ -3601,12 +3614,12 @@ $(document).ready(function() {
             $('#RazorpayForm').addClass('d-none');
         }
     });
-    
+
     // Paystack toggle
-    $('#Paystack').on('change', function() {
+    $('#Paystack').on('change', function () {
         if ($(this).is(':checked')) {
             $('#PaystackForm').removeClass('d-none');
-            
+
             // Uncheck other toggles
             $('#Stripe').prop('checked', false);
             $('#StripeForm').addClass('d-none');
@@ -3614,7 +3627,7 @@ $(document).ready(function() {
             $('#RazorpayForm').addClass('d-none');
             $('#Flutterwave').prop('checked', false);
             $('#FlutterwaveForm').addClass('d-none');
-            
+
             // For legacy dropdowns
             $('#stripe_status').val(0);
             $('#razorpay_status').val(0);
@@ -3624,12 +3637,12 @@ $(document).ready(function() {
             $('#PaystackForm').addClass('d-none');
         }
     });
-    
+
     // Flutterwave toggle
-    $('#Flutterwave').on('change', function() {
+    $('#Flutterwave').on('change', function () {
         if ($(this).is(':checked')) {
             $('#FlutterwaveForm').removeClass('d-none');
-            
+
             // Uncheck other toggles
             $('#Stripe').prop('checked', false);
             $('#StripeForm').addClass('d-none');
@@ -3637,7 +3650,7 @@ $(document).ready(function() {
             $('#RazorpayForm').addClass('d-none');
             $('#Paystack').prop('checked', false);
             $('#PaystackForm').addClass('d-none');
-            
+
             // For legacy dropdowns
             $('#stripe_status').val(0);
             $('#razorpay_status').val(0);
@@ -3650,8 +3663,8 @@ $(document).ready(function() {
 });
 
 // two factor verification
-$(document).ready(function() {
-    $('#two_factor_verification').change(function() {
+$(document).ready(function () {
+    $('#two_factor_verification').change(function () {
         if ($(this).is(':checked')) {
             $('#two_factor_verification').prop('checked', true);
             $('#two_factor_verification').val(1);
@@ -3711,7 +3724,7 @@ function removeSubject(element, subject, id, class_subject_id) {
             student_id: id,
             class_subject_id: class_subject_id
         },
-        success: function(response) {
+        success: function (response) {
             if (!response.error) {
                 showSuccessToast(response.message);
                 $('#table_list').bootstrapTable('refresh');
@@ -3719,7 +3732,7 @@ function removeSubject(element, subject, id, class_subject_id) {
                 showErrorToast(response.message);
             }
         },
-        error: function() {
+        error: function () {
             showErrorToast('Something went wrong!');
         }
     });
@@ -3728,16 +3741,16 @@ function removeSubject(element, subject, id, class_subject_id) {
 // Handle file input change event for image validation
 $(document).ready(function () {
     // Use event delegation to handle change events on dynamically added file inputs
-    $('.files_data').on('change', 'input[type="file"][accept="image/*"]', function() {
+    $('.files_data').on('change', 'input[type="file"][accept="image/*"]', function () {
         console.log('File input changed');
-        
+
         const file = this.files[0];
         if (file) {
             console.log('Selected file:', file.name);
             const fileType = file.type;
             const validImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
             console.log('File type:', fileType);
-            
+
             if (!validImageTypes.includes(fileType)) {
                 alert('Please select a valid image file (JPEG, PNG, GIF, WEBP).');
                 $(this).val(''); // Clear the input
@@ -3750,21 +3763,21 @@ $(document).ready(function () {
     });
 });
 
-$('.remove-existing-fee').on('click', function(){
+$('.remove-existing-fee').on('click', function () {
     let id = $(this).data('id');
     $.ajax({
         url: baseUrl + '/delete-transportation-fees/' + id,
         type: 'DELETE',
-       
-        success: function(response) {
+
+        success: function (response) {
             if (!response.error) {
                 showSuccessToast(response.message);
-                
+
             } else {
                 showErrorToast(response.message);
             }
         },
-        error: function() {
+        error: function () {
             showErrorToast('Something went wrong!');
         }
     });

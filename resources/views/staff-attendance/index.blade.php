@@ -18,17 +18,20 @@
                         <h4 class="card-title">
                             {{ __('create_staff_attendance') }}
                         </h4>
-                        <form action="{{ route('staff-attendance.store') }}" class="create-form attendance-table" id="formdata">
+                        <form action="{{ route('staff-attendance.store') }}" class="create-form attendance-table"
+                            id="formdata">
                             @csrf
                             <div class="row" id="toolbar">
                                 <div class="form-group col-sm-12 col-md-4">
-                                    {!! Form::text('date', null, ['required', 'placeholder' => __('date'), 'class' => 'datepicker-popup form-control', 'id' => 'date','data-date-end-date'=>"0d"]) !!}
+                                    <input type="text" name="date" id="date" class="datepicker-popup form-control"
+                                        placeholder="{{ __('date') }}" data-date-end-date="0d" required>
                                     <span class="input-group-addon input-group-append"></span>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-3 holiday-div">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" name="holiday" id="holiday" value="0">
+                                            <input type="checkbox" class="form-check-input" name="holiday" id="holiday"
+                                                value="0">
                                             {{ __('holiday') }}
                                             <i class="input-helper"></i>
                                         </label>
@@ -40,9 +43,10 @@
                                 <div class="form-group col-sm-12 col-md-10">
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                          <div class="input-group-text">
-                                            <input type="checkbox" name="absent_notification" class="cursor-pointer" aria-label="Checkbox for following text input" id="gridCheck">
-                                          </div>
+                                            <div class="input-group-text">
+                                                <input type="checkbox" name="absent_notification" class="cursor-pointer"
+                                                    aria-label="Checkbox for following text input" id="gridCheck">
+                                            </div>
                                         </div>
                                         <label class="form-control cursor-pointer" for="gridCheck">
                                             {{ __('send_a_notification_to_staff_if_they_are_absent') }}
@@ -53,26 +57,33 @@
 
                             <div class="show_staff_list">
                                 <table aria-describedby="mydesc" class='table staff_table' id='table_list'
-                                       data-toggle="table" data-url="{{ route('staff-attendance.show',[1]) }}" data-click-to-select="true"
-                                       data-side-pagination="server" data-pagination="false"
-                                       data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-show-refresh="true"
-                                       data-toolbar="#toolbar" data-show-columns="true" data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
-                                       data-sort-order="asc" data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
-                                       data-export-options='{ "fileName": "staff-attendance-<?= date('d-m-y') ?>" ,"ignoreColumn": ["operate"]}'
-                                       data-query-params="attendanceQueryParams" data-escape="true">
+                                    data-toggle="table" data-url="{{ route('staff-attendance.show', [1]) }}"
+                                    data-click-to-select="true" data-side-pagination="server" data-pagination="false"
+                                    data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-show-refresh="true"
+                                    data-toolbar="#toolbar" data-show-columns="true" data-trim-on-search="false"
+                                    data-mobile-responsive="true" data-sort-name="id" data-sort-order="asc"
+                                    data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
+                                    data-export-options='{ "fileName": "staff-attendance-<?= date('d-m-y') ?>" ,"ignoreColumn": ["operate"]}'
+                                    data-query-params="attendanceQueryParams" data-escape="true">
                                     <thead>
-                                    <tr>
-                                        <th scope="col" data-field="id" data-sortable="false" data-visible="false"> {{ __('id') }}</th>
-                                        <th scope="col" data-field="no">{{ __('no.') }}</th>
-                                        <th scope="col" data-field="staff_id" data-sortable="false" data-visible="false" data-formatter="addStaffIdInputAttendance"> {{ __('staff_id') }}</th>
-                                        <th scope="col" data-field="user.staff.user_id" data-sortable="false">{{ __('user_id') }}</th>
-                                        <th scope="col" data-field="user.full_name" data-escape="false">{{ __('name') }} </th>
-                                        <th scope="col" data-field="type" data-formatter="addStaffRadioInputAttendance">{{ __('type') }} </th>
-                                    </tr>
+                                        <tr>
+                                            <th scope="col" data-field="id" data-sortable="false" data-visible="false">
+                                                {{ __('id') }}</th>
+                                            <th scope="col" data-field="no">{{ __('no.') }}</th>
+                                            <th scope="col" data-field="staff_id" data-sortable="false" data-visible="false"
+                                                data-formatter="addStaffIdInputAttendance"> {{ __('staff_id') }}</th>
+                                            <th scope="col" data-field="user.staff.user_id" data-sortable="false">
+                                                {{ __('user_id') }}</th>
+                                            <th scope="col" data-field="user.full_name" data-escape="false">{{ __('name') }}
+                                            </th>
+                                            <th scope="col" data-field="type" data-formatter="addStaffRadioInputAttendance">
+                                                {{ __('type') }} </th>
+                                        </tr>
                                     </thead>
                                 </table>
                             </div>
-                            <input class="btn btn-theme btn_attendance mt-4 float-right" id="create-btn" type="submit" value={{ __('submit') }}>
+                            <input class="btn btn-theme btn_attendance mt-4 float-right" id="create-btn" type="submit"
+                                value={{ __('submit') }}>
                         </form>
                     </div>
                 </div>
@@ -175,29 +186,29 @@
         });
     </script>
 
-{{-- =================== --}}
+    {{-- =================== --}}
 
-<script>
-    let attendanceState = {};
-    // Save state when attendance changes
-    $('#table_list').on('change', 'input[type="radio"]', function () {
-        let staffNo = $(this).data('id');
-        let attendanceType = $(this).val();
-        attendanceState[staffNo] = attendanceType;
-    });
-    
+    <script>
+        let attendanceState = {};
+        // Save state when attendance changes
+        $('#table_list').on('change', 'input[type="radio"]', function () {
+            let staffNo = $(this).data('id');
+            let attendanceType = $(this).val();
+            attendanceState[staffNo] = attendanceType;
+        });
 
-    // Initialize table and restore attendance state
-    $('#table_list').on('load-success.bs.table', function () {
-        restoreAttendanceState();
-    });
 
-    // Function to restore attendance state
-    function restoreAttendanceState() {
-        for (let staffNo in attendanceState) {
-            $(`input[type="radio"][data-id="`+staffNo+`"][value="${attendanceState[staffNo]}"]`).prop('checked', true);
+        // Initialize table and restore attendance state
+        $('#table_list').on('load-success.bs.table', function () {
+            restoreAttendanceState();
+        });
+
+        // Function to restore attendance state
+        function restoreAttendanceState() {
+            for (let staffNo in attendanceState) {
+                $(`input[type="radio"][data-id="` + staffNo + `"][value="${attendanceState[staffNo]}"]`).prop('checked', true);
+            }
         }
-    }
-</script>
+    </script>
 
-@endsection 
+@endsection

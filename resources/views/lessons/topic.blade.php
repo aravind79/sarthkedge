@@ -20,7 +20,7 @@
                         </h4>
                         <form class="pt-3 add-topic-form" id="create-form" data-success-function="formSuccessFunction" action="{{ route('lesson-topic.store') }}" method="POST" novalidate="novalidate">
                             <div class="row">
-                                {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
+                                <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('Class Section') }} <span class="text-danger">*</span></label>
                                     <select name="class_section_id[]" id="class-section-id" class="class_section_id form-control select2-dropdown select2-hidden-accessible" multiple>

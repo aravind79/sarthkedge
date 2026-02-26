@@ -10,49 +10,12 @@
             <h3 class="page-title">
                 {{ __('manage_diary_categories') }}
             </h3>
+            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createCategoryModal">
+                <i class="fa fa-plus-circle mr-1"></i> {{ __('create_category') }}
+            </button>
         </div>
 
         <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            {{ __('create_diary_category') }}
-                        </h4>
-                        <form class="create-form pt-3" id="formdata" action="{{ route('diary-categories.store') }}"
-                            method="POST" novalidate="novalidate">
-                            @csrf
-                            <div class="row">
-                                <div class="form-group col-sm-12 col-md-4">
-                                    <label>{{ __('name') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('name', null, ['required', 'placeholder' => __('name'), 'class' => 'form-control']) !!}
-                                </div>
-                                <div class="form-group col-sm-12 col-md-4">
-                                    <label>{{ __('type') }} <span class="text-danger">*</span></label><br>
-                                    <div class="d-flex">
-                                        <div class="form-check form-check-inline">
-                                            <label class="form-check-label">
-                                                {!! Form::radio('type', 'positive', true, ['id' => 'positive']) !!}
-                                                {{ __('positive') }}
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <label class="form-check-label">
-                                                {!! Form::radio('type', 'negative', false, ['id' => 'negative']) !!}
-                                                {{ __('negative') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- <input class="btn btn-theme" type="submit" value={{ __('submit') }}> --}}
-                            <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit"
-                                value={{ __('submit') }}>
-                            <input class="btn btn-secondary float-right" type="reset" value={{ __('reset') }}>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -61,21 +24,9 @@
                         </h4>
 
                         <div class="col-12 text-right">
-                            <b><a href="#" class="table-list-type mr-2 active" data-id="0">{{ __('all') }}</a></b> | <a href="#" class="ml-2 table-list-type" data-id="1">{{ __('Trashed') }}</a>
+                            <b><a href="#" class="table-list-type mr-2 active" data-id="0">{{ __('all') }}</a></b> | <a
+                                href="#" class="ml-2 table-list-type" data-id="1">{{ __('Trashed') }}</a>
                         </div>
-                        
-                        {{-- <div class="row" id="toolbar">
-                            <div class="form-group col-12">
-                                <button id="update-status" class="btn btn-secondary" disabled><span
-                                        class="update-status-btn-name">{{ __('Inactive') }}</span></button>
-                            </div>
-                        </div> --}}
-
-                        {{-- <div class="col-12 mt-4 text-right">
-                            <b><a href="#" class="table-list-type active mr-2"
-                                    data-id="0">{{ __('active') }}</a></b> | <a href="#"
-                                class="ml-2 table-list-type" data-id="1">{{ __('Inactive') }}</a>
-                        </div> --}}
 
                         <div class="row">
                             <div class="col-12">
@@ -87,16 +38,18 @@
                                     data-mobile-responsive="true" data-sort-name="id" data-sort-order="desc"
                                     data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
                                     data-export-options='{ "fileName": "diary-category-list-<?= date('d-m-y') ?>"
-                                    ,"ignoreColumn":["operate"]}'
-                                    data-query-params="queryParams" data-escape="true">
+                                                ,"ignoreColumn":["operate"]}' data-query-params="queryParams"
+                                    data-escape="true">
                                     <thead>
                                         <tr>
-                                            {{-- <th data-field="state" data-checkbox="true"></th> --}}
                                             <th scope="col" data-field="id" data-sortable="true" data-visible="false">
-                                                {{ __('id') }}</th>
+                                                {{ __('id') }}
+                                            </th>
                                             <th scope="col" data-field="no">{{ __('no.') }}</th>
                                             <th scope="col" data-field="name">{{ __('name') }}</th>
-                                            <th scope="col" data-formatter="diaryTypeFormatter" data-field="type">{{ __('type') }}</th>
+                                            <th scope="col" data-formatter="diaryTypeFormatter" data-field="type">
+                                                {{ __('type') }}
+                                            </th>
                                             <th data-events="diaryCategoryEvents" scope="col"
                                                 data-formatter="actionColumnFormatter" data-field="operate"
                                                 data-escape="false">{{ __('action') }}</th>
@@ -111,7 +64,7 @@
         </div>
     </div>
 
-
+    {{-- Edit Category Modal --}}
     <div class="modal fade" id="editModal" data-backdrop="static" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
@@ -123,60 +76,84 @@
                     </button>
                 </div>
                 <form id="editdata" class="edit-form" action="{{ url('diary-categories') }}" novalidate="novalidate">
-                {{-- <form id="editdata" class="edit-form" action="{{ url('diary-categories') }}" novalidate="novalidate"> --}}
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group col-sm-12 col-md-12 col-lg-4">
                                 <label>{{ __('name') }} <span class="text-danger">*</span></label>
-                                {!! Form::text('name', null, [
-                                    'required',
-                                    'placeholder' => __('name'),
-                                    'class' => 'form-control',
-                                    'id' => 'name',
-                                ]) !!}
+                                <input name="name" id="name" type="text" placeholder="{{ __('name') }}" class="form-control"
+                                    required>
                             </div>
                             <div class="form-group col-sm-12 col-md-4">
                                 <label>{{ __('type') }} <span class="text-danger">*</span></label><br>
                                 <div class="d-flex">
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('type', 'positive', false, ['id' => 'positive']) !!}
+                                            <input type="radio" name="type" value="positive" id="edit_positive">
                                             {{ __('positive') }}
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('type', 'negative', false, ['id' => 'negative']) !!}
+                                            <input type="radio" name="type" value="negative" id="edit_negative">
                                             {{ __('negative') }}
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Cancel') }}</button>
+                        <input class="btn btn-theme" type="submit" value={{ __('submit') }}>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    {{-- Create Category Modal --}}
+    <div class="modal fade" id="createCategoryModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCategoryModalLabel">{{ __('create_diary_category') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fa fa-close"></i></span>
+                    </button>
+                </div>
+                <form class="create-form" id="formdata" action="{{ route('diary-categories.store') }}" method="POST"
+                    novalidate="novalidate">
+                    @csrf
+                    <div class="modal-body">
                         <div class="row">
-
-                        </div>
-
-                        {{-- <div class="row">
                             <div class="form-group col-sm-12 col-md-4">
+                                <label>{{ __('name') }} <span class="text-danger">*</span></label>
+                                <input name="name" type="text" placeholder="{{ __('name') }}" class="form-control" required>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4">
+                                <label>{{ __('type') }} <span class="text-danger">*</span></label><br>
                                 <div class="d-flex">
-                                    <div class="form-check w-fit-content">
-                                        <label class="form-check-label ml-4">
-                                            <input type="checkbox" class="form-check-input" name="reset_password"
-                                                value="1">{{ __('reset_password') }}
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" name="type" value="positive" id="positive" checked>
+                                            {{ __('positive') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label">
+                                            <input type="radio" name="type" value="negative" id="negative">
+                                            {{ __('negative') }}
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
-
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">{{ __('Cancel') }}</button>
-                        <input class="btn btn-theme" type="submit" value={{ __('submit') }}>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+                        <input class="btn btn-theme" id="create-btn" type="submit" value={{ __('submit') }}>
                     </div>
                 </form>
             </div>

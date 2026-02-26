@@ -22,11 +22,16 @@
                         <div class="row" id="toolbar">
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu" for="status">{{ __('status') }}</label>
-                                {!! Form::select('status', ['' => 'All', '0' => 'Pending', '2' => 'Reject'], null, ['class' => 'form-control', 'id' => 'filter_status_id']) !!}
+                                <select name="status" id="filter_status_id" class="form-control">
+                                    <option value="">{{ __('All') }}</option>
+                                    <option value="0">{{ __('Pending') }}</option>
+                                    <option value="2">{{ __('Reject') }}</option>
+                                </select>
                             </div>
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu" for="status">{{ __('date') }}</label>
-                                {!! Form::text('filter_date', null, ['id' => 'filter_date', 'placeholder' => __('date'), 'class' => 'daterange form-control']) !!}
+                                <input type="text" name="filter_date" id="filter_date" placeholder="{{ __('date') }}"
+                                    class="daterange form-control">
                             </div>
                         </div>
                         <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
@@ -144,13 +149,14 @@
                                 @foreach ($extraFields as $key => $data)
                                     @php $fieldName = str_replace(' ', '_', $data->name) @endphp
                                     {{-- Edit Extra Details ID --}}
-                                    {{ Form::hidden('extra_fields[' . $key . '][id]', '', ['id' => $fieldName . '_id']) }}
+                                    {{-- Edit Extra Details ID --}}
+                                    <input type="hidden" name="extra_fields[{{ $key }}][id]" id="{{ $fieldName }}_id" value="">
 
                                     {{-- Form Field ID --}}
-                                    {{ Form::hidden('extra_fields[' . $key . '][form_field_id]', $data->id) }}
+                                    <input type="hidden" name="extra_fields[{{ $key }}][form_field_id]" value="{{ $data->id }}">
 
                                     {{-- FormFieldType --}}
-                                    {{ Form::hidden('extra_fields[' . $key . '][input_type]', $data->type) }}
+                                    <input type="hidden" name="extra_fields[{{ $key }}][input_type]" value="{{ $data->type }}">
 
                                     <div class='form-group col-md-12 col-lg-6 col-xl-4 col-sm-12'>
 
@@ -163,28 +169,27 @@
 
                                         {{-- Text Field --}}
                                         @if($data->type == 'text')
-                                            {{ Form::text('extra_fields[' . $key . '][data]', '', ['class' => 'form-control text-fields', 'id' => $fieldName, 'placeholder' => $data->name, 'readonly' => true, ($data->is_required == 1 ? 'required' : ''),]) }}
+                                            <input type="text" name="extra_fields[{{ $key }}][data]" class="form-control text-fields"
+                                                id="{{ $fieldName }}" placeholder="{{ $data->name }}" readonly {{ $data->is_required == 1 ? 'required' : '' }}>
                                             {{-- Number Field --}}
                                         @elseif($data->type == 'number')
-                                            {{ Form::number('extra_fields[' . $key . '][data]', '', ['min' => 0, 'class' => 'form-control number-fields', 'id' => $fieldName, 'placeholder' => $data->name, 'readonly' => true, ($data->is_required == 1 ? 'required' : '')]) }}
+                                            <input type="number" name="extra_fields[{{ $key }}][data]" min="0"
+                                                class="form-control number-fields" id="{{ $fieldName }}" placeholder="{{ $data->name }}"
+                                                readonly {{ $data->is_required == 1 ? 'required' : '' }}>
 
                                             {{-- Dropdown Field --}}
                                         @elseif($data->type == 'dropdown')
-                                                            {{ Form::select(
-                                                'extra_fields[' . $key . '][data]',
-                                                $data->default_values,
-                                                null,
-                                                [
-                                                    'id' => $fieldName,
-                                                    'class' => 'form-control select-fields',
-                                                    ($data->is_required == 1 ? 'required' : ''),
-                                                    'placeholder' => 'Select ' . $data->name,
-                                                    'disabled' => true,
-                                                ]
-                                            )}}
-                                            {{ Form::hidden('extra_fields['.$key.'][data]', '', ['id' => $fieldName.'_hidden']) }}
+                                            <select name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}"
+                                                class="form-control select-fields" disabled>
+                                                <option value="">Select {{ $data->name }}</option>
+                                                @foreach($data->default_values as $val)
+                                                    <option value="{{ $val }}">{{ $val }}</option>
+                                                @endforeach
+                                            </select>
+                                            <input type="hidden" name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}_hidden"
+                                                value="">
 
-                                                            {{-- Radio Field --}}
+                                            {{-- Radio Field --}}
                                         @elseif($data->type == 'radio')
                                             <label class="d-block">{{$data->name}} @if($data->is_required)
                                                 <span class="text-danger">*</span>
@@ -193,12 +198,14 @@
                                                 @foreach ($data->default_values as $keyRadio => $value)
                                                     <div class="col-md-12 col-lg-12 col-xl-6 col-sm-12 form-check">
                                                         <label class="form-check-label">
-                                                            {{ Form::radio('extra_fields[' . $key . '][data]', $value, null, ['id' => $fieldName . '_' . $keyRadio, 'class' => 'radio-fields', 'disabled' => true, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                            <input type="radio" name="extra_fields[{{ $key }}][data]" value="{{ $value }}"
+                                                                id="{{ $fieldName }}_{{ $keyRadio }}" class="radio-fields" disabled {{ $data->is_required == 1 ? 'required' : '' }}>
                                                             {{$value}}
                                                         </label>
                                                     </div>
                                                 @endforeach
-                                                {{ Form::hidden('extra_fields['.$key.'][data]', '', ['id' => $fieldName.'_hidden']) }}
+                                                <input type="hidden" name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}_hidden"
+                                                    value="">
                                             </div>
 
                                             {{-- Checkbox Field --}}
@@ -210,29 +217,36 @@
                                                 @foreach ($data->default_values as $chkKey => $value)
                                                     <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12 form-check">
                                                         <label class="form-check-label">
-                                                            {{ Form::checkbox('extra_fields[' . $key . '][data][]', $value, null, ['id' => $fieldName . '_' . $chkKey, 'class' => 'form-check-input chkclass checkbox-fields', 'disabled' => true, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                            <input type="checkbox" name="extra_fields[{{ $key }}][data][]"
+                                                                value="{{ $value }}" id="{{ $fieldName }}_{{ $chkKey }}"
+                                                                class="form-check-input chkclass checkbox-fields" disabled {{ $data->is_required == 1 ? 'required' : '' }}>
                                                             {{ $value }}
                                                         </label>
                                                     </div>
                                                 @endforeach
-                                                {{ Form::hidden('extra_fields['.$key.'][data]', '', ['id' => $fieldName.'_hidden']) }}
+                                                <input type="hidden" name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}_hidden"
+                                                    value="">
                                             </div>
 
                                             {{-- Textarea Field --}}
                                         @elseif($data->type == 'textarea')
-                                            {{ Form::textarea('extra_fields[' . $key . '][data]', '', ['placeholder' => $data->name, 'readonly' => true, 'id' => $fieldName, 'class' => 'form-control textarea-fields', ($data->is_required ? 'required' : ''), 'rows' => 3]) }}
+                                            <textarea name="extra_fields[{{ $key }}][data]" placeholder="{{ $data->name }}" readonly
+                                                id="{{ $fieldName }}" class="form-control textarea-fields" {{ $data->is_required ? 'required' : '' }} rows="3"></textarea>
 
                                             {{-- File Upload Field --}}
                                         @elseif($data->type == 'file')
                                             <div class="input-group col-xs-12">
-                                                {{ Form::file('extra_fields[' . $key . '][data]', ['class' => 'file-upload-default', 'disabled' => true, 'id' => $fieldName, ($data->is_required == 1 ? 'required' : '')]) }}
-                                                {{ Form::text('', '', ['class' => 'form-control file-upload-info', 'disabled' => '', 'placeholder' => __('image')]) }}
+                                                <input type="file" name="extra_fields[{{ $key }}][data]" class="file-upload-default"
+                                                    disabled id="{{ $fieldName }}" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                <input type="text" class="form-control file-upload-info" disabled
+                                                    placeholder="{{ __('image') }}">
                                                 <span class="input-group-append">
                                                     <button class="file-upload-browse btn btn-theme"
                                                         type="button">{{ __('upload') }}</button>
                                                 </span>
 
-                                                {{ Form::hidden('extra_fields[' . $key . '][data]', '', ['id' => $fieldName . '_hidden']) }}
+                                                <input type="hidden" name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}_hidden"
+                                                    value="">
                                             </div>
                                             <div id="file_div_{{$fieldName}}" class="mt-2 d-none file-div">
                                                 <a href="" id="file_link_{{$fieldName}}" target="_blank">{{$data->name}}</a>
@@ -249,13 +263,13 @@
                                 <div class="d-flex">
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('status', 1) !!}
+                                            <input type="radio" name="status" value="1">
                                             {{ __('approved') }}
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('status', 2) !!}
+                                            <input type="radio" name="status" value="2">
                                             {{ __('rejected') }}
                                         </label>
                                     </div>

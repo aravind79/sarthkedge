@@ -24,7 +24,12 @@
                                 <div class="form-group col-sm-12 col-md-5">
                                     <label>{{ __('select') }} {{ __('category') }} <span
                                             class="text-danger">*</span></label>
-                                    {!! Form::select('category_id', $expenseCategory, null, ['required', 'class' => 'form-control', 'placeholder' => __('select') . ' ' . __('category')]) !!}
+                                    <select name="category_id" class="form-control" required>
+                                        <option value="">{{ __('select') . ' ' . __('category') }}</option>
+                                        @foreach($expenseCategory as $key => $cat)
+                                            <option value="{{ $key }}">{{ $cat }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-5">
@@ -59,7 +64,11 @@
 
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label for="">{{ __('select') }} {{ __('session_year') }}</label>
-                                    {!! Form::select('session_year_id', $sessionYear, $current_session_year->id, ['required', 'class' => 'form-control', 'id' => 'session_year']) !!}
+                                    <select name="session_year_id" id="session_year" class="form-control" required>
+                                        @foreach($sessionYear as $key => $sy)
+                                            <option value="{{ $key }}" {{ $key == $current_session_year->id ? 'selected' : '' }}>{{ $sy }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                             </div>
@@ -78,17 +87,31 @@
 
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu">{{ __('session_year') }}</label>
-                                {!! Form::select('session_year_id', $sessionYear, $current_session_year->id, ['class' => 'form-control', 'id' => 'filter_session_year_id']) !!}
+                                <select name="session_year_id" id="filter_session_year_id" class="form-control">
+                                    @foreach($sessionYear as $key => $sy)
+                                        <option value="{{ $key }}" {{ $key == $current_session_year->id ? 'selected' : '' }}>{{ $sy }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu">{{ __('category') }}</label>
-                                {!! Form::select('category_id', $expenseCategory + ['salary' => __('salary')], null, ['class' => 'form-control', 'id' => 'filter_category_id', 'placeholder' => __('all')]) !!}
+                                <select name="category_id" id="filter_category_id" class="form-control">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach($expenseCategory + ['salary' => __('salary')] as $key => $cat)
+                                        <option value="{{ $key }}">{{ $cat }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu"> {{ __('month') }}</label>
-                                {!! Form::select('month', $months, null, ['class' => 'form-control', 'id' => 'filter_month', 'placeholder' => __('all')]) !!}
+                                <select name="month" id="filter_month" class="form-control">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach($months as $key => $month)
+                                        <option value="{{ $key }}">{{ $month }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                         </div>
@@ -150,7 +173,12 @@
                                     <div class="form-group col-sm-12 col-md-5">
                                         <label>{{ __('select') }} {{ __('category') }} <span
                                                 class="text-danger">*</span></label>
-                                        {!! Form::select('category_id', $expenseCategory, null, ['required', 'class' => 'form-control', 'placeholder' => __('select') . ' ' . __('category'), 'id' => 'edit_category_id']) !!}
+                                        <select name="category_id" id="edit_category_id" class="form-control" required>
+                                            <option value="">{{ __('select') . ' ' . __('category') }}</option>
+                                            @foreach($expenseCategory as $key => $cat)
+                                                <option value="{{ $key }}">{{ $cat }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-5">
@@ -186,7 +214,11 @@
 
                                     <div class="form-group col-sm-12 col-md-3">
                                         <label for="">{{ __('select') }} {{ __('session_year') }}</label>
-                                        {!! Form::select('session_year_id', $sessionYear, $current_session_year->id, ['required', 'class' => 'form-control', 'id' => 'edit_session_year_id']) !!}
+                                        <select name="session_year_id" id="edit_session_year_id" class="form-control" required>
+                                            @foreach($sessionYear as $key => $sy)
+                                                <option value="{{ $key }}" {{ $key == $current_session_year->id ? 'selected' : '' }}>{{ $sy }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
 

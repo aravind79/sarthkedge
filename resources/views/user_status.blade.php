@@ -22,16 +22,19 @@
                         <div id="toolbar" class="row">
                             <div class="col-sm-12 col-md-3">
                                 <label for="" class="filter-menu">{{ __('role') }}</label>
-                                {!! Form::select('role', ['1' => __('students'), '2' => __('teachers_staffs')], null, [
-        'class' => 'form-control role',
-    ]) !!}
+                                <select name="role" class="form-control role">
+                                    <option value="1">{{ __('students') }}</option>
+                                    <option value="2">{{ __('teachers_staffs') }}</option>
+                                </select>
                             </div>
                             <div class="col-sm-12 col-md-3 class-section">
                                 <label for="" class="filter-menu">{{ __('class_section') }}</label>
-                                {!! Form::select('class_section_id', $classSection, null, [
-        'class' => 'form-control class_section_id',
-        'placeholder' => __('class_section'),
-    ]) !!}
+                                <select name="class_section_id" class="form-control class_section_id">
+                                    <option value="">{{ __('class_section') }}</option>
+                                    @foreach ($classSection as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <form action="{{ url('users/status') }}" class="create-form" method="post">
@@ -52,10 +55,12 @@
                                                 <th scope="col" data-field="id" data-visible="false">{{ __('id') }} </th>
                                                 <th scope="col" data-field="no">{{ __('no.') }}</th>
                                                 <th scope="col" data-field="image" data-formatter="imageFormatter">
-                                                    {{ __('image') }}</th>
+                                                    {{ __('image') }}
+                                                </th>
                                                 <th scope="col" data-field="full_name">{{ __('full_name') }}</th>
                                                 <th scope="col" data-field="type" data-formatter="userTypeFormatter">
-                                                    {{ __('type') }}</th>
+                                                    {{ __('type') }}
+                                                </th>
                                             </tr>
                                         </thead>
                                     </table>

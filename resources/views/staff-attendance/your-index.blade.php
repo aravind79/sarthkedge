@@ -21,11 +21,16 @@
                         <div class="row" id="toolbar">
                             <div class="form-group col-sm-12 col-md-4">
                                 <label for="session_year_id">{{__('session_year')}}</label>
-                                {!! Form::select('session_year_id', $sessionYears, null, ['class' => 'form-control', 'id' => 'session_year_id']) !!}
+                                <select name="session_year_id" id="session_year_id" class="form-control">
+                                    @foreach ($sessionYears as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group col-sm-12 col-md-4">
                                 <label for="month">{{__('month')}}</label>
-                                <select required name="month" id="month" class="form-control select2" style="width:100%;" tabindex="-1" aria-hidden="true">
+                                <select required name="month" id="month" class="form-control select2" style="width:100%;"
+                                    tabindex="-1" aria-hidden="true">
                                     <option value="">{{__('select') . ' ' . __('Month')}}</option>
                                     <option value="1">{{__('January')}}</option>
                                     <option value="2">{{__('February')}}</option>
@@ -41,26 +46,27 @@
                                     <option value="12">{{__('December')}}</option>
                                 </select>
                             </div>
-                            
+
                         </div>
 
                         <div class="show_month_wise_attendance">
-                            <table aria-describedby="mydesc" class='table staff_table' id='table_list'
-                                   data-toggle="table" data-url="{{ route('staff-attendance.month-wise.show',Auth::user()->id) }}" data-click-to-select="true"
-                                   data-side-pagination="server" data-pagination="true"
-                                   data-page-list="[5, 10, 20, 50, 100, 200,All]" data-search="false" data-toolbar="#toolbar"
-                                   data-show-columns="true" data-show-refresh="true" data-fixed-columns="false"
-                                   data-fixed-number="2" data-fixed-right-number="1" data-trim-on-search="false"
-                                   data-mobile-responsive="true" data-sort-name="id" data-sort-order="desc"
-                                   data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
-                                   data-export-options='{ "fileName": "month-wise-staff-attendance-<?= date('d-m-y') ?>" ,"ignoreColumn": ["operate"]}'
-                                   data-query-params="queryParams" data-escape="true">
+                            <table aria-describedby="mydesc" class='table staff_table' id='table_list' data-toggle="table"
+                                data-url="{{ route('staff-attendance.month-wise.show', Auth::user()->id) }}"
+                                data-click-to-select="true" data-side-pagination="server" data-pagination="true"
+                                data-page-list="[5, 10, 20, 50, 100, 200,All]" data-search="false" data-toolbar="#toolbar"
+                                data-show-columns="true" data-show-refresh="true" data-fixed-columns="false"
+                                data-fixed-number="2" data-fixed-right-number="1" data-trim-on-search="false"
+                                data-mobile-responsive="true" data-sort-name="id" data-sort-order="desc"
+                                data-maintain-selected="true" data-export-data-type='all' data-show-export="true"
+                                data-export-options='{ "fileName": "month-wise-staff-attendance-<?= date('d-m-y') ?>" ,"ignoreColumn": ["operate"]}'
+                                data-query-params="queryParams" data-escape="true">
                                 <thead>
-                                <tr>
-                                    <th scope="col" data-field="id" data-sortable="true" data-visible="false">{{__('id')}}</th>
-                                    <th scope="col" data-field="no">{{__('no.')}}</th>
-                                    <th scope="col" data-field="name" data-sortable="false">{{__('name')}}</th>
-                                </tr>
+                                    <tr>
+                                        <th scope="col" data-field="id" data-sortable="true" data-visible="false">
+                                            {{__('id')}}</th>
+                                        <th scope="col" data-field="no">{{__('no.')}}</th>
+                                        <th scope="col" data-field="name" data-sortable="false">{{__('name')}}</th>
+                                    </tr>
                                 </thead>
                             </table>
                         </div>
@@ -92,73 +98,73 @@
         });
     </script>
 
-<script>
-        
-    const sessionYearSelect = document.getElementById('session_year_id');
-    const monthSelect = document.getElementById('month');
+    <script>
 
-    async function handleSelectChange() {
-        var month = $('#month').val();
-        var session_year_id = $('#session_year_id').val();
-        var table = $('#table_list');
-        const response = await fetch(`/staff-attendance/month-wise/list?session_year_id=${session_year_id}&month=${month}`);
-        const data = await response.json();
-        table.bootstrapTable('load', data);
-        try {
-            // Fetch the attendance data
-            // Ensure data is loaded before refreshing the table
-                    
-            // Update the table columns dynamically based on the month
-            table.bootstrapTable('refreshOptions', {
-                columns: [
-                    {
-                        field: 'user_id',
-                        title: 'User ID'
-                    },
-                    {
-                        field: 'full_name',
-                        title: 'Staff Name'
-                    },
-                    ...generateDayColumns(month)
-                ]
-            });
-            
-            
-        } catch (error) {
-            console.error('Error fetching attendance data:', error);
+        const sessionYearSelect = document.getElementById('session_year_id');
+        const monthSelect = document.getElementById('month');
+
+        async function handleSelectChange() {
+            var month = $('#month').val();
+            var session_year_id = $('#session_year_id').val();
+            var table = $('#table_list');
+            const response = await fetch(`/staff-attendance/month-wise/list?session_year_id=${session_year_id}&month=${month}`);
+            const data = await response.json();
+            table.bootstrapTable('load', data);
+            try {
+                // Fetch the attendance data
+                // Ensure data is loaded before refreshing the table
+
+                // Update the table columns dynamically based on the month
+                table.bootstrapTable('refreshOptions', {
+                    columns: [
+                        {
+                            field: 'user_id',
+                            title: 'User ID'
+                        },
+                        {
+                            field: 'full_name',
+                            title: 'Staff Name'
+                        },
+                        ...generateDayColumns(month)
+                    ]
+                });
+
+
+            } catch (error) {
+                console.error('Error fetching attendance data:', error);
+            }
         }
-    }
 
-    sessionYearSelect.addEventListener('change', handleSelectChange);
-    monthSelect.addEventListener('change', handleSelectChange);
+        sessionYearSelect.addEventListener('change', handleSelectChange);
+        monthSelect.addEventListener('change', handleSelectChange);
 
-    function generateDayColumns(month) {
-        var currentYear = new Date().getFullYear();
-        const daysInMonth = new Date(currentYear, month, 0).getDate(); // Month is zero-indexed, so no need to subtract 1
-        const columns = [];
+        function generateDayColumns(month) {
+            var currentYear = new Date().getFullYear();
+            const daysInMonth = new Date(currentYear, month, 0).getDate(); // Month is zero-indexed, so no need to subtract 1
+            const columns = [];
 
-        for (let day = 1; day <= daysInMonth; day++) {
-            columns.push({
-                field: `day_${day}`,
-                title: `${day}`,
-                formatter: attendanceFormatter
-            });
+            for (let day = 1; day <= daysInMonth; day++) {
+                columns.push({
+                    field: `day_${day}`,
+                    title: `${day}`,
+                    formatter: attendanceFormatter
+                });
+            }
+            return columns;
+
         }
-        return columns;
-        
-    }
 
 
-    function attendanceFormatter(value, row, index) {
-        if (value == 1) {
-            return '<i class="fa fa-check text-success"></i>';
-        } else if(value == 0) {
-            return '<i class="fa fa-times text-danger"></i>';
-        } else if(value == 3){
-            return '<i class="fa fa-power-off text-info"></i>';
+        function attendanceFormatter(value, row, index) {
+            if (value == 1) {
+                return '<i class="fa fa-check text-success"></i>';
+            } else if (value == 0) {
+                return '<i class="fa fa-times text-danger"></i>';
+            } else if (value == 3) {
+                return '<i class="fa fa-power-off text-info"></i>';
+            }
+            return '-'; // return empty string for no data
         }
-        return '-'; // return empty string for no data
-    }    
 
-</script>
-@endsection 
+    </script>
+@endsection

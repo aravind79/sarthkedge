@@ -5,12 +5,16 @@
 @endsection
 
 @section('content')
+    @php
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+    @endphp
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">
                 {{ __('manage') . ' ' . __('holiday') }}
             </h3>
-            @if (Auth::user()->can('holiday-create'))
+            @if ($user->can('holiday-create'))
                 <button type="button" class="btn btn-theme btn-sm" data-toggle="modal" data-target="#createModal">
                     <i class="fa fa-plus mr-1"></i> {{ __('create') . ' ' . __('holiday') }}
                 </button>
@@ -18,7 +22,7 @@
         </div>
 
         <div class="row">
-            @if (Auth::user()->can('holiday-list'))
+            @if ($user->can('holiday-list'))
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
@@ -39,7 +43,12 @@
 
                                 <div class="form-group col-12 col-sm-12 col-md-3 col-lg-3">
                                     <label for="filter_month_id" class="filter-menu">{{__("month")}}</label>
-                                    {!! Form::select('month', ['0' => 'All'] + $months, null, ['class' => 'form-control', 'id' => 'filter_month']) !!}
+                                    <select name="month" id="filter_month" class="form-control">
+                                        <option value="0">{{ __('All') }}</option>
+                                        @foreach ($months as $key => $month)
+                                            <option value="{{ $key }}">{{ $month }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -67,7 +76,7 @@
                                                     data-formatter="descriptionFormatter" data-field="description">
                                                     {{ __('description') }}
                                                 </th>
-                                                @if (Auth::user()->can('holiday-edit') || Auth::user()->can('holiday-delete'))
+                                                @if ($user->can('holiday-edit') || $user->can('holiday-delete'))
                                                     <th data-events="holidayEvents" data-width="150" scope="col"
                                                         data-field="operate">{{ __('action') }}</th>
                                                 @endif
@@ -101,23 +110,23 @@
                         <div class="row form-group">
                             <div class="col-sm-12 col-md-6">
                                 <label>{{ __('start_date') }} <span class="text-danger">*</span></label>
-                                {!! Form::text('date', null, ['required', 'placeholder' => __('start_date'), 'class' => 'datepicker-popup form-control', 'id' => 'edit-date']) !!}
+                                <input type="text" name="date" id="edit-date" class="datepicker-popup form-control" placeholder="{{ __('start_date') }}" required>
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <label>{{ __('end_date') }}</label>
-                                {!! Form::text('end_date', null, ['placeholder' => __('end_date'), 'class' => 'datepicker-popup form-control', 'id' => 'edit-end-date']) !!}
+                                <input type="text" name="end_date" id="edit-end-date" class="datepicker-popup form-control" placeholder="{{ __('end_date') }}">
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12 col-md-12">
                                 <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control', 'id' => 'edit-title']) !!}
+                                <input type="text" name="title" id="edit-title" class="form-control" placeholder="{{ __('title') }}" required>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-12 col-md-12">
                                 <label>{{ __('description') }}</label>
-                                {!! Form::textarea('description', null, ['placeholder' => __('description'), 'class' => 'form-control', 'id' => 'edit-description']) !!}
+                                <textarea name="description" id="edit-description" class="form-control" placeholder="{{ __('description') }}"></textarea>
                             </div>
                         </div>
                     </div>
@@ -131,7 +140,7 @@
     </div>
 
     {{-- Create Modal --}}
-    @if (Auth::user()->can('holiday-create'))
+    @if ($user->can('holiday-create'))
         <div class="modal fade" id="createModal" data-backdrop="static" tabindex="-1" role="dialog"
             aria-labelledby="createModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -149,23 +158,23 @@
                             <div class="row form-group">
                                 <div class="col-sm-12 col-md-6">
                                     <label>{{ __('start_date') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('date', null, ['required', 'placeholder' => __('start_date'), 'class' => 'datepicker-popup form-control', 'autocomplete' => 'off']) !!}
+                                    <input type="text" name="date" class="datepicker-popup form-control" placeholder="{{ __('start_date') }}" required autocomplete="off">
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <label>{{ __('end_date') }}</label>
-                                    {!! Form::text('end_date', null, ['placeholder' => __('end_date'), 'class' => 'datepicker-popup form-control', 'autocomplete' => 'off']) !!}
+                                    <input type="text" name="end_date" class="datepicker-popup form-control" placeholder="{{ __('end_date') }}" autocomplete="off">
                                 </div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12 col-md-12">
                                     <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control']) !!}
+                                    <input type="text" name="title" class="form-control" placeholder="{{ __('title') }}" required>
                                 </div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-12 col-md-12">
                                     <label>{{ __('description') }}</label>
-                                    {!! Form::textarea('description', null, ['rows' => '2', 'placeholder' => __('description'), 'class' => 'form-control']) !!}
+                                    <textarea name="description" rows="2" class="form-control" placeholder="{{ __('description') }}"></textarea>
                                 </div>
                             </div>
                         </div>

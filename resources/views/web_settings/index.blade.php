@@ -168,21 +168,21 @@
                                 <div class="row my-4 mx-1">
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label for="title">{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('about_us_title', $settings['about_us_title'] ?? null, ['required','class' => 'form-control','placeholder' => __('title')]) !!}
+                                        <input type="text" name="about_us_title" value="{{ $settings['about_us_title'] ?? '' }}" class="form-control" placeholder="{{ __('title') }}" required>
                                     </div>
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label for="heading">{{ __('heading') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('about_us_heading', $settings['about_us_heading'] ?? null, ['required','class' => 'form-control', 'placeholder' => __('heading')]) !!}
+                                        <input type="text" name="about_us_heading" value="{{ $settings['about_us_heading'] ?? '' }}" class="form-control" placeholder="{{ __('heading') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label for="description">{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('about_us_description', $settings['about_us_description'] ?? null, ['required','class' => 'form-control','rows' => 5, 'placeholder' => __('description')]) !!}
+                                        <textarea name="about_us_description" class="form-control" rows="5" placeholder="{{ __('description') }}" required>{{ $settings['about_us_description'] ?? '' }}</textarea>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label for="points">{{ __('points') }} <span class="text-danger">*</span> <span class="text-small text-info">({{ __('please_use_commas_or_press_enter_to_add_multiple_points') }})</label>
-                                        {!! Form::text('about_us_points', $settings['about_us_points'] ?? null, ['required','class' => 'form-control', 'id' => 'tags', 'placeholder' => __('about_us_points')]) !!}
+                                        <input type="text" name="about_us_points" value="{{ $settings['about_us_points'] ?? '' }}" class="form-control" id="tags" placeholder="{{ __('about_us_points') }}" required>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-4">
@@ -242,7 +242,7 @@
                                     </div>
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label for="description">{{ __('description') }} </label>
-                                        {!! Form::textarea('custom_package_description', $settings['custom_package_description'] ?? null, ['class' => 'form-control','rows' => 5, 'placeholder' => __('description')]) !!}
+                                        <textarea name="custom_package_description" class="form-control" rows="5" placeholder="{{ __('description') }}">{{ $settings['custom_package_description'] ?? '' }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -274,7 +274,7 @@
                                 <div class="row my-4 mx-1">
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label for="description">{{ __('description') }} <span class="text-danger">*</span></label>
-                                        {!! Form::textarea('download_our_app_description', $settings['download_our_app_description'] ?? null, ['required','class' => 'form-control','rows' => 5, 'placeholder' => __('description')]) !!}
+                                        <textarea name="download_our_app_description" class="form-control" rows="5" placeholder="{{ __('description') }}" required>{{ $settings['download_our_app_description'] ?? '' }}</textarea>
                                     </div>
                                 </div>
                             </div>

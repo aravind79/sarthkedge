@@ -23,12 +23,16 @@
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label for="assign_schools">{{__('subject') }}<span class="text-danger">*</span></label>
-                                    {!! Form::text('subject', null, ['class' => 'form-control', 'required']) !!}
+                                    <input type="text" name="subject" class="form-control" required placeholder="{{ __('subject') }}">
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label for="assign_schools">{{ __('schools') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('school_id[]', $schools, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible','multiple','required']) !!}
+                                    <select name="school_id[]" class="form-control select2-dropdown select2-hidden-accessible" multiple required>
+                                        @foreach($schools as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-12">

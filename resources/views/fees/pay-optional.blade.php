@@ -48,7 +48,7 @@
                                                 </td>
                                                 <td style="cursor: default;" class="text-right">
                                                     {{$optionalFee->amount}}
-                                                    {!! Form::hidden('fees_class_type['.$key.'][amount]', $optionalFee->amount) !!}
+                                                    <input type="hidden" name="fees_class_type[{{ $key }}][amount]" value="{{ $optionalFee->amount }}">
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -57,7 +57,7 @@
                                             <td class="text-left"></td>
                                             <td colspan="2" class="text-left"><label>{{__("Total Amount")}}</label></td>
                                             <td class="text-right" id="optional-total-amount"></td>
-                                            {!! Form::hidden('total_amount',null, ["id" => "form-total-optional-amount"]) !!}
+                                            <input type="hidden" name="total_amount" id="form-total-optional-amount">
                                         </tr>
                                         </tbody>
                                     </table>

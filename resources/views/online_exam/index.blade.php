@@ -2,7 +2,7 @@
 @extends('layouts.master')
 
 @section('title')
-{{ __('manage_online_exam') }}
+    {{ __('manage_online_exam') }}
 @endsection
 
 @section('content')
@@ -21,7 +21,7 @@
                                 {{ __('create_online_exam') }}
                             </h4>
                             <form class="pt-3 mt-6" id="create-form" method="POST" action="{{ route('online-exam.store') }}">
-                                {{-- {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!} --}}
+
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label>{{ __('Class') }} <span class="text-danger">*</span></label>
@@ -34,12 +34,14 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>{{ __('Class Section') }} <span class="text-danger">*</span></label>
-                                        <select name="class_section_id[]" required id="class-section-id" class="form-control select2" style="width:100%;" multiple disabled>
+                                        <select name="class_section_id[]" required id="class-section-id"
+                                            class="form-control select2" style="width:100%;" multiple disabled>
                                             <option value="">-- {{ __('Select Class First') }} --</option>
                                         </select>
                                         <div class="form-check w-fit-content mt-2">
                                             <label class="form-check-label user-select-none">
-                                                <input type="checkbox" class="form-check-input" id="select-all" value="1">{{__("Select All")}}
+                                                <input type="checkbox" class="form-check-input" id="select-all"
+                                                    value="1">{{__("Select All")}}
                                             </label>
                                         </div>
                                     </div>
@@ -53,27 +55,34 @@
                                 <div class="row">
                                     <div class="form-group col-md-4 col-lg-4 col-xl-4">
                                         <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('title', "", ['required','id' => "title","placeholder" => trans('title'),"class" => "form-control" ]) !!}
+                                        <input required type="text" name="title" id="title" class="form-control"
+                                            placeholder="{{ __('title') }}">
                                     </div>
                                     <div class="form-group col-md-4 col-lg-4 col-xl-2">
                                         <label>{{ __('exam_key') }} <span class="text-danger">*</span></label>
-                                        {!! Form::number('exam_key', "", ['required','id' => "key","placeholder" => trans('exam_key'),"class" => "form-control","min" => 1,'readonly' => true]) !!}
+                                        <input required type="number" name="exam_key" id="key" class="form-control"
+                                            placeholder="{{ __('exam_key') }}" min="1" readonly>
                                     </div>
                                     <div class="form-group col-md-4 col-lg-4 col-xl-2">
-                                        <label>{{ __('duration') }} <span class="text-danger">*</span> <span class="text-info small">( {{__('in_minutes')}} )</span></label>
-                                        {!! Form::number('duration', "", ['required','id' => "duration","placeholder" => trans('duration'),"class" => "form-control","min" => 1]) !!}
+                                        <label>{{ __('duration') }} <span class="text-danger">*</span> <span
+                                                class="text-info small">( {{__('in_minutes')}} )</span></label>
+                                        <input required type="number" name="duration" id="duration" class="form-control"
+                                            placeholder="{{ __('duration') }}" min="1">
                                     </div>
                                     <div class="form-group col-md-4 col-lg-4 col-xl-2">
                                         <label>{{ __('start_date')}} <span class="text-danger">*</span></label>
-                                        {!! Form::datetimeLocal('start_date', "", ['required','id' => "start-date timepicker-example","placeholder" => trans('start_date'),"class" => "form-control"]) !!}
+                                        <input required type="datetime-local" name="start_date"
+                                            id="start-date timepicker-example" class="form-control"
+                                            placeholder="{{ __('start_date') }}">
                                     </div>
                                     <div class="form-group col-md-4 col-lg-4 col-xl-2">
                                         <label>{{ __('end_date') }} <span class="text-danger">*</span></label>
-                                        {!! Form::datetimeLocal('end_date', "", ['required','id' => "end-date","placeholder" => trans('end_date'),"class" => "form-control"]) !!}
+                                        <input required type="datetime-local" name="end_date" id="end-date" class="form-control"
+                                            placeholder="{{ __('end_date') }}">
                                     </div>
                                 </div>
 
-                                {{-- <input class="btn btn-theme" id="add-online-exam-btn" type="submit" value={{ __('submit') }}> --}}
+
                                 <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit" value={{ __('submit') }}>
                                 <input class="btn btn-secondary float-right" type="reset" value={{ __('reset') }}>
                             </form>
@@ -91,7 +100,8 @@
                         <div class="d-block">
                             <div class="">
                                 <div class="col-12 text-right d-flex justify-content-end text-right align-items-end">
-                                    <b><a href="#" class="table-list-type active mr-2" data-id="0">{{ __('all') }}</a></b> | <a href="#" class="ml-2 table-list-type" data-id="1">{{ __('Trashed') }}</a>
+                                    <b><a href="#" class="table-list-type active mr-2" data-id="0">{{ __('all') }}</a></b> |
+                                    <a href="#" class="ml-2 table-list-type" data-id="1">{{ __('Trashed') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +109,13 @@
 
                             <div class="form-group col-12 col-sm-12 col-md-3">
                                 <label for="filter-session-year-id" class="filter-menu">{{__("session_year")}}</label>
-                                {!! Form::select('session_year_id', $sessionYear, $defaultSessionYear->id, ['class' => 'form-control', 'id' => 'filter_session_year_id']) !!}
+                                <select name="session_year_id" id="filter_session_year_id" class="form-control">
+                                    @foreach($sessionYear as $key => $year)
+                                        <option value="{{ $key }}" {{ $key == $defaultSessionYear->id ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-3">
@@ -124,33 +140,47 @@
                                 </select>
                             </div>
                         </div>
-                        <table aria-describedby="mydesc" class='table' id='table_list'
-                               data-toggle="table" data-url="{{ route('online-exam.show', 1) }}" data-click-to-select="true"
-                               data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
-                               data-search="true" data-toolbar="#toolbar" data-show-columns="true"
-                               data-show-refresh="true" data-fixed-columns="false" data-fixed-right-number="1"
-                               data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
-                               data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all'
-                               data-export-options='{ "fileName": "{{__('online').' '.__('exam')}}-<?= date(' d-m-y') ?>" ,"ignoreColumn":["operate"]}'
-                               data-show-export="true" data-query-params="onlineExamQueryParams" data-escape="true" data-escape-title="false">
+                        <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
+                            data-url="{{ route('online-exam.show', 1) }}" data-click-to-select="true"
+                            data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
+                            data-search="true" data-toolbar="#toolbar" data-show-columns="true" data-show-refresh="true"
+                            data-fixed-columns="false" data-fixed-right-number="1" data-trim-on-search="false"
+                            data-mobile-responsive="true" data-sort-name="id" data-sort-order="desc"
+                            data-maintain-selected="true" data-export-data-type='all'
+                            data-export-options='{ "fileName": "{{__('online') . ' ' . __('exam')}}-<?= date(' d-m-y') ?>" ,"ignoreColumn":["operate"]}'
+                            data-show-export="true" data-query-params="onlineExamQueryParams" data-escape="true"
+                            data-escape-title="false">
                             <thead>
-                            <tr>
-                                <th scope="col" data-field="id" data-sortable="true" data-visible="false">{{ __('id') }}</th>
-                                <th scope="col" data-field="no">{{ __('no.') }}</th>
-                                <th scope="col" data-field="class_section_with_medium" data-formatter="ClassSectionFormatter">{{ __('class_section') }}</th>
-                                <th scope="col" data-field="subject_name">{{ __('subject') }}</th>
-                                <th scope="col" data-field="title">{{ __('title') }}</th>
-                                <th scope="col" data-field="exam_key" data-align="center">{{ __('exam_key')}}</th>
-                                <th scope="col" data-field="duration" data-align="center">{{ __('duration')}} <span class="text-info small">( {{__('in_minutes')}} )</span></th>
-                                <th scope="col" data-field="start_date_db"  data-sortable="true">{{ __('start_date') }}</th>
-                                <th scope="col" data-field="end_date_db"  data-sortable="true">{{ __('end_date') }}</th>
-                                <th scope="col" data-field="total_questions" data-align="center">{{ __('total').' '.__('questions') }}</th>
-                                <th scope="col" data-field="exam_status_name" data-align="center" data-formatter="examStatusFormatter">{{ __('status') }}</th>
-                                <th scope="col" data-field="participants" data-align="center">{{ __('participants') }}</th>
-                                <th scope="col" data-field="created_at"  data-sortable="true" data-visible="false">{{ __('created_at') }}</th>
-                                <th scope="col" data-field="updated_at"  data-sortable="true" data-visible="false">{{ __('updated_at') }}</th>
-                                <th scope="col" data-field="operate" data-formatter="actionColumnFormatter" data-events="onlineExamEvents" data-escape="false">{{ __('action') }}</th>
-                            </tr>
+                                <tr>
+                                    <th scope="col" data-field="id" data-sortable="true" data-visible="false">{{ __('id') }}
+                                    </th>
+                                    <th scope="col" data-field="no">{{ __('no.') }}</th>
+                                    <th scope="col" data-field="class_section_with_medium"
+                                        data-formatter="ClassSectionFormatter">{{ __('class_section') }}</th>
+                                    <th scope="col" data-field="subject_name">{{ __('subject') }}</th>
+                                    <th scope="col" data-field="title">{{ __('title') }}</th>
+                                    <th scope="col" data-field="exam_key" data-align="center">{{ __('exam_key')}}</th>
+                                    <th scope="col" data-field="duration" data-align="center">{{ __('duration')}} <span
+                                            class="text-info small">( {{__('in_minutes')}} )</span></th>
+                                    <th scope="col" data-field="start_date_db" data-sortable="true">{{ __('start_date') }}
+                                    </th>
+                                    <th scope="col" data-field="end_date_db" data-sortable="true">{{ __('end_date') }}</th>
+                                    <th scope="col" data-field="total_questions" data-align="center">
+                                        {{ __('total') . ' ' . __('questions') }}
+                                    </th>
+                                    <th scope="col" data-field="exam_status_name" data-align="center"
+                                        data-formatter="examStatusFormatter">{{ __('status') }}</th>
+                                    <th scope="col" data-field="participants" data-align="center">{{ __('participants') }}
+                                    </th>
+                                    <th scope="col" data-field="created_at" data-sortable="true" data-visible="false">
+                                        {{ __('created_at') }}
+                                    </th>
+                                    <th scope="col" data-field="updated_at" data-sortable="true" data-visible="false">
+                                        {{ __('updated_at') }}
+                                    </th>
+                                    <th scope="col" data-field="operate" data-formatter="actionColumnFormatter"
+                                        data-events="onlineExamEvents" data-escape="false">{{ __('action') }}</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -159,11 +189,13 @@
 
 
             {{-- model --}}
-            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">{{__('edit')}} {{__('online')}} {{__('exam')}}</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">{{__('edit')}} {{__('online')}} {{__('exam')}}
+                            </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true"><i class="fa fa-close"></i></span>
                             </button>
@@ -173,31 +205,38 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                    <input type="text" id="edit-online-exam-title" required name="edit_title" placeholder="{{ __('title') }}" class="form-control"/>
+                                    <input type="text" id="edit-online-exam-title" required name="edit_title"
+                                        placeholder="{{ __('title') }}" class="form-control" />
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label>{{ __('exam') }} {{__('key')}} <span class="text-danger">*</span></label>
-                                        <input type="number" id="edit-online-exam-key" required name="edit_exam_key" placeholder="{{ __('exam_key') }}" class="form-control" readonly/>
+                                        <input type="number" id="edit-online-exam-key" required name="edit_exam_key"
+                                            placeholder="{{ __('exam_key') }}" class="form-control" readonly />
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label>{{ __('duration') }} <span class="text-danger">*</span></label><span class="text-info small">( {{__('in_minutes')}} )</span>
-                                        <input type="number" id="edit-online-exam-duration" required name="edit_duration" placeholder="{{ __('duration') }}" class="form-control"/>
+                                        <label>{{ __('duration') }} <span class="text-danger">*</span></label><span
+                                            class="text-info small">( {{__('in_minutes')}} )</span>
+                                        <input type="number" id="edit-online-exam-duration" required name="edit_duration"
+                                            placeholder="{{ __('duration') }}" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label>{{ __('start_date')}} <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" id="edit-online-exam-start-date" required name="edit_start_date" placeholder="{{__('start_date')}}" class='form-control'>
+                                        <input type="datetime-local" id="edit-online-exam-start-date" required
+                                            name="edit_start_date" placeholder="{{__('start_date')}}" class='form-control'>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>{{ __('end_date') }} <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" id="edit-online-exam-end-date" required name="edit_end_date" placeholder="{{ __('end_date')}}" class='form-control'>
+                                        <input type="datetime-local" id="edit-online-exam-end-date" required
+                                            name="edit_end_date" placeholder="{{ __('end_date')}}" class='form-control'>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('close') }}</button>
+                                <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">{{ __('close') }}</button>
                                 <input class="btn btn-theme" type="submit" value={{ __('submit') }} />
                             </div>
                         </form>
@@ -211,7 +250,7 @@
     <script>
         $(document).ready(function () {
 
-            function random_exam_key() { 
+            function random_exam_key() {
                 return Math.floor(100000 + Math.random() * 900000);
             }
 
@@ -222,43 +261,43 @@
             }
 
             // Generate a new exam key when the form is submitted
-            $("form").submit(function(event) {
+            $("form").submit(function (event) {
                 event.preventDefault();
                 let rndInt = random_exam_key();
                 $('#key').attr("value", rndInt);
             });
 
             // Cascading dropdown functionality
-            $('#class-id').on('change', function() {
+            $('#class-id').on('change', function () {
                 var classId = $(this).val();
                 var classSectionSelect = $('#class-section-id');
                 var subjectSelect = $('#subject-id');
-                
+
                 // Reset dependent dropdowns
                 classSectionSelect.empty().append('<option value="">-- {{ __('Select Class First') }} --</option>').prop('disabled', true);
                 subjectSelect.empty().append('<option value="">-- {{ __('Select Section First') }} --</option>').prop('disabled', true);
-                
+
                 if (classId) {
                     // Enable class section dropdown
                     classSectionSelect.prop('disabled', false);
-                    
+
                     // Load sections for the selected class
                     $.ajax({
                         url: '{{ route("online-exam.get-sections-by-class") }}',
                         type: 'GET',
                         data: { class_id: classId },
-                        success: function(response) {
+                        success: function (response) {
                             classSectionSelect.empty().append('<option value="placeholder">-- {{ __('Select Section') }} --</option>');
-                            
+
                             if (response.length > 0) {
-                                $.each(response, function(index, section) {
+                                $.each(response, function (index, section) {
                                     classSectionSelect.append('<option value="' + section.id + '">' + section.full_name + '</option>');
                                 });
                             } else {
                                 classSectionSelect.append('<option value="data-not-found">-- {{ __('no_data_found') }} --</option>');
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.error('Error loading sections:', error);
                             classSectionSelect.append('<option value="error">-- {{ __('Error loading sections') }} --</option>');
                         }
@@ -266,34 +305,34 @@
                 }
             });
 
-            $('#class-section-id').on('change', function() {
+            $('#class-section-id').on('change', function () {
                 var classSectionIds = $(this).val();
                 var subjectSelect = $('#subject-id');
-                
+
                 // Reset subject dropdown
                 subjectSelect.empty().append('<option value="">-- {{ __('Select Section First') }} --</option>').prop('disabled', true);
-                
+
                 if (classSectionIds && classSectionIds.length > 0 && !classSectionIds.includes('')) {
                     // Enable subject dropdown
                     subjectSelect.prop('disabled', false);
-                    
+
                     // Load subjects for the selected sections
                     $.ajax({
                         url: '{{ route("online-exam.get-subjects-by-class-section") }}',
                         type: 'GET',
                         data: { class_section_id: classSectionIds },
-                        success: function(response) {
+                        success: function (response) {
                             subjectSelect.empty().append('<option value="">-- {{ __('Select Subject') }} --</option>');
-                            
+
                             if (response.length > 0) {
-                                $.each(response, function(index, subject) {
+                                $.each(response, function (index, subject) {
                                     subjectSelect.append('<option value="' + subject.subject_id + '" data-class-subject-id="' + subject.id + '">' + subject.subject_with_name + '</option>');
                                 });
                             } else {
                                 subjectSelect.append('<option value="data-not-found">-- {{ __('no_data_found') }} --</option>');
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.error('Error loading subjects:', error);
                             subjectSelect.append('<option value="error">-- {{ __('Error loading subjects') }} --</option>');
                         }
@@ -302,26 +341,26 @@
             });
 
             // Select All functionality for class sections
-            $('#select-all').on('change', function() {
+            $('#select-all').on('change', function () {
                 var classSectionSelect = $('#class-section-id');
                 var isChecked = $(this).is(':checked');
-                
+
                 if (isChecked) {
                     // Clear all selections first
                     classSectionSelect.val(null).trigger('change');
-                    
+
                     // Get all valid option values (excluding placeholder and error options)
                     var validValues = [];
-                    classSectionSelect.find('option').each(function() {
+                    classSectionSelect.find('option').each(function () {
                         var $option = $(this);
                         var value = $option.val();
                         var text = $option.text().trim();
-                        
+
                         // Only include options that have a value and are not placeholder/error options
-                        if (value && 
-                            value !== '' && 
+                        if (value &&
+                            value !== '' &&
                             value !== 'placeholder' &&
-                            value !== 'data-not-found' && 
+                            value !== 'data-not-found' &&
                             value !== 'error' &&
                             !text.includes('-- Select') &&
                             !text.includes('-- no_data_found') &&
@@ -329,7 +368,7 @@
                             validValues.push(value);
                         }
                     });
-                    
+
                     // Select only valid values
                     if (validValues.length > 0) {
                         classSectionSelect.val(validValues).trigger('change');
@@ -347,66 +386,66 @@
             });
 
             // Filter dropdown functionality
-            $('#filter-class-id').on('change', function() {
+            $('#filter-class-id').on('change', function () {
                 var classId = $(this).val();
                 var classSectionSelect = $('#filter-class-section-id');
                 var subjectSelect = $('#filter-subject-id');
-                
+
                 // Reset dependent dropdowns
                 classSectionSelect.empty().append('<option value="">{{ __('all') }}</option>').prop('disabled', true);
                 subjectSelect.empty().append('<option value="">{{ __('all') }}</option>').prop('disabled', true);
-                
+
                 if (classId) {
                     // Enable class section dropdown
                     classSectionSelect.prop('disabled', false);
-                    
+
                     // Load sections for the selected class
                     $.ajax({
                         url: '{{ route("online-exam.get-sections-by-class") }}',
                         type: 'GET',
                         data: { class_id: classId },
-                        success: function(response) {
+                        success: function (response) {
                             classSectionSelect.empty().append('<option value="">{{ __('all') }}</option>');
-                            
+
                             if (response.length > 0) {
-                                $.each(response, function(index, section) {
+                                $.each(response, function (index, section) {
                                     classSectionSelect.append('<option value="' + section.id + '">' + section.full_name + '</option>');
                                 });
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.error('Error loading sections:', error);
                         }
                     });
                 }
             });
 
-            $('#filter-class-section-id').on('change', function() {
+            $('#filter-class-section-id').on('change', function () {
                 var classSectionIds = $(this).val();
                 var subjectSelect = $('#filter-subject-id');
-                
+
                 // Reset subject dropdown
                 subjectSelect.empty().append('<option value="">{{ __('all') }}</option>').prop('disabled', true);
-                
+
                 if (classSectionIds && classSectionIds !== '') {
                     // Enable subject dropdown
                     subjectSelect.prop('disabled', false);
-                    
+
                     // Load subjects for the selected sections
                     $.ajax({
                         url: '{{ route("online-exam.get-subjects-by-class-section") }}',
                         type: 'GET',
                         data: { class_section_id: [classSectionIds] },
-                        success: function(response) {
+                        success: function (response) {
                             subjectSelect.empty().append('<option value="">{{ __('all') }}</option>');
-                            
+
                             if (response.length > 0) {
-                                $.each(response, function(index, subject) {
+                                $.each(response, function (index, subject) {
                                     subjectSelect.append('<option value="' + subject.subject_id + '">' + subject.subject_with_name + '</option>');
                                 });
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.error('Error loading subjects:', error);
                         }
                     });

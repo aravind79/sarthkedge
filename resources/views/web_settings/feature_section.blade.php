@@ -26,11 +26,13 @@
                             <div class="row">
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control']) !!}
+                                    <input type="text" name="title" class="form-control" placeholder="{{ __('title') }}"
+                                        required>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-8">
                                     <label>{{ __('heading') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('heading', null, ['required', 'placeholder' => __('heading'), 'class' => 'form-control']) !!}
+                                    <input type="text" name="heading" class="form-control" placeholder="{{ __('heading') }}"
+                                        required>
                                 </div>
                             </div>
                             <hr>
@@ -50,7 +52,8 @@
                                         <div class="form-group col-sm-12 col-md-3" id="file_div">
                                             <label>{{ __('image') }} <span class="text-danger">*</span></label>
                                             <input type="file" name="section[0][image]" class="file form-control"
-                                                placeholder="" accept="image/png, image/jpeg, image/jpg, image/webp" required>
+                                                placeholder="" accept="image/png, image/jpeg, image/jpg, image/webp"
+                                                required>
                                         </div>
 
                                         <div class="form-group col-md-1 mt-4 mb-5">
@@ -93,7 +96,8 @@
                                     <thead>
                                         <tr>
                                             <th scope="col" data-field="id" data-sortable="true" data-visible="false">
-                                                {{ __('id') }}</th>
+                                                {{ __('id') }}
+                                            </th>
                                             <th scope="col" data-field="no">{{ __('no.') }}</th>
                                             <th scope="col" data-field="title">{{ __('title') }}</th>
                                             <th scope="col" data-field="heading">{{ __('heading') }}</th>
@@ -171,30 +175,30 @@
             })
         })
         $(document).on('click', '.edit-data, .delete-form', function (e) {
-                e.preventDefault();
-                e.stopPropagation(); // stop TableDnD interference
-                let hreff = $(this).attr('href');
-                let button = $(this);
-                if (button.hasClass('edit-data')) {
-                    if (hreff) {
-                        window.location.href = hreff;
-                    }
+            e.preventDefault();
+            e.stopPropagation(); // stop TableDnD interference
+            let hreff = $(this).attr('href');
+            let button = $(this);
+            if (button.hasClass('edit-data')) {
+                if (hreff) {
+                    window.location.href = hreff;
                 }
+            }
+        });
+
+        // TableDnD setup after table is rendered
+        $('#table_list').on('post-body.bs.table', function () {
+            $('#table_list').tableDnD({
+                onDragClass: "drag-row",
+                dragHandle: 'td:not([data-field="operate"])'
             });
 
-            // TableDnD setup after table is rendered
-            $('#table_list').on('post-body.bs.table', function () {
-                $('#table_list').tableDnD({
-                    onDragClass: "drag-row",
-                    dragHandle: 'td:not([data-field="operate"])'
+            // Prevent drag on action column (desktop & mobile)
+            $('#table_list td[data-field="operate"], .card-view .card-view-value')
+                .off('mousedown touchstart')
+                .on('mousedown touchstart', function (e) {
+                    e.stopPropagation();
                 });
-
-                // Prevent drag on action column (desktop & mobile)
-                $('#table_list td[data-field="operate"], .card-view .card-view-value')
-                    .off('mousedown touchstart')
-                    .on('mousedown touchstart', function (e) {
-                        e.stopPropagation();
-                    });
-            });
+        });
     </script>
 @endsection

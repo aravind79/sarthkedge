@@ -20,29 +20,26 @@
                         </h4>
                         <form class="pt-3 mt-6 add-exam-form create-form" data-success-function="formSuccessFunction"
                             method="POST" action="{{ url('exams') }}">
-                            {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" id="user_id">
                             <div class="row">
                                 <div class="form-group col-sm-12 col-md-12 col-lg-3">
                                     <label>{{ __('Exam Name') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('name', '', [
-        'id' => 'name',
-        'placeholder' => trans('Exam Name'),
-        'class' => 'form-control',
-        'required' => true,
-    ]) !!}
+                                    <input type="text" name="name" id="name" placeholder="{{ __('Exam Name') }}"
+                                        class="form-control" required>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-12 col-lg-2">
                                     <label>{{ __('Exam Type') }} <span class="text-danger">*</span></label>
                                     <div class="d-flex">
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {!! Form::radio('exam_type', '1', true, ['id' => 'exam_type_offline']) !!}
+                                                <input type="radio" name="exam_type" value="1" id="exam_type_offline"
+                                                    checked>
                                                 {{ __('Offline') }}
                                             </label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {!! Form::radio('exam_type', '2', false, ['id' => 'exam_type_online']) !!}
+                                                <input type="radio" name="exam_type" value="2" id="exam_type_online">
                                                 {{ __('Online') }}
                                             </label>
                                         </div>
@@ -55,7 +52,8 @@
                                         class="form-control select2" style="width:100%;" tabindex="-1" aria-hidden="true">
                                         @foreach ($session_year_all as $years)
                                             <option value="{{ $years->id }}" {{ $years->default == 1 ? 'selected' : '' }}>
-                                                {{ $years->name }}</option>
+                                                {{ $years->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -79,12 +77,8 @@
                             <div class="row">
                                 <div class="form-group col">
                                     <label>{{ __('Exam Description') }}</label>
-                                    {!! Form::textarea('description', '', [
-        'id' => 'description',
-        'placeholder' => trans('Exam Description'),
-        'class' => 'form-control',
-        'rows' => '3',
-    ]) !!}
+                                    <textarea name="description" id="description" placeholder="{{ __('Exam Description') }}"
+                                        class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
                             <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit" value={{ __('submit') }}>
@@ -118,11 +112,20 @@
                             </div>
                             <div class="form-group col-12 col-sm-12 col-md-3 col-lg-3">
                                 <label for="filter_medium_id" class="filter-menu">{{ __('medium') }}</label>
-                                {!! Form::select('medium_id', $mediums, null, ['class' => 'form-control', 'id' => 'filter_medium_id', 'placeholder' => __('all')]) !!}
+                                <select name="medium_id" id="filter_medium_id" class="form-control">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach ($mediums as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group col-12 col-sm-12 col-md-3 col-lg-3">
                                 <label for="filter_exam_type" class="filter-menu">{{ __('Type') }}</label>
-                                {!! Form::select('exam_type', [1 => __('Offline'), 2 => __('Online')], null, ['class' => 'form-control', 'id' => 'filter_exam_type', 'placeholder' => __('all')]) !!}
+                                <select name="exam_type" id="filter_exam_type" class="form-control">
+                                    <option value="">{{ __('all') }}</option>
+                                    <option value="1">{{ __('Offline') }}</option>
+                                    <option value="2">{{ __('Online') }}</option>
+                                </select>
                             </div>
                         </div>
                         <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
@@ -133,7 +136,7 @@
                             data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
                             data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all'
                             data-export-options='{ "fileName": "exam-list-<?= date(' d-m-y') ?>" ,"ignoreColumn":
-                                ["operate"]}' data-show-export="true" data-detail-formatter="examListFormatter"
+                                        ["operate"]}' data-show-export="true" data-detail-formatter="examListFormatter"
                             data-query-params="examQueryParams" data-escape="true">
                             <thead>
                                 <tr>
@@ -144,18 +147,22 @@
                                     <th scope="col" data-field="type_name">{{ __('Type') }}</th>
                                     <th scope="col" data-events="tableDescriptionEvents"
                                         data-formatter="descriptionFormatter" data-field="description" data-sortable="true">
-                                        {{ __('description') }}</th>
+                                        {{ __('description') }}
+                                    </th>
                                     <th scope="col" data-field="class_name">{{ __('Class') }}</th>
                                     <th scope="col" data-field="has_timetable" data-formatter="yesAndNoStatusFormatter">
-                                        {{ __('timetable_created') }}</th>
+                                        {{ __('timetable_created') }}
+                                    </th>
                                     <th scope="col" data-field="classSectionWiseStatus"
                                         data-formatter="classSectionSubmissionStatus">{{ __('status') }}</th>
                                     <th scope="col" data-field="publish" data-sortable="true"
                                         data-formatter="yesAndNoStatusFormatter">{{ __('Publish Result') }}</th>
                                     <th scope="col" data-field="created_at" data-sortable="true" data-visible="false">
-                                        {{ __('created_at') }}</th>
+                                        {{ __('created_at') }}
+                                    </th>
                                     <th scope="col" data-field="updated_at" data-sortable="true" data-visible="false">
-                                        {{ __('updated_at') }}</th>
+                                        {{ __('updated_at') }}
+                                    </th>
                                     <th scope="col" data-field="operate" data-formatter="actionColumnFormatter"
                                         data-events="examEvents" data-escape="false">{{ __('action') }}</th>
                                 </tr>
@@ -184,25 +191,23 @@
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label>{{ __('Exam Name') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('name', '', [
-        'id' => 'edit_name',
-        'placeholder' => trans('Exam Name'),
-        'class' => 'form-control',
-        'required' => true,
-    ]) !!}
+                                        <input type="text" name="name" id="edit_name" placeholder="{{ __('Exam Name') }}"
+                                            class="form-control" required>
                                     </div>
                                     <div class="form-group col-12">
                                         <label>{{ __('Exam Type') }} <span class="text-danger">*</span></label>
                                         <div class="d-flex">
                                             <div class="form-check form-check-inline">
                                                 <label class="form-check-label">
-                                                    {!! Form::radio('exam_type', '1', true, ['id' => 'edit_exam_type_offline']) !!}
+                                                    <input type="radio" name="exam_type" value="1"
+                                                        id="edit_exam_type_offline" checked>
                                                     {{ __('Offline') }}
                                                 </label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <label class="form-check-label">
-                                                    {!! Form::radio('exam_type', '2', false, ['id' => 'edit_exam_type_online']) !!}
+                                                    <input type="radio" name="exam_type" value="2"
+                                                        id="edit_exam_type_online">
                                                     {{ __('Online') }}
                                                 </label>
                                             </div>
@@ -210,12 +215,9 @@
                                     </div>
                                     <div class="form-group col-12">
                                         <label>{{ __('Exam Description') }}</label>
-                                        {!! Form::textarea('description', '', [
-        'id' => 'edit_description',
-        'placeholder' => trans('Exam Description'),
-        'class' => 'form-control',
-        'rows' => '3',
-    ]) !!}
+                                        <textarea name="description" id="edit_description"
+                                            placeholder="{{ __('Exam Description') }}" class="form-control"
+                                            rows="3"></textarea>
                                     </div>
                                 </div>
                             </div>

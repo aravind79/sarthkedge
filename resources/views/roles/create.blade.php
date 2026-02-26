@@ -27,69 +27,76 @@
                         </div>
 
                         <div class="row">
-                            {!! Form::open(['route' => 'roles.store', 'method' => 'POST']) !!}
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <label>{{ __('name') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('name', null, ['placeholder' => 'Name', 'class' => 'form-control']) !!}
+                            <form action="{{ route('roles.store') }}" method="POST">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <div class="form-group">
+                                            <label>{{ __('name') }} <span class="text-danger">*</span></label>
+                                            <input type="text" name="name" class="form-control" placeholder="Name">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-lg-3 col-sm-12 col-xs-12 col-md-3">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            {{ Form::checkbox('selectall', 1, false, ['class' => 'name form-check-input', 'id' => 'selectall']) }}Select
-                                            all
-                                        </label>
+                                    <div class="form-group col-lg-3 col-sm-12 col-xs-12 col-md-3">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" name="selectall" value="1"
+                                                    class="name form-check-input" id="selectall">Select
+                                                all
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-12 col-md-12">
-                                    <label><strong>{{ __('permission') }}:</strong></label>
-                                    <div class="row mt-4">
-                                        @php
-                                            $groupedPermissions = $permission->groupBy(function ($item) {
-                                                return explode('-', $item->name)[0];
-                                            });
-                                        @endphp
+                                    <div class="col-sm-12 col-md-12">
+                                        <label><strong>{{ __('permission') }}:</strong></label>
+                                        <div class="row mt-4">
+                                            @php
+                                                $groupedPermissions = $permission->groupBy(function ($item) {
+                                                    return explode('-', $item->name)[0];
+                                                });
+                                            @endphp
 
-                                        @foreach ($groupedPermissions as $group => $permissions)
-                                            <div class="col-sm-12 col-md-12 mb-4">
-                                                <div class="form-check">
-                                                    <label class="form-check-label" for="checkbox-{{ $group }}">
-                                                        <strong>{{ ucfirst($group) }}</strong>
-                                                        <input type="checkbox" class="form-check-input parent-checkbox"
-                                                            id="checkbox-{{ $group }}" data-group="{{ $group }}"
-                                                            onchange="togglePermissions(this)">
+                                            @foreach ($groupedPermissions as $group => $permissions)
+                                                <div class="col-sm-12 col-md-12 mb-4">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="checkbox-{{ $group }}">
+                                                            <strong>{{ ucfirst($group) }}</strong>
+                                                            <input type="checkbox" class="form-check-input parent-checkbox"
+                                                                id="checkbox-{{ $group }}" data-group="{{ $group }}"
+                                                                onchange="togglePermissions(this)">
 
 
-                                                    </label>
-                                                </div>
+                                                        </label>
+                                                    </div>
 
-                                                <div class="row mt-2">
-                                                    @foreach ($permissions as $value)
-                                                        <div class="form-group col-lg-3 col-sm-12 col-xs-12 col-md-3">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    {{ Form::checkbox('permission[]', $value->id, false, ['class' => 'form-check-input child-checkbox', 'data-group' => $group, 'onchange' => 'updateParentCheckboxState("' . $group . '")']) }}
-                                                                    {{ $value->name }}
-                                                                </label>
+                                                    <div class="row mt-2">
+                                                        @foreach ($permissions as $value)
+                                                            <div class="form-group col-lg-3 col-sm-12 col-xs-12 col-md-3">
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="checkbox" name="permission[]"
+                                                                            value="{{ $value->id }}"
+                                                                            class="form-check-input child-checkbox"
+                                                                            data-group="{{ $group }}"
+                                                                            onchange="updateParentCheckboxState('{{ $group }}')">
+                                                                        {{ $value->name }}
+                                                                    </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    @endforeach
+                                                        @endforeach
+                                                    </div>
+                                                    <hr>
                                                 </div>
-                                                <hr>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12">
+                                        {{-- <button type="submit" class="btn btn-theme float-right">{{ __('submit')
+                                            }}</button>
+                                        --}}
+                                        <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit" value={{ __('submit') }}>
+                                        <input class="btn btn-secondary float-right" type="reset" value={{ __('reset') }}>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-12">
-                                    {{-- <button type="submit" class="btn btn-theme float-right">{{ __('submit') }}</button>
-                                    --}}
-                                    <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit" value={{ __('submit') }}>
-                                    <input class="btn btn-secondary float-right" type="reset" value={{ __('reset') }}>
-                                </div>
-                            </div>
-                            {!! Form::close() !!}
+                            </form>
                         </div>
                     </div>
                 </div>

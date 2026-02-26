@@ -53,7 +53,14 @@
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('select') }} {{ __('category') }} <span
                                             class="text-danger">*</span></label>
-                                    {!! Form::select('category_id', $expenseCategory, null, ['required', 'class' => 'form-control select2-dropdown select2-hidden-accessible', 'placeholder' => __('select') . ' ' . __('category'), 'data-live-search' => "true", 'id' => 'category_id']) !!}
+                                    <select name="category_id" id="category_id"
+                                        class="form-control select2-dropdown select2-hidden-accessible"
+                                        data-live-search="true" required>
+                                        <option value="">{{ __('select') . ' ' . __('category') }}</option>
+                                        @foreach ($expenseCategory as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-4">
@@ -96,7 +103,14 @@
 
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label for="">{{ __('select') }} {{ __('session_year') }}</label>
-                                    {!! Form::select('session_year_id', $sessionYear, $current_session_year->id, ['required', 'class' => 'form-control select2-dropdown select2-hidden-accessible', 'id' => 'session_year_id', 'data-live-search' => "true"]) !!}
+                                    <select name="session_year_id" id="session_year_id"
+                                        class="form-control select2-dropdown select2-hidden-accessible"
+                                        data-live-search="true" required>
+                                        @foreach ($sessionYear as $id => $name)
+                                            <option value="{{ $id }}" {{ $id == $current_session_year->id ? 'selected' : '' }}>
+                                                {{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-4">
@@ -121,7 +135,13 @@
 
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu">{{ __('category') }}</label>
-                                {!! Form::select('category_id', $expenseCategory, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible', 'id' => 'filter_category_id', 'placeholder' => __('all'), 'data-live-search' => "true"]) !!}
+                                <select name="category_id" id="filter_category_id"
+                                    class="form-control select2-dropdown select2-hidden-accessible" data-live-search="true">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach ($expenseCategory as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-4">
@@ -140,7 +160,13 @@
 
                             <div class="form-group col-sm-12 col-md-4">
                                 <label class="filter-menu">{{ __('session_year') }}</label>
-                                {!! Form::select('session_year_id', $sessionYear, null, ['class' => 'form-control select2-dropdown select2-hidden-accessible', 'id' => 'filter_session_year_id', 'placeholder' => __('all'), 'data-live-search' => "true"]) !!}
+                                <select name="session_year_id" id="filter_session_year_id"
+                                    class="form-control select2-dropdown select2-hidden-accessible" data-live-search="true">
+                                    <option value="">{{ __('all') }}</option>
+                                    @foreach ($sessionYear as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                         </div>
@@ -225,7 +251,13 @@
                                     <div class="form-group col-sm-12 col-md-4">
                                         <label>{{ __('select') }} {{ __('category') }} <span
                                                 class="text-danger">*</span></label>
-                                        {!! Form::select('category_id', $expenseCategory, null, ['required', 'class' => 'form-control select2-dropdown select2-hidden-accessible', 'placeholder' => __('select') . ' ' . __('category'), 'id' => 'edit_category_id']) !!}
+                                        <select name="category_id" id="edit_category_id"
+                                            class="form-control select2-dropdown select2-hidden-accessible" required>
+                                            <option value="">{{ __('select') . ' ' . __('category') }}</option>
+                                            @foreach ($expenseCategory as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-4">
@@ -277,7 +309,12 @@
 
                                     <div class="form-group col-sm-12 col-md-4">
                                         <label for="">{{ __('select') }} {{ __('session_year') }}</label>
-                                        {!! Form::select('session_year_id', $sessionYear, $current_session_year->id, ['required', 'class' => 'form-control select2-dropdown select2-hidden-accessible', 'id' => 'edit_session_year_id']) !!}
+                                        <select name="session_year_id" id="edit_session_year_id"
+                                            class="form-control select2-dropdown select2-hidden-accessible" required>
+                                            @foreach ($sessionYear as $id => $name)
+                                                <option value="{{ $id }}" {{ $id == $current_session_year->id ? 'selected' : '' }}>{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                 </div>

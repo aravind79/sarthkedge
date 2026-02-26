@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="form-group col-sm-12 col-md-8">
                                     <label for="">{{ __('link') }}</label>
-                                    {!! Form::text('link', null, ['class' => 'form-control','placeholder' => __('link')]) !!}
+                                    <input type="text" name="link" class="form-control" placeholder="{{ __('link') }}">
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-4">
@@ -142,7 +142,7 @@
 
                                 <div class="form-group">
                                     <label for="">{{ __('link') }}</label>
-                                    {!! Form::text('link', null, ['class' => 'form-control edit_link', 'placeholder' => __('link')]) !!}
+                                    <input type="text" name="link" class="form-control edit_link" placeholder="{{ __('link') }}">
                                 </div>
                                 
                                 <div class="form-group">

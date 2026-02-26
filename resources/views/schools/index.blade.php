@@ -70,7 +70,8 @@
                                         <label for="school_support_email">{{ __('school') . ' ' . __('email') }} <span
                                                 class="text-danger">*</span></label>
                                         <input type="email" name="school_support_email" id="school_support_email"
-                                            placeholder="{{__('support') . ' ' . __('email')}}" class="form-control" required>
+                                            placeholder="{{__('support') . ' ' . __('email')}}" class="form-control"
+                                            required>
                                     </div>
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label for="school_support_phone">{{ __('school') . ' ' . __('phone') }} <span
@@ -94,11 +95,7 @@
                                             class="form-control" placeholder="{{__('address')}}" required></textarea>
                                     </div>
 
-                                    {{-- <div class="form-group col-sm-12 col-md-3">
-                                        <label for="assign_package">{{ __('assign_package')}} </label>
-                                        {!! Form::select('assign_package', $packages, null, ['class' => 'form-control',
-                                        'placeholder' => __('select_package')]) !!}
-                                    </div> --}}
+
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label for="school_domain">{{ __('School Code Prefix')}}</label> <span
@@ -123,12 +120,14 @@
                                         <div class="d-flex">
                                             <div class="form-check form-check-inline">
                                                 <label class="form-check-label">
-                                                    {!! Form::radio('domain_type', 'default', false, ['class' => 'default', 'checked' => "checked"]) !!}{{ __('default') }}
+                                                    <input type="radio" name="domain_type" value="default" class="default"
+                                                        checked> {{ __('default') }}
                                                 </label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <label class="form-check-label">
-                                                    {!! Form::radio('domain_type', 'custom', false, ['class' => 'custom']) !!}{{ __('custom') }}
+                                                    <input type="radio" name="domain_type" value="custom" class="custom">
+                                                    {{ __('custom') }}
                                                 </label>
                                             </div>
                                         </div>
@@ -164,13 +163,16 @@
                                         @foreach ($extraFields as $key => $data)
                                             @php $fieldName = str_replace(' ', '_', $data->name) @endphp
                                             {{-- Edit Extra Details ID --}}
-                                            {{ Form::hidden('extra_fields[' . $key . '][id]', '', ['id' => $fieldName . '_id']) }}
+                                            <input type="hidden" name="extra_fields[{{ $key }}][id]" id="{{ $fieldName }}_id"
+                                                value="">
 
                                             {{-- Form Field ID --}}
-                                            {{ Form::hidden('extra_fields[' . $key . '][form_field_id]', $data->id) }}
+                                            <input type="hidden" name="extra_fields[{{ $key }}][form_field_id]"
+                                                value="{{ $data->id }}">
 
                                             {{-- FormFieldType --}}
-                                            {{ Form::hidden('extra_fields[' . $key . '][input_type]', $data->type) }}
+                                            <input type="hidden" name="extra_fields[{{ $key }}][input_type]"
+                                                value="{{ $data->type }}">
 
                                             <div class='form-group col-xl-4 col-lg-6 col-md-6 col-sm-12'>
 
@@ -183,26 +185,26 @@
 
                                                 {{-- Text Field --}}
                                                 @if($data->type == 'text')
-                                                    {{ Form::text('extra_fields[' . $key . '][data]', '', ['class' => 'form-control text-fields', 'id' => $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                    <input type="text" name="extra_fields[{{ $key }}][data]"
+                                                        class="form-control text-fields" id="{{ $fieldName }}"
+                                                        placeholder="{{ $data->name }}" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                     {{-- Number Field --}}
                                                 @elseif($data->type == 'number')
-                                                    {{ Form::number('extra_fields[' . $key . '][data]', '', ['min' => 0, 'class' => 'form-control number-fields', 'id' => $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                    <input type="number" name="extra_fields[{{ $key }}][data]" min="0"
+                                                        class="form-control number-fields" id="{{ $fieldName }}"
+                                                        placeholder="{{ $data->name }}" {{ $data->is_required == 1 ? 'required' : '' }}>
 
                                                     {{-- Dropdown Field --}}
                                                 @elseif($data->type == 'dropdown')
-                                                                            {{ Form::select(
-                                                        'extra_fields[' . $key . '][data]',
-                                                        $data->default_values,
-                                                        null,
-                                                        [
-                                                            'id' => $fieldName,
-                                                            'class' => 'form-control select-fields',
-                                                            ($data->is_required == 1 ? 'required' : ''),
-                                                            'placeholder' => 'Select ' . $data->name
-                                                        ]
-                                                    )}}
+                                                    <select name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}"
+                                                        class="form-control select-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                        <option value="">Select {{ $data->name }}</option>
+                                                        @foreach($data->default_values as $val)
+                                                            <option value="{{ $val }}">{{ $val }}</option>
+                                                        @endforeach
+                                                    </select>
 
-                                                                            {{-- Radio Field --}}
+                                                    {{-- Radio Field --}}
                                                 @elseif($data->type == 'radio')
                                                     <label class="d-block">{{$data->name}} @if($data->is_required)
                                                         <span class="text-danger">*</span>
@@ -211,7 +213,9 @@
                                                         @foreach ($data->default_values as $keyRadio => $value)
                                                             <div class="form-check mr-3">
                                                                 <label class="form-check-label">
-                                                                    {{ Form::radio('extra_fields[' . $key . '][data]', $value, null, ['id' => $fieldName . '_' . $keyRadio, 'class' => 'radio-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                    <input type="radio" name="extra_fields[{{ $key }}][data]"
+                                                                        value="{{ $value }}" id="{{ $fieldName }}_{{ $keyRadio }}"
+                                                                        class="radio-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                     {{$value}}
                                                                 </label>
                                                             </div>
@@ -227,7 +231,9 @@
                                                         @foreach ($data->default_values as $chkKey => $value)
                                                             <div class="form-check mr-3">
                                                                 <label class="form-check-label">
-                                                                    {{ Form::checkbox('extra_fields[' . $key . '][data][]', $value, null, ['id' => $fieldName . '_' . $chkKey, 'class' => 'form-check-input chkclass checkbox-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                    <input type="checkbox" name="extra_fields[{{ $key }}][data][]"
+                                                                        value="{{ $value }}" id="{{ $fieldName }}_{{ $chkKey }}"
+                                                                        class="form-check-input chkclass checkbox-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                     {{ $value }}
                                                                 </label>
                                                             </div>
@@ -236,13 +242,16 @@
 
                                                     {{-- Textarea Field --}}
                                                 @elseif($data->type == 'textarea')
-                                                    {{ Form::textarea('extra_fields[' . $key . '][data]', '', ['placeholder' => $data->name, 'id' => $fieldName, 'class' => 'form-control textarea-fields', ($data->is_required ? 'required' : ''), 'rows' => 3]) }}
+                                                    <textarea name="extra_fields[{{ $key }}][data]" placeholder="{{ $data->name }}"
+                                                        id="{{ $fieldName }}" class="form-control textarea-fields" {{ $data->is_required ? 'required' : '' }} rows="3"></textarea>
 
                                                     {{-- File Upload Field --}}
                                                 @elseif($data->type == 'file')
                                                     <div class="input-group">
-                                                        {{ Form::file('extra_fields[' . $key . '][data]', ['class' => 'file-upload-default', 'id' => $fieldName, ($data->is_required == 1 ? 'required' : '')]) }}
-                                                        {{ Form::text('', '', ['class' => 'form-control file-upload-info', 'disabled' => '', 'placeholder' => __('image')]) }}
+                                                        <input type="file" name="extra_fields[{{ $key }}][data]"
+                                                            class="file-upload-default" id="{{ $fieldName }}" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                        <input type="text" class="form-control file-upload-info" disabled
+                                                            placeholder="{{ __('image') }}">
                                                         <span class="input-group-append">
                                                             <button class="file-upload-browse btn btn-theme"
                                                                 type="button">{{ __('upload') }}</button>
@@ -286,59 +295,79 @@
                             {{ __('list') . ' ' . __('schools') }}
                         </h4>
 
-                            <div class="row align-items-end" id="toolbar">
-                                <div class="form-group col-sm-12 col-md-3">
-                                    <label class="filter-menu" for="package">{{ __('package') }}</label>
-                                    {!! Form::select('package', ['' => 'All'] + $packages, request('package'), ['class' => 'form-control', 'id' => 'filter_package_id']) !!}
-                                </div>
-                                <div class="form-group col-sm-12 col-md-3">
-                                    <label class="filter-menu" for="search">{{ __('Search') }}</label>
-                                    <input type="text" name="search" class="form-control" value="{{ request('search') }}"
-                                        placeholder="{{ __('Search by name, email, code...') }}">
-                                </div>
-                                <div class="form-group col-sm-12 col-md-6">
-                                    <button type="submit" class="btn btn-theme">{{ __('Search') }}</button>
-                                    <a href="{{ route('schools.index') }}" class="btn btn-secondary ml-2">{{ __('Reset') }}</a>
-                                    
-                                    <div class="float-right mt-2">
-                                        <b><a href="{{ route('schools.index') }}" class="mr-2 {{ !request('show_deleted') ? 'text-theme' : 'text-muted' }}">{{ __('All') }}</a></b> |
-                                        <a href="{{ route('schools.index', ['show_deleted' => 1]) }}" class="ml-2 {{ request('show_deleted') ? 'text-theme' : 'text-muted' }}">{{ __('Trashed') }}</a>
-                                    </div>
+                        <div class="row align-items-end" id="toolbar">
+                            <div class="form-group col-sm-12 col-md-3">
+                                <label class="filter-menu" for="package">{{ __('package') }}</label>
+                                <select name="package" id="filter_package_id" class="form-control">
+                                    <option value="">{{ __('All') }}</option>
+                                    @foreach($packages as $id => $name)
+                                        <option value="{{ $id }}" {{ request('package') == $id ? 'selected' : '' }}>{{ $name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3">
+                                <label class="filter-menu" for="search">{{ __('Search') }}</label>
+                                <input type="text" name="search" class="form-control" value="{{ request('search') }}"
+                                    placeholder="{{ __('Search by name, email, code...') }}">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-6">
+                                <button type="submit" class="btn btn-theme">{{ __('Search') }}</button>
+                                <a href="{{ route('schools.index') }}" class="btn btn-secondary ml-2">{{ __('Reset') }}</a>
+
+                                <div class="float-right mt-2">
+                                    <b><a href="{{ route('schools.index') }}"
+                                            class="mr-2 {{ !request('show_deleted') ? 'text-theme' : 'text-muted' }}">{{ __('All') }}</a></b>
+                                    |
+                                    <a href="{{ route('schools.index', ['show_deleted' => 1]) }}"
+                                        class="ml-2 {{ request('show_deleted') ? 'text-theme' : 'text-muted' }}">{{ __('Trashed') }}</a>
                                 </div>
                             </div>
+                        </div>
                         </form>
 
                         <div class="row">
                             @forelse($schoolsList as $school)
                                 <div class="col-md-6 col-lg-4 col-xl-4 mb-4">
-                                    <div class="card border rounded shadow-sm h-100" style="border-radius: 12px; transition: transform 0.2s; border: 1px solid #eef0f3;">
+                                    <div class="card border rounded shadow-sm h-100"
+                                        style="border-radius: 12px; transition: transform 0.2s; border: 1px solid #eef0f3;">
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between align-items-start mb-3">
-                                                 <div class="d-flex align-items-center">
-                                                    <img src="{{ $school->logo }}" alt="{{ $school->name }}" class="rounded-circle mr-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #f0f1f7;">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="{{ $school->logo }}" alt="{{ $school->name }}"
+                                                        class="rounded-circle mr-3"
+                                                        style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #f0f1f7;">
                                                     <div>
-                                                        <h5 class="mb-1 font-weight-bold element-title" style="font-size: 1.1rem; color: #333;">{{ $school->name }}</h5>
-                                                        <p class="text-muted mb-0 small"><i class="fa fa-map-marker mr-1" style="color: #6c757d;"></i> {{ Str::limit($school->address, 25) }}</p>
+                                                        <h5 class="mb-1 font-weight-bold element-title"
+                                                            style="font-size: 1.1rem; color: #333;">{{ $school->name }}</h5>
+                                                        <p class="text-muted mb-0 small"><i class="fa fa-map-marker mr-1"
+                                                                style="color: #6c757d;"></i>
+                                                            {{ Str::limit($school->address, 25) }}</p>
                                                     </div>
-                                                 </div>
-                                                 @if($school->trashed())
-                                                     <span class="badge badge-danger badge-pill px-3 py-1" style="font-size: 10px;">{{ __('Trashed') }}</span>
-                                                 @else
-                                                     <span class="badge badge-{{ $school->status ? 'success' : 'danger' }} badge-pill px-3 py-1" style="font-size: 10px;">{{ $school->status ? __('Active') : __('Inactive') }}</span>
-                                                 @endif
+                                                </div>
+                                                @if($school->trashed())
+                                                    <span class="badge badge-danger badge-pill px-3 py-1"
+                                                        style="font-size: 10px;">{{ __('Trashed') }}</span>
+                                                @else
+                                                    <span
+                                                        class="badge badge-{{ $school->status ? 'success' : 'danger' }} badge-pill px-3 py-1"
+                                                        style="font-size: 10px;">{{ $school->status ? __('Active') : __('Inactive') }}</span>
+                                                @endif
                                             </div>
-                                            
+
                                             <div class="d-flex justify-content-between mb-2">
-                                                 <span class="text-muted small">{{ __('Active Plan') }}</span>
-                                                 <span class="font-weight-bold text-theme">{{ $school->subscription->first()->package->name ?? 'No Plan' }}</span>
+                                                <span class="text-muted small">{{ __('Active Plan') }}</span>
+                                                <span
+                                                    class="font-weight-bold text-theme">{{ $school->subscription->first()->package->name ?? 'No Plan' }}</span>
                                             </div>
 
                                             <hr style="border-top: 1px solid #f0f0f0;">
-                                            
+
                                             <div class="row text-center mb-0 mt-3">
                                                 <div class="col-6 border-right">
                                                     <h6 class="font-weight-bold mb-0 text-dark">-</h6>
-                                                    <small class="text-muted" style="font-size: 11px;">{{ __('Students') }}</small>
+                                                    <small class="text-muted"
+                                                        style="font-size: 11px;">{{ __('Students') }}</small>
                                                 </div>
                                                 <div class="col-6">
                                                     <h6 class="font-weight-bold mb-0 text-dark">-</h6>
@@ -347,68 +376,90 @@
                                             </div>
 
                                             <div class="mt-4">
-                                                 <div class="d-flex justify-content-between">
-                                                     <a href="{{ route('schools.edit', $school->id) }}" class="btn btn-theme btn-sm flex-grow-1 mr-2 rounded-pill" style="font-size: 12px;">{{ __('View Details') }}</a>
-                                                      <div class="dropdown">
-                                                          <button class="btn btn-secondary btn-sm rounded-circle" type="button" data-toggle="dropdown" style="width: 32px; height: 32px; padding: 0; line-height: 30px;">
-                                                              <i class="fa fa-ellipsis-v"></i>
-                                                          </button>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                @if($school->trashed())
-                                                                    <a class="dropdown-item" href="#" onclick="document.getElementById('restore-form-{{ $school->id }}').submit();"><i class="fa fa-refresh mr-2"></i> {{ __('Restore') }}</a>
-                                                                    
-                                                                    <a class="dropdown-item text-danger" href="#" onclick="confirm('Are you sure you want to permanently delete this school? This action cannot be undone.') ? document.getElementById('force-delete-form-{{ $school->id }}').submit() : false;">
-                                                                        <i class="fa fa-trash mr-2"></i> {{ __('Delete Permanently') }}
-                                                                    </a>
+                                                <div class="d-flex justify-content-between">
+                                                    <a href="{{ route('schools.edit', $school->id) }}"
+                                                        class="btn btn-theme btn-sm flex-grow-1 mr-2 rounded-pill"
+                                                        style="font-size: 12px;">{{ __('View Details') }}</a>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-secondary btn-sm rounded-circle" type="button"
+                                                            data-toggle="dropdown"
+                                                            style="width: 32px; height: 32px; padding: 0; line-height: 30px;">
+                                                            <i class="fa fa-ellipsis-v"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            @if($school->trashed())
+                                                                <a class="dropdown-item" href="#"
+                                                                    onclick="document.getElementById('restore-form-{{ $school->id }}').submit();"><i
+                                                                        class="fa fa-refresh mr-2"></i> {{ __('Restore') }}</a>
+
+                                                                <a class="dropdown-item text-danger" href="#"
+                                                                    onclick="confirm('Are you sure you want to permanently delete this school? This action cannot be undone.') ? document.getElementById('force-delete-form-{{ $school->id }}').submit() : false;">
+                                                                    <i class="fa fa-trash mr-2"></i> {{ __('Delete Permanently') }}
+                                                                </a>
+                                                            @else
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('schools.edit', $school->id) }}"><i
+                                                                        class="fa fa-edit mr-2"></i> {{ __('Edit') }}</a>
+
+                                                                <a class="dropdown-item" href="#" data-toggle="modal"
+                                                                    data-target="#editAdminModal" onclick="
+                                                                                   $('#edit_school_id').val({{ $school->id }});
+                                                                                   $('#edit-admin-email').val('{{ $school->user->email ?? '' }}');
+                                                                                   $('#edit-admin-first-name').val('{{ $school->user->first_name ?? '' }}');
+                                                                                   $('#edit-admin-last-name').val('{{ $school->user->last_name ?? '' }}');
+                                                                                   $('#edit-admin-contact').val('{{ $school->user->contact ?? '' }}');
+                                                                                    $('#edit_admin_id').val('{{ $school->user->id ?? '' }}');
+                                                                                   $('#admin-image-tag').attr('src', '{{ $school->user->image ?? '' }}');
+                                                                                   ">
+                                                                    <i class="fa fa-user mr-2"></i> {{ __('Change Admin') }}
+                                                                </a>
+
+                                                                @if($school->status)
+                                                                    <a class="dropdown-item" href="#"
+                                                                        onclick="confirm('Are you sure?') ? document.getElementById('status-form-{{ $school->id }}').submit() : false;"><i
+                                                                            class="fa fa-ban mr-2"></i> {{ __('Deactivate') }}</a>
                                                                 @else
-                                                                    <a class="dropdown-item" href="{{ route('schools.edit', $school->id) }}"><i class="fa fa-edit mr-2"></i> {{ __('Edit') }}</a>
-                                                                    
-                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editAdminModal" 
-                                                                       onclick="
-                                                                       $('#edit_school_id').val({{ $school->id }});
-                                                                       $('#edit-admin-email').val('{{ $school->user->email ?? '' }}');
-                                                                       $('#edit-admin-first-name').val('{{ $school->user->first_name ?? '' }}');
-                                                                       $('#edit-admin-last-name').val('{{ $school->user->last_name ?? '' }}');
-                                                                       $('#edit-admin-contact').val('{{ $school->user->contact ?? '' }}');
-                                                                        $('#edit_admin_id').val('{{ $school->user->id ?? '' }}');
-                                                                       $('#admin-image-tag').attr('src', '{{ $school->user->image ?? '' }}');
-                                                                       ">
-                                                                        <i class="fa fa-user mr-2"></i> {{ __('Change Admin') }}
-                                                                    </a>
-
-                                                                    @if($school->status)
-                                                                        <a class="dropdown-item" href="#" onclick="confirm('Are you sure?') ? document.getElementById('status-form-{{ $school->id }}').submit() : false;"><i class="fa fa-ban mr-2"></i> {{ __('Deactivate') }}</a>
-                                                                    @else
-                                                                        <a class="dropdown-item" href="#" onclick="confirm('Are you sure?') ? document.getElementById('status-form-{{ $school->id }}').submit() : false;"><i class="fa fa-check mr-2"></i> {{ __('Activate') }}</a>
-                                                                    @endif
-
-                                                                    <div class="dropdown-divider"></div>
-                                                                    
-                                                                    <a class="dropdown-item text-danger" href="#" onclick="confirm('Are you sure you want to delete this school?') ? document.getElementById('delete-form-{{ $school->id }}').submit() : false;">
-                                                                        <i class="fa fa-trash mr-2"></i> {{ __('Delete') }}
-                                                                    </a>
+                                                                    <a class="dropdown-item" href="#"
+                                                                        onclick="confirm('Are you sure?') ? document.getElementById('status-form-{{ $school->id }}').submit() : false;"><i
+                                                                            class="fa fa-check mr-2"></i> {{ __('Activate') }}</a>
                                                                 @endif
-                                                            </div>
-                                                      </div>
-                                                 </div>
-                                                 
-                                                <form id="status-form-{{ $school->id }}" action="{{ url('schools/change/status', $school->id) }}" method="POST" style="display: none;">
+
+                                                                <div class="dropdown-divider"></div>
+
+                                                                <a class="dropdown-item text-danger" href="#"
+                                                                    onclick="confirm('Are you sure you want to delete this school?') ? document.getElementById('delete-form-{{ $school->id }}').submit() : false;">
+                                                                    <i class="fa fa-trash mr-2"></i> {{ __('Delete') }}
+                                                                </a>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <form id="status-form-{{ $school->id }}"
+                                                    action="{{ url('schools/change/status', $school->id) }}" method="POST"
+                                                    style="display: none;">
                                                     @csrf
                                                     @method('PUT')
                                                 </form>
-                                                <form id="delete-form-{{ $school->id }}" action="{{ route('schools.destroy', $school->id) }}" method="POST" style="display: none;">
+                                                <form id="delete-form-{{ $school->id }}"
+                                                    action="{{ route('schools.destroy', $school->id) }}" method="POST"
+                                                    style="display: none;">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
-                                                <form id="restore-form-{{ $school->id }}" action="{{ route('schools.restore', $school->id) }}" method="POST" style="display: none;">
+                                                <form id="restore-form-{{ $school->id }}"
+                                                    action="{{ route('schools.restore', $school->id) }}" method="POST"
+                                                    style="display: none;">
                                                     @csrf
                                                     @method('PUT')
                                                 </form>
-                                                <form id="force-delete-form-{{ $school->id }}" action="{{ route('schools.trash', $school->id) }}" method="POST" style="display: none;">
+                                                <form id="force-delete-form-{{ $school->id }}"
+                                                    action="{{ route('schools.trash', $school->id) }}" method="POST"
+                                                    style="display: none;">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
-                                                 
+
                                             </div>
                                         </div>
                                     </div>
@@ -485,13 +536,12 @@
 
                             <div class="form-group col-sm-12 col-md-3" id="edit_assign_package_container">
                                 <label for="assign_package">{{ __('assign_package')}} </label>
-                                {!! Form::select('assign_package', $packages, null, ['class' => 'form-control mb-2', 'placeholder' => __('select_package'), 'id' => 'edit_assign_package']) !!}
-                                {{-- <span class="text-danger text-small">
-                                    {{ __('note') }}: {{
-                                    __('if_the_school_does_not_currently_have_a_plan_please_assign_from_here_If_there_is_already_an_active_plan_proceed_to_the_subscription_page_to_make_any_necessary_changes')
-                                    }}.
-                                </span> --}}
-
+                                <select name="assign_package" id="edit_assign_package" class="form-control mb-2">
+                                    <option value="">{{ __('select_package') }}</option>
+                                    @foreach($packages as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-3">
@@ -522,12 +572,14 @@
                                 <div class="d-flex">
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('edit_domain_type', 'default', false, ['class' => 'edit_default', 'checked']) !!}{{ __('default') }}
+                                            <input type="radio" name="edit_domain_type" value="default" class="edit_default"
+                                                checked> {{ __('default') }}
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('edit_domain_type', 'custom', false, ['class' => 'edit_custom']) !!}{{ __('custom') }}
+                                            <input type="radio" name="edit_domain_type" value="custom" class="edit_custom">
+                                            {{ __('custom') }}
                                         </label>
                                     </div>
                                 </div>
@@ -570,13 +622,15 @@
                                 @foreach ($extraFields as $key => $data)
                                     @php $fieldName = str_replace(' ', '_', $data->name) @endphp
                                     {{-- Edit Extra Details ID --}}
-                                    {{ Form::hidden('edit_extra_fields[' . $key . '][id]', '', ['class' => 'edit_extra_fields_id', 'id' => 'edit_' . $fieldName . '_id']) }}
+                                    <input type="hidden" name="edit_extra_fields[{{ $key }}][id]" class="edit_extra_fields_id"
+                                        id="edit_{{ $fieldName }}_id" value="">
 
                                     {{-- Form Field ID --}}
-                                    {{ Form::hidden('edit_extra_fields[' . $key . '][form_field_id]', $data->id) }}
+                                    <input type="hidden" name="edit_extra_fields[{{ $key }}][form_field_id]"
+                                        value="{{ $data->id }}">
 
                                     {{-- FormFieldType --}}
-                                    {{ Form::hidden('edit_extra_fields[' . $key . '][input_type]', $data->type) }}
+                                    <input type="hidden" name="edit_extra_fields[{{ $key }}][input_type]" value="{{ $data->type }}">
 
                                     <div class='form-group col-md-12 col-lg-6 col-xl-4 col-sm-12'>
 
@@ -589,26 +643,26 @@
 
                                         {{-- Text Field --}}
                                         @if($data->type == 'text')
-                                            {{ Form::text('edit_extra_fields[' . $key . '][data]', '', ['class' => 'form-control text-fields', 'id' => 'edit_' . $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                            <input type="text" name="edit_extra_fields[{{ $key }}][data]"
+                                                class="form-control text-fields" id="edit_{{ $fieldName }}"
+                                                placeholder="{{ $data->name }}" {{ $data->is_required == 1 ? 'required' : '' }}>
                                             {{-- Number Field --}}
                                         @elseif($data->type == 'number')
-                                            {{ Form::number('edit_extra_fields[' . $key . '][data]', '', ['min' => 0, 'class' => 'form-control number-fields', 'id' => 'edit_' . $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                            <input type="number" name="edit_extra_fields[{{ $key }}][data]" min="0"
+                                                class="form-control number-fields" id="edit_{{ $fieldName }}"
+                                                placeholder="{{ $data->name }}" {{ $data->is_required == 1 ? 'required' : '' }}>
 
                                             {{-- Dropdown Field --}}
                                         @elseif($data->type == 'dropdown')
-                                                            {{ Form::select(
-                                                'edit_extra_fields[' . $key . '][data]',
-                                                $data->default_values,
-                                                null,
-                                                [
-                                                    'id' => 'edit_' . $fieldName,
-                                                    'class' => 'form-control select-fields',
-                                                    ($data->is_required == 1 ? 'required' : ''),
-                                                    'placeholder' => 'Select ' . $data->name
-                                                ]
-                                            )}}
+                                            <select name="edit_extra_fields[{{ $key }}][data]" id="edit_{{ $fieldName }}"
+                                                class="form-control select-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                <option value="">Select {{ $data->name }}</option>
+                                                @foreach($data->default_values as $val)
+                                                    <option value="{{ $val }}">{{ $val }}</option>
+                                                @endforeach
+                                            </select>
 
-                                                            {{-- Radio Field --}}
+                                            {{-- Radio Field --}}
                                         @elseif($data->type == 'radio')
                                             <label class="d-block">{{$data->name}} @if($data->is_required)
                                                 <span class="text-danger">*</span>
@@ -617,7 +671,9 @@
                                                 @foreach ($data->default_values as $keyRadio => $value)
                                                     <div class="col-md-12 col-lg-12 col-xl-6 col-sm-12 form-check">
                                                         <label class="form-check-label">
-                                                            {{ Form::radio('edit_extra_fields[' . $key . '][data]', $value, null, ['id' => 'edit_' . $fieldName . '_' . $keyRadio, 'class' => 'edit-radio-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                            <input type="radio" name="edit_extra_fields[{{ $key }}][data]"
+                                                                value="{{ $value }}" id="edit_{{ $fieldName }}_{{ $keyRadio }}"
+                                                                class="edit-radio-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                             {{$value}}
                                                         </label>
                                                     </div>
@@ -633,7 +689,9 @@
                                                 @foreach ($data->default_values as $chkKey => $value)
                                                     <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12 form-check">
                                                         <label class="form-check-label">
-                                                            {{ Form::checkbox('edit_extra_fields[' . $key . '][data][]', $value, null, ['id' => 'edit_' . $fieldName . '_' . $chkKey, 'class' => 'form-check-input chkclass checkbox-fields', ($data->is_required == 1 ? 'required' : '')]) }}
+                                                            <input type="checkbox" name="edit_extra_fields[{{ $key }}][data][]"
+                                                                value="{{ $value }}" id="edit_{{ $fieldName }}_{{ $chkKey }}"
+                                                                class="form-check-input chkclass checkbox-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                             {{ $value }}
                                                         </label>
                                                     </div>
@@ -642,13 +700,16 @@
 
                                             {{-- Textarea Field --}}
                                         @elseif($data->type == 'textarea')
-                                            {{ Form::textarea('edit_extra_fields[' . $key . '][data]', '', ['placeholder' => $data->name, 'id' => 'edit_' . $fieldName, 'class' => 'form-control textarea-fields', ($data->is_required ? 'required' : ''), 'rows' => 3]) }}
+                                            <textarea name="edit_extra_fields[{{ $key }}][data]" placeholder="{{ $data->name }}"
+                                                id="edit_{{ $fieldName }}" class="form-control textarea-fields" {{ $data->is_required ? 'required' : '' }} rows="3"></textarea>
 
                                             {{-- File Upload Field --}}
                                         @elseif($data->type == 'file')
                                             <div class="input-group col-xs-12">
-                                                {{ Form::file('edit_extra_fields[' . $key . '][data]', ['class' => 'file-upload-default', 'id' => 'edit_' . $fieldName]) }}
-                                                {{ Form::text('', '', ['class' => 'form-control file-upload-info', 'disabled' => '', 'placeholder' => __('image')]) }}
+                                                <input type="file" name="edit_extra_fields[{{ $key }}][data]"
+                                                    class="file-upload-default" id="edit_{{ $fieldName }}">
+                                                <input type="text" class="form-control file-upload-info" disabled
+                                                    placeholder="{{ __('image') }}">
                                                 <span class="input-group-append">
                                                     <button class="file-upload-browse btn btn-theme"
                                                         type="button">{{ __('upload') }}</button>

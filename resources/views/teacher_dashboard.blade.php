@@ -33,7 +33,8 @@
                                     @foreach ($holiday as $holiday)
                                         <div class="col-md-12 bg-light p-2 mb-2">
                                             <span>{{ $holiday->title }}</span>
-                                            <span class="float-right text-muted">{{ \Carbon\Carbon::createFromFormat($originalDateFormat, $holiday->date)->format('d - M') }}</span>
+                                            <span
+                                                class="float-right text-muted">{{ \Carbon\Carbon::createFromFormat($originalDateFormat, $holiday->date)->format('d - M') }}</span>
                                         </div>
                                     @endforeach
                                 @else
@@ -54,7 +55,11 @@
                                     <h3 class="card-title">{{ __('leaves') }}</h3>
                                 </div>
                                 <div class="col-md-6 dropdown text-right">
-                                    {!! Form::select('leave_filter', ['Today' => __('today'), 'Tomorrow' => __('tomorrow'), 'Upcoming' => __('upcoming')], 'today', ['class' => 'form-control form-control-sm filter_leaves']) !!}
+                                    <select name="leave_filter" class="form-control form-control-sm filter_leaves">
+                                        <option value="Today">{{ __('today') }}</option>
+                                        <option value="Tomorrow">{{ __('tomorrow') }}</option>
+                                        <option value="Upcoming">{{ __('upcoming') }}</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -88,7 +93,7 @@
                     <div class="card">
                         <div class="card-body custom-card-body">
                             <h4 class="card-title">{{ __('student_gender') }}</h4>
-                            @if (($boys and $girls and $total_students) == 0 || ($boys == null && $girls == null && $total_students == null)) 
+                            @if (($boys and $girls and $total_students) == 0 || ($boys == null && $girls == null && $total_students == null))
                                 <div class="col-md-12 text-center bg-light p-2 mb-2">
                                     <span>{{ __('no_student_found') }}.</span>
                                 </div>
@@ -159,9 +164,17 @@
                                         </div>
                                         <div class="col-sm-12 col-md-6">
                                             @if ($class_names->isEmpty())
-                                            {!! Form::select('class_id', ['' => __('no_data_found')], null, ['class' => 'form-control form-control-sm class-section-attendance']) !!}
-                                            @else                                               
-                                            {!! Form::select('class_id', $class_names, null, ['class' => 'form-control form-control-sm class-section-attendance']) !!}
+                                                <select name="class_id"
+                                                    class="form-control form-control-sm class-section-attendance">
+                                                    <option value="">{{ __('no_data_found') }}</option>
+                                                </select>
+                                            @else
+                                                <select name="class_id"
+                                                    class="form-control form-control-sm class-section-attendance">
+                                                    @foreach ($class_names as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
                                             @endif
                                         </div>
                                     </div>
@@ -257,12 +270,14 @@
                                     <thead>
                                         <tr>
                                             <th scope="col" data-field="id" data-sortable="true" data-visible="false">
-                                                {{ __('id') }}</th>
+                                                {{ __('id') }}
+                                            </th>
                                             <th scope="col" data-field="no">{{ __('no.') }}</th>
                                             <th scope="col" data-field="title" class="truncateTitle">{{ __('title') }}</th>
                                             <th scope="col" data-events="tableDescriptionEvents"
                                                 data-formatter="descriptionFormatter" data-field="description">
-                                                {{ __('description') }}</th>
+                                                {{ __('description') }}
+                                            </th>
                                         </tr>
                                     </thead>
                                 </table>

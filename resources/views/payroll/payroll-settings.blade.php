@@ -47,7 +47,8 @@
 
                                 <div class="form-group col-sm-12 col-md-12">
                                     <label for="">{{ __('name') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('name', null, ['required', 'class' => 'form-control', 'placeholder' => __('name')]) !!}
+                                    <input required type="text" name="name" class="form-control"
+                                        placeholder="{{ __('name') }}">
                                 </div>
                                 <div class="form-group col-sm-12 col-md-12">
                                     <label for="">{{ __('Amount_Type') }} <span class="text-danger">*</span></label>
@@ -70,11 +71,13 @@
                                 </div>
                                 <div class="form-group col-sm-12 col-md-6 fixed-amount-field">
                                     <label for="">{{ __('fixed_amount') }}</label>
-                                    {!! Form::number('amount', null, ['class' => 'form-control', 'placeholder' => __('fixed_amount'), 'min' => '1']) !!}
+                                    <input type="number" name="amount" class="form-control"
+                                        placeholder="{{ __('fixed_amount') }}" min="1">
                                 </div>
                                 <div class="form-group col-sm-12 col-md-6 percentage-field" style="display: none;">
                                     <label for="">{{ __('percentage') }}</label>
-                                    {!! Form::number('percentage', null, ['class' => 'form-control', 'placeholder' => __('percentage'), 'min' => '0.1', 'max' => '100']) !!}
+                                    <input type="number" name="percentage" class="form-control"
+                                        placeholder="{{ __('percentage') }}" min="0.1" max="100" step="0.1">
                                 </div>
 
                             </div>
@@ -106,7 +109,10 @@
                         <div class="row" id="toolbar">
                             <div class="form-group col-sm-12 col-md-4">
                                 <label for="">{{ __('type') }}</label>
-                                {!! Form::select('filter_type', ['allowance' => __('allowances'), 'deduction' => __('deductions')], 'allowance', ['class' => 'form-control', 'id' => 'filter_type']) !!}
+                                <select name="filter_type" id="filter_type" class="form-control">
+                                    <option value="allowance" selected>{{ __('allowances') }}</option>
+                                    <option value="deduction">{{ __('deductions') }}</option>
+                                </select>
                             </div>
                         </div>
 
@@ -177,7 +183,8 @@
 
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label for="">{{ __('name') }} <span class="text-danger">*</span></label>
-                                        {!! Form::text('name', null, ['required', 'class' => 'form-control', 'placeholder' => __('name'), 'id' => 'name']) !!}
+                                        <input required type="text" name="name" id="name" class="form-control"
+                                            placeholder="{{ __('name') }}">
                                     </div>
                                     <div class="form-group col-sm-12 col-md-12">
                                         <label for="">{{ __('Amount_Type') }} <span class="text-danger">*</span></label>
@@ -200,11 +207,13 @@
                                     </div>
                                     <div class="form-group col-sm-12 col-md-12" id="amount-div" style="display: none">
                                         <label for="">{{ __('fixed_amount') }}</label>
-                                        {!! Form::number('amount', null, ['class' => 'form-control', 'placeholder' => __('fixed_amount'), 'id' => 'amount', 'min' => '1']) !!}
+                                        <input type="number" name="amount" id="amount" class="form-control"
+                                            placeholder="{{ __('fixed_amount') }}" min="1">
                                     </div>
                                     <div class="form-group col-sm-12 col-md-12" id="percentage-div" style="display: none">
                                         <label for="">{{ __('percentage') }}</label>
-                                        {!! Form::number('percentage', null, ['required', 'class' => 'form-control', 'placeholder' => __('percentage'), 'id' => 'percentage', 'min' => '0.1', 'max' => '100']) !!}
+                                        <input required type="number" name="percentage" id="percentage" class="form-control"
+                                            placeholder="{{ __('percentage') }}" min="0.1" max="100" step="0.1">
                                     </div>
                                 </div>
                             </div>

@@ -20,23 +20,28 @@
                         </h4>
                         <div class="row text-right">
                             <div class="col-sm-12 col-md-12">
-                                <a class="btn btn-sm btn-theme" href="{{ route('lesson-topic.index') }}">{{ __('back') }}</a>
+                                <a class="btn btn-sm btn-theme"
+                                    href="{{ route('lesson-topic.index') }}">{{ __('back') }}</a>
                             </div>
                         </div>
-                        <form class="pt-3 edit-topic-form" id="edit-form" data-success-function="formSuccessFunction" action="{{ route('lesson-topic.update',[$topic->id]) }}" method="POST" novalidate="novalidate">
+                        <form class="pt-3 edit-topic-form" id="edit-form" data-success-function="formSuccessFunction"
+                            action="{{ route('lesson-topic.update', [$topic->id]) }}" method="POST" novalidate="novalidate">
                             <div class="row">
                                 <div class="form-group col-sm-12 col-md-4">
-                                    <label>{{ __('Class') . ' ' . __('section') }} <span class="text-danger">*</span></label>
-                                    <select name="class_section_id[]" id="class-section-id" class="class_section_id form-control select2-dropdown select2-hidden-accessible" multiple>
+                                    <label>{{ __('Class') . ' ' . __('section') }} <span
+                                            class="text-danger">*</span></label>
+                                    <select name="class_section_id[]" id="class-section-id"
+                                        class="class_section_id form-control select2-dropdown select2-hidden-accessible"
+                                        multiple>
                                         @foreach ($class_section as $section)
-                                            <option value="{{ $section->id }}" 
-                                                    data-class-id="{{ $section->class->id }}"
-                                                    @if($topic->lesson && $topic->lesson->lesson_commons->pluck('class_section_id')->contains($section->id)) selected @endif>
+                                            <option value="{{ $section->id }}" data-class-id="{{ $section->class->id }}"
+                                                @if($topic->lesson && $topic->lesson->lesson_commons->pluck('class_section_id')->contains($section->id))
+                                                selected @endif>
                                                 {{ $section->full_name }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    {{-- {!! Form::hidden('class_section_id[]', "", ['id' => 'class_section_id_value']) !!} --}}
+
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-4">
@@ -45,10 +50,12 @@
                                         <option value="">-- {{ __('Select Subject') }} --</option>
                                         <option value="data-not-found">-- {{ __('no_data_found') }} --</option>
                                         @foreach ($subjectTeachers as $item)
-                                            <option value="{{ $item->class_subject_id }}" data-class-section="{{ $item->class_section_id }}" data-user="{{ Auth::user()->id }}">{{ $item->subject_with_name}}</option>
+                                            <option value="{{ $item->class_subject_id }}"
+                                                data-class-section="{{ $item->class_section_id }}"
+                                                data-user="{{ Auth::user()->id }}">{{ $item->subject_with_name}}</option>
                                         @endforeach
                                     </select>
-                                    {!! Form::hidden('class_subject_id', "", ['id' => 'class_subject_id_value']) !!}
+                                    <input type="hidden" name="class_subject_id" id="class_subject_id_value" value="">
                                 </div>
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('lesson') }} <span class="text-danger">*</span></label>
@@ -56,20 +63,24 @@
                                         <option value="">-- {{ __('lesson') }} --</option>
                                         <option value="data-not-found">-- {{ __('no_data_found') }} --</option>
                                         @foreach ($lessons as $item)
-                                            <option value="{{ $item->id }}" data-class-section="{{ $item->class_section_id }}" data-subject="{{ $item->subject_id }}">{{ $item->name}}</option>
+                                            <option value="{{ $item->id }}" data-class-section="{{ $item->class_section_id }}"
+                                                data-subject="{{ $item->subject_id }}">{{ $item->name}}</option>
                                         @endforeach
                                     </select>
-                                    {!! Form::hidden('lesson_id', "", ['id' => 'topic_lesson_id_value']) !!}
+                                    <input type="hidden" name="lesson_id" id="topic_lesson_id_value" value="">
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label>{{ __('topic_name') }} <span class="text-danger">*</span></label>
-                                    <input type="text" id="name" value="{{ $topic->name }}" name="name" placeholder="{{ __('lesson_name') }}" class="form-control"/>
+                                    <input type="text" id="name" value="{{ $topic->name }}" name="name"
+                                        placeholder="{{ __('lesson_name') }}" class="form-control" />
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label>{{ __('topic_description') }} <span class="text-danger">*</span></label>
-                                    <textarea id="description" name="description" placeholder="{{ __('lesson_description') }}" class="form-control">{{ $topic->description }}</textarea>
+                                    <textarea id="description" name="description"
+                                        placeholder="{{ __('lesson_description') }}"
+                                        class="form-control">{{ $topic->description }}</textarea>
                                 </div>
                             </div>
                             <hr>
@@ -91,34 +102,44 @@
                                         </div>
                                         <div class="form-group col-xl-3" id="file_name_div" style="display: none">
                                             <label>{{ __('file_name') }} <span class="text-danger">*</span></label>
-                                            <input type="text" name="name" class="file_name form-control" placeholder="{{ __('file_name') }}" required>
+                                            <input type="text" name="name" class="file_name form-control"
+                                                placeholder="{{ __('file_name') }}" required>
                                         </div>
                                         <div class="form-group col-xl-3" id="file_thumbnail_div" style="display: none">
-                                            <label>{{ __('thumbnail') }} <span class="text-danger thumbnail-required">*</span></label>
-                                            <input type="file" name="thumbnail" class="file_thumbnail form-control" accept="image/jpg,image/png,image/svg+xml,image/jpeg" required>
+                                            <label>{{ __('thumbnail') }} <span
+                                                    class="text-danger thumbnail-required">*</span></label>
+                                            <input type="file" name="thumbnail" class="file_thumbnail form-control"
+                                                accept="image/jpg,image/png,image/svg+xml,image/jpeg" required>
                                             <div style="width: 70px;">
-                                                <a data-toggle='lightbox' href=><img class="img-fluid w-70 thumbnail-preview mt-1" alt="" src=""/></a>
+                                                <a data-toggle='lightbox' href=><img
+                                                        class="img-fluid w-70 thumbnail-preview mt-1" alt="" src="" /></a>
                                             </div>
                                         </div>
                                         <div class="form-group col-xl-3" id="file_div" style="display: none">
-                                            <label>{{ __('file_upload') }} <span class="text-danger file-upload-required">*</span></label>
-                                            <input type="file" name="file" class="file form-control" placeholder="" required>
+                                            <label>{{ __('file_upload') }} <span
+                                                    class="text-danger file-upload-required">*</span></label>
+                                            <input type="file" name="file" class="file form-control" placeholder=""
+                                                required>
                                             <a href="" class="file-preview mt-2" target="_blank"></a>
                                         </div>
                                         <div class="form-group col-xl-3" id="file_link_div" style="display: none">
                                             <label>{{ __('link') }} <span class="text-danger">*</span></label>
-                                            <input type="text" name="link" class="file_link form-control" placeholder="{{ __('link') }}" required>
+                                            <input type="text" name="link" class="file_link form-control"
+                                                placeholder="{{ __('link') }}" required>
                                         </div>
 
                                         <div class="form-group col-xl-1 mt-4">
-                                            <button type="button" class="btn btn-inverse-danger btn-icon remove-lesson-topic-file" data-repeater-delete>
+                                            <button type="button"
+                                                class="btn btn-inverse-danger btn-icon remove-lesson-topic-file"
+                                                data-repeater-delete>
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group mt-4">
-                                    <button type="button" class="btn btn-inverse-success add-lesson-topic-file" data-repeater-create>
+                                    <button type="button" class="btn btn-inverse-success add-lesson-topic-file"
+                                        data-repeater-create>
                                         <i class="fa fa-plus"></i> {{__('add_new_files')}}
                                     </button>
                                 </div>
@@ -142,7 +163,7 @@
             @if($topic->lesson && $topic->lesson->lesson_commons)
                 // Get all class section IDs from lesson commons
                 var classSectionIds = @json($topic->lesson->lesson_commons->pluck('class_section_id'));
-                
+
                 // Set multiple values for class section select
                 $('#class-section-id')
                     .val(classSectionIds)
@@ -173,95 +194,95 @@
             $('#topic_lesson_id_value')
                 .val({{ $topic->lesson_id }})
                 .trigger('change');
-            
+
             // Topic Files Repeater
             addNewLessonTopicFileRepeater.setList([
                 @foreach($topic->file as $key => $fileData)
-                    {
-                        id: "{{$fileData->id}}",
-                        name: "{{$fileData->file_name}}",
-                        @if($fileData->type == 1)
+                        {
+                    id: "{{$fileData->id}}",
+                    name: "{{$fileData->file_name}}",
+                    @if($fileData->type == 1)
                         type: "file_upload",
-                        @elseif($fileData->type == 2)
-                        type: "youtube_link",
+                    @elseif($fileData->type == 2)
+                                type: "youtube_link",
                         link: "{{$fileData->file_url}}",
-                        @elseif($fileData->type == 3)
+                    @elseif($fileData->type == 3)
                         type: "video_upload",
-                        @elseif($fileData->type == 4)
-                        type: "other_link",
+                    @elseif($fileData->type == 4)
+                                type: "other_link",
                         link: "{{$fileData->file_url}}",
-                        @endif
-                    },
+                    @endif
+                        },
                 @endforeach
-            ]);
+                ]);
 
-            // Change The File type selecte value
-            $('.file_type').trigger('change');
+        // Change The File type selecte value
+        $('.file_type').trigger('change');
 
-            @foreach($topic->file as $key => $fileData)
-                $('#remove-lesson-topic-file-{{ $key }}').attr("data-id", "{{ $fileData->id }}") // Add Data id attribute to Remove Files
-                @if($fileData->type == 1)
+        @foreach($topic->file as $key => $fileData)
+            $('#remove-lesson-topic-file-{{ $key }}').attr("data-id", "{{ $fileData->id }}") // Add Data id attribute to Remove Files
+            @if($fileData->type == 1)
 
 
                 // if File Url Exists
                 @if ($fileData->getOriginal('file_url'))
-                $('#file-upload-required-{{ $key }}').html("") // remove * from label
-                $('#file-upload-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
-                $('#file-preview-{{ $key }}').addClass('btn btn-sm btn-outline-info').attr('href', '{{ $fileData->file_url }}').html(window.trans['File Preview']) // Add File Url in Anchor Tag
+                    $('#file-upload-required-{{ $key }}').html("") // remove * from label
+                    $('#file-upload-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
+                    $('#file-preview-{{ $key }}').addClass('btn btn-sm btn-outline-info').attr('href', '{{ $fileData->file_url }}').html(window.trans['File Preview']) // Add File Url in Anchor Tag
                 @else
-                $('#file-upload-required-{{ $key }}').html("*") // Add * in label
-                $('#file-upload-required-{{ $key }}').parent().siblings().attr('required', true) // Add Required attribute in file input
+                    $('#file-upload-required-{{ $key }}').html("*") // Add * in label
+                    $('#file-upload-required-{{ $key }}').parent().siblings().attr('required', true) // Add Required attribute in file input
                 @endif
-                @elseif($fileData->type == 2)
+            @elseif($fileData->type == 2)
 
                 // if Thumbnail Exists
                 @if($fileData->getOriginal('file_thumbnail'))
-                $('#thumbnail-required-{{ $key }}').html("") // remove * from label
-                $('#thumbnail-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
-                $('#thumbnail-preview-{{ $key }}').attr('src', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in Image Tag
-                $('#thumbnail-preview-{{ $key }}').parent().attr('href', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in image Tag
+                    $('#thumbnail-required-{{ $key }}').html("") // remove * from label
+                    $('#thumbnail-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
+                    $('#thumbnail-preview-{{ $key }}').attr('src', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in Image Tag
+                    $('#thumbnail-preview-{{ $key }}').parent().attr('href', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in image Tag
                 @else
-                $('#thumbnail-required-{{ $key }}').parent().siblings().attr('required', true) // Add * in label
-                $('#thumbnail-required-{{ $key }}').html("*") // Add Required attribute in file input
+                    $('#thumbnail-required-{{ $key }}').parent().siblings().attr('required', true) // Add * in label
+                    $('#thumbnail-required-{{ $key }}').html("*") // Add Required attribute in file input
                 @endif
-                @elseif($fileData->type == 3)
+            @elseif($fileData->type == 3)
 
                 // if Thumbnail Exists
                 @if($fileData->getOriginal('file_thumbnail'))
-                $('#thumbnail-required-{{ $key }}').html("") // remove * from label
-                $('#thumbnail-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
-                $('#thumbnail-preview-{{ $key }}').attr('src', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in Image Tag
-                $('#thumbnail-preview-{{ $key }}').parent().attr('href', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in image Tag
+                    $('#thumbnail-required-{{ $key }}').html("") // remove * from label
+                    $('#thumbnail-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
+                    $('#thumbnail-preview-{{ $key }}').attr('src', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in Image Tag
+                    $('#thumbnail-preview-{{ $key }}').parent().attr('href', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in image Tag
                 @else
-                $('#thumbnail-required-{{ $key }}').parent().siblings().attr('required', true) // Add * in label
-                $('#thumbnail-required-{{ $key }}').html("*") // Add Required attribute in file input
+                    $('#thumbnail-required-{{ $key }}').parent().siblings().attr('required', true) // Add * in label
+                    $('#thumbnail-required-{{ $key }}').html("*") // Add Required attribute in file input
                 @endif
 
                 // if File Url Exists
                 @if ($fileData->getOriginal('file_url'))
-                $('#file-upload-required-{{ $key }}').html("") // remove * from label
-                $('#file-upload-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
-                $('#file-preview-{{ $key }}').addClass('btn btn-sm btn-outline-info').attr('href', '{{ $fileData->file_url }}').html(window.trans['File Preview']) // Add File Url in Anchor Tag
+                    $('#file-upload-required-{{ $key }}').html("") // remove * from label
+                    $('#file-upload-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
+                    $('#file-preview-{{ $key }}').addClass('btn btn-sm btn-outline-info').attr('href', '{{ $fileData->file_url }}').html(window.trans['File Preview']) // Add File Url in Anchor Tag
                 @else
-                $('#file-upload-required-{{ $key }}').html("*") // Add * in label
-                $('#file-upload-required-{{ $key }}').parent().siblings().attr('required', true) // Add Required attribute in file input
+                    $('#file-upload-required-{{ $key }}').html("*") // Add * in label
+                    $('#file-upload-required-{{ $key }}').parent().siblings().attr('required', true) // Add Required attribute in file input
                 @endif
-                @elseif($fileData->type == 4)
+            @elseif($fileData->type == 4)
 
                 // if Thumbnail Exists
                 @if($fileData->getOriginal('file_thumbnail'))
-                $('#thumbnail-required-{{ $key }}').html("") // remove * from label
-                $('#thumbnail-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
-                $('#thumbnail-preview-{{ $key }}').attr('src', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in Image Tag
-                $('#thumbnail-preview-{{ $key }}').parent().attr('href', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in image Tag
+                    $('#thumbnail-required-{{ $key }}').html("") // remove * from label
+                    $('#thumbnail-required-{{ $key }}').parent().siblings().removeAttr('required') // Remove Required from file input
+                    $('#thumbnail-preview-{{ $key }}').attr('src', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in Image Tag
+                    $('#thumbnail-preview-{{ $key }}').parent().attr('href', "{{ $fileData->file_thumbnail }}") // Add Thumbnail in image Tag
                 @else
-                $('#thumbnail-required-{{ $key }}').parent().siblings().attr('required', true) // Add * in label
-                $('#thumbnail-required-{{ $key }}').html("*") // Add Required attribute in file input
+                    $('#thumbnail-required-{{ $key }}').parent().siblings().attr('required', true) // Add * in label
+                    $('#thumbnail-required-{{ $key }}').html("*") // Add Required attribute in file input
                 @endif
 
-                @endif
-                @endforeach
-                }, 1000);
+            @endif
+        @endforeach
+                    }, 1000);
 
         function formSuccessFunction(response) {
             if (!response.error) {

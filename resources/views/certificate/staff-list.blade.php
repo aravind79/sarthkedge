@@ -23,7 +23,12 @@
                             @csrf
                             <div class="form-group col-sm-12 col-md-4">
                                     <label class="filter-menu">{{ __('certificate') }} <span class="text-danger">*</span></label>
-                                    {!! Form::select('certificate_template_id', $certificateTemplates, null, ['class' => 'form-control','id' => 'certificate_template_id', 'placeholder' => 'Select '.__('certificate').' '.__('template'), 'required' => 'required']) !!}
+                                    <select name="certificate_template_id" id="certificate_template_id" class="form-control" required>
+                                        <option value="">Select {{ __('certificate') }} {{ __('template') }}</option>
+                                        @foreach ($certificateTemplates as $id => $name)
+                                            <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             <div class="row" id="toolbar">
                             </div>

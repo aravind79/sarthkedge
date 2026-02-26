@@ -87,13 +87,13 @@
                                 <div class="d-flex">
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('application_status', '1', true , ['class'=> 'application-status-accepted','id' =>"edit-application-status-accepted",'required']) !!}
+                                            <input type="radio" name="application_status" value="1" class="application-status-accepted" id="edit-application-status-accepted" checked required>
                                             {{ __('accepted') }}
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('application_status', '0', false , ['class'=> 'application-status-rejected','id' =>"edit-application-status-rejected", 'required']) !!}
+                                            <input type="radio" name="application_status" value="0" class="application-status-rejected" id="edit-application-status-rejected" required>
                                             {{ __('rejected') }}
                                         </label>
                                     </div>
@@ -121,7 +121,7 @@
                                                 <div class="row">
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('admission_no') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::text('admission_no', null, ['placeholder' => __('admission_no'), 'class' => 'form-control', 'id' => 'edit_admission_no' ,'readonly'=>true]) !!}
+                                                        <input type="text" name="admission_no" id="edit_admission_no" class="form-control" placeholder="{{ __('admission_no') }}" readonly>
                     
                                                     </div>
                     
@@ -154,17 +154,17 @@
                                                 <div class="row mt-5">
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('first_name') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::text('first_name', null, ['placeholder' => __('first_name'), 'class' => 'form-control', 'id' => 'edit_first_name']) !!}
+                                                        <input type="text" name="first_name" id="edit_first_name" class="form-control" placeholder="{{ __('first_name') }}" required>
                                                     </div>
                     
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('last_name') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::text('last_name', null, ['placeholder' => __('last_name'), 'class' => 'form-control', 'id' => 'edit_last_name']) !!}
+                                                        <input type="text" name="last_name" id="edit_last_name" class="form-control" placeholder="{{ __('last_name') }}" required>
                                                     </div>
                     
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('dob') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::text('dob', null, ['placeholder' => __('dob'), 'class' => 'datepicker-popup-no-future form-control', 'id' => 'edit_dob']) !!}
+                                                        <input type="text" name="dob" id="edit_dob" class="datepicker-popup-no-future form-control" placeholder="{{ __('dob') }}" required autocomplete="off">
                                                         <span class="input-group-addon input-group-append">
                                                         </span>
                                                     </div>
@@ -174,13 +174,13 @@
                                                         <div class="d-flex">
                                                             <div class="form-check form-check-inline">
                                                                 <label class="form-check-label">
-                                                                    {!! Form::radio('gender', 'male', false ,['id' => 'male']) !!}
+                                                                    <input type="radio" name="gender" value="male" id="male">
                                                                     {{ __('male') }}
                                                                 </label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
                                                                 <label class="form-check-label">
-                                                                    {!! Form::radio('gender', 'female', false , ['id' => 'female']) !!}
+                                                                    <input type="radio" name="gender" value="female" id="female">
                                                                     {{ __('female') }}
                                                                 </label>
                                                             </div>
@@ -201,15 +201,15 @@
                                                     </div>
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('mobile') }}</label>
-                                                        {!! Form::number('mobile', null, ['placeholder' => __('mobile'), 'min' => 1 , 'class' => 'form-control remove-number-increment', 'id' => 'edit_mobile']) !!}
+                                                        <input type="number" name="mobile" id="edit_mobile" placeholder="{{ __('mobile') }}" class="form-control remove-number-increment" min="1">
                                                     </div>
                                                     <div class="form-group col-sm-12 col-md-6">
                                                         <label>{{ __('current_address') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::textarea('current_address', null, ['required', 'placeholder' => __('current_address'), 'class' => 'form-control', 'rows' => 3,'id'=>'edit-current-address']) !!}
+                                                        <textarea name="current_address" id="edit-current-address" class="form-control" placeholder="{{ __('current_address') }}" rows="3" required></textarea>
                                                     </div>
                                                     <div class="form-group col-sm-12 col-md-6">
                                                         <label>{{ __('permanent_address') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::textarea('permanent_address', null, ['required', 'placeholder' => __('permanent_address'), 'class' => 'form-control', 'rows' => 3,'id'=>'edit-permanent-address']) !!}
+                                                        <textarea name="permanent_address" id="edit-permanent-address" class="form-control" placeholder="{{ __('permanent_address') }}" rows="3" required></textarea>
                                                     </div>
                                                 </div>
                     
@@ -221,13 +221,13 @@
                                                             @if($data->user_type == 1)
                                                                 @php $fieldName = str_replace(' ', '_', $data->name) @endphp
                                                                 {{-- Edit Extra Details ID --}}
-                                                                {{ Form::hidden('extra_fields['.$key.'][id]', '', ['id' => $fieldName.'_id']) }}
+                                                                <input type="hidden" name="extra_fields[{{ $key }}][id]" id="{{ $fieldName }}_id" value="">
                         
                                                                 {{-- Form Field ID --}}
-                                                                {{ Form::hidden('extra_fields['.$key.'][form_field_id]', $data->id) }}
+                                                                <input type="hidden" name="extra_fields[{{ $key }}][form_field_id]" value="{{ $data->id }}">
                         
                                                                 {{-- FormFieldType --}}
-                                                                {{ Form::hidden('extra_fields['.$key.'][input_type]', $data->type) }}
+                                                                <input type="hidden" name="extra_fields[{{ $key }}][input_type]" value="{{ $data->type }}">
                         
                                                                 <div class='form-group col-md-12 col-lg-6 col-xl-4 col-sm-12'>
                         
@@ -240,23 +240,19 @@
                         
                                                                     {{-- Text Field --}}
                                                                     @if($data->type == 'text')
-                                                                        {{ Form::text('extra_fields['.$key.'][data]', '', ['class' => 'form-control text-fields', 'id' => $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                        <input type="text" name="extra_fields[{{ $key }}][data]" class="form-control text-fields" id="{{ $fieldName }}" placeholder="{{ $data->name }}" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                         {{-- Number Field --}}
                                                                     @elseif($data->type == 'number')
-                                                                        {{ Form::number('extra_fields['.$key.'][data]', '', ['min' => 0, 'class' => 'form-control number-fields', 'id' => $fieldName, 'placeholder' => $data->name, ($data->is_required == 1 ? 'required' : '')]) }}
+                                                                        <input type="number" name="extra_fields[{{ $key }}][data]" class="form-control number-fields" id="{{ $fieldName }}" placeholder="{{ $data->name }}" min="0" {{ $data->is_required == 1 ? 'required' : '' }}>
                         
                                                                         {{-- Dropdown Field --}}
                                                                     @elseif($data->type == 'dropdown')
-                                                                        {{ Form::select(
-                                                                            'extra_fields['.$key.'][data]',$data->default_values,
-                                                                            null,
-                                                                            [
-                                                                                'id' => $fieldName,
-                                                                                'class' => 'form-control select-fields',
-                                                                                ($data->is_required == 1 ? 'required' : ''),
-                                                                                'placeholder' => 'Select '.$data->name
-                                                                            ]
-                                                                        )}}
+                                                                        <select name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}" class="form-control select-fields" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                                            <option value="">{{ __('Select') . ' ' . $data->name }}</option>
+                                                                            @foreach($data->default_values as $option)
+                                                                                <option value="{{ $option }}">{{ $option }}</option>
+                                                                            @endforeach
+                                                                        </select>
                         
                                                                         {{-- Radio Field --}}
                                                                     @elseif($data->type == 'radio')
@@ -267,7 +263,7 @@
                                                                             @foreach ($data->default_values as $keyRadio => $value)
                                                                                 <div class="col-md-12 col-lg-12 col-xl-6 col-sm-12 form-check">
                                                                                     <label class="form-check-label">
-                                                                                        {{ Form::radio('extra_fields['.$key.'][data]', $value, null, ['id' => $fieldName.'_'.$keyRadio, 'class' => 'radio-fields',($data->is_required == 1 ? 'required' : '')]) }}
+                                                                                        <input type="radio" name="extra_fields[{{ $key }}][data]" value="{{ $value }}" class="radio-fields" id="{{ $fieldName . '_' . $keyRadio }}" {{ $data->is_required == 1 ? 'required' : '' }}>
                                                                                         {{$value}}
                                                                                     </label>
                                                                                 </div>
@@ -283,7 +279,7 @@
                                                                             @foreach ($data->default_values as $chkKey => $value)
                                                                                 <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12 form-check">
                                                                                     <label class="form-check-label">
-                                                                                        {{ Form::checkbox('extra_fields['.$key.'][data][]', $value, null, ['id' => $fieldName.'_'.$chkKey, 'class' => 'form-check-input chkclass checkbox-fields',($data->is_required == 1 ? 'required' : '')]) }} {{ $value }}
+                                                                                        <input type="checkbox" name="extra_fields[{{ $key }}][data][]" value="{{ $value }}" class="form-check-input chkclass checkbox-fields" id="{{ $fieldName . '_' . $chkKey }}" {{ $data->is_required == 1 ? 'required' : '' }}> {{ $value }}
                                                                                     </label>
                                                                                 </div>
                                                                             @endforeach
@@ -291,13 +287,13 @@
                         
                                                                         {{-- Textarea Field --}}
                                                                     @elseif($data->type == 'textarea')
-                                                                        {{ Form::textarea('extra_fields['.$key.'][data]', '', ['placeholder' => $data->name, 'id' => $fieldName, 'class' => 'form-control textarea-fields', ($data->is_required ? 'required' : '') , 'rows' => 3]) }}
+                                                                        <textarea name="extra_fields[{{ $key }}][data]" id="{{ $fieldName }}" class="form-control textarea-fields" placeholder="{{ $data->name }}" rows="3" {{ $data->is_required ? 'required' : '' }}></textarea>
                         
                                                                         {{-- File Upload Field --}}
                                                                     @elseif($data->type == 'file')
                                                                         <div class="input-group col-xs-12">
-                                                                            {{ Form::file('extra_fields['.$key.'][data]', ['class' => 'file-upload-default', 'id' => $fieldName,($data->is_required == 1 ? 'required' : '')]) }}
-                                                                            {{ Form::text('', '', ['class' => 'form-control file-upload-info', 'disabled' => '', 'placeholder' => __('image')]) }}
+                                                                            <input type="file" name="extra_fields[{{ $key }}][data]" class="file-upload-default" id="{{ $fieldName }}" {{ $data->is_required == 1 ? 'required' : '' }}>
+                                                                            <input type="text" class="form-control file-upload-info" disabled placeholder="{{ __('image') }}">
                                                                             <span class="input-group-append">
                                                                                 <button class="file-upload-browse btn btn-theme" type="button">{{ __('upload') }}</button>
                                                                             </span>
@@ -337,34 +333,32 @@
                     
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('guardian') . ' ' . __('first_name') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::text('guardian_first_name', null, ['placeholder' => __('guardian') . ' ' . __('first_name'), 'class' => 'form-control', 'id' => 'edit_guardian_first_name']) !!}
+                                                        <input type="text" name="guardian_first_name" id="edit_guardian_first_name" class="form-control" placeholder="{{ __('guardian') . ' ' . __('first_name') }}" required>
                                                     </div>
                     
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('guardian') . ' ' . __('last_name') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::text('guardian_last_name', null, ['placeholder' => __('guardian') . ' ' . __('last_name'), 'class' => 'form-control', 'id' => 'edit_guardian_last_name']) !!}
+                                                        <input type="text" name="guardian_last_name" id="edit_guardian_last_name" class="form-control" placeholder="{{ __('guardian') . ' ' . __('last_name') }}" required>
                                                     </div>
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('guardian') . ' ' . __('mobile') }} <span class="text-danger">*</span></label>
-                                                        {!! Form::number('guardian_mobile', null, ['placeholder' => __('guardian') . ' ' . __('mobile'), 'class' => 'form-control remove-number-increment', 'min' => 1  ,'id' => 'edit_guardian_mobile']) !!}
+                                                        <input type="number" name="guardian_mobile" id="edit_guardian_mobile" class="form-control remove-number-increment" placeholder="{{ __('guardian') . ' ' . __('mobile') }}" min="1" required>
                                                     </div>
                                                     <div class="form-group col-sm-12 col-md-12">
                                                         <label>{{ __('gender') }} <span class="text-danger">*</span></label><br>
                                                         <div class="d-flex">
-                                                            <div class="form-check form-check-inline">
-                                                                <label class="form-check-label">
-                                                                    {!! Form::radio('guardian_gender', 'male', false , ['id' =>"edit-guardian-male"]) !!}
-                                                                    {{-- <input type="radio" name="guardian_gender" value="male" id="edit_guardian_male"  disabled> --}}
-                                                                    {{ __('male') }}
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                <label class="form-check-label">
-                                                                    {!! Form::radio('guardian_gender', 'female', false , ['id' =>"edit-guardian-female"]) !!}
-                                                                    {{-- <input type="radio" name="guardian_gender" value="female" id="edit_guardian_female" disabled> --}}
-                                                                    {{ __('female') }}
-                                                                </label>
-                                                            </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <label class="form-check-label">
+                                                                            <input type="radio" name="guardian_gender" value="male" id="edit-guardian-male">
+                                                                            {{ __('male') }}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <label class="form-check-label">
+                                                                            <input type="radio" name="guardian_gender" value="female" id="edit-guardian-female">
+                                                                            {{ __('female') }}
+                                                                        </label>
+                                                                    </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
@@ -387,18 +381,18 @@
                                                     <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-4">
                                                         <label>{{ __('application_status') }} <span class="text-danger">*</span></label><br>
                                                         <div class="d-flex">
-                                                            <div class="form-check form-check-inline">
-                                                                <label class="form-check-label">
-                                                                    {!! Form::radio('application_status', '1', true , ['class'=> 'application-status-accepted','id' =>"edit-application-status-accepted", 'checked','required']) !!}
-                                                                    {{ __('accepted') }}
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                <label class="form-check-label">
-                                                                    {!! Form::radio('application_status', '0', false , ['class'=> 'application-status-rejected','id' =>"edit-application-status-rejected", 'required']) !!}
-                                                                    {{ __('rejected') }}
-                                                                </label>
-                                                            </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <label class="form-check-label">
+                                                                        <input type="radio" name="application_status" value="1" class="application-status-accepted" id="edit-application-status-accepted" checked required>
+                                                                        {{ __('accepted') }}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <label class="form-check-label">
+                                                                        <input type="radio" name="application_status" value="0" class="application-status-rejected" id="edit-application-status-rejected" required>
+                                                                        {{ __('rejected') }}
+                                                                    </label>
+                                                                </div>
                                                         </div>
                                                     </div>
                                                 </div>

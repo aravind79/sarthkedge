@@ -30,13 +30,8 @@
 
                         <hr>
 
-                        {!! Form::model($package, [
-                            'route' => ['package.update', $package->id],
-                            'method' => 'post',
-                            'class' => 'edit-form',
-                            'novalidate' => 'novalidate',
-                            'data-success-function' => 'formSuccessFunction'
-                        ]) !!}
+                        <form action="{{ route('package.update', $package->id) }}" method="post" class="edit-form" novalidate="novalidate" data-success-function="formSuccessFunction">
+                            @csrf
                         <div class="row">
 
                             <div class="form-group col-sm-12 col-md-12">
@@ -44,13 +39,13 @@
                                 <div class="d-flex">
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('type', 0, false, ['class' => 'form-check-input package_type','id' => 'prepaid']) !!}
+                                            <input type="radio" name="type" class="form-check-input package_type" id="prepaid" value="0" {{ $package->getRawOriginal('type') == 0 ? 'checked' : '' }}>
                                             {{__("prepaid")}}
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('type', 1, false, ['class' => 'form-check-input package_type','id' => 'postpaid']) !!}
+                                            <input type="radio" name="type" class="form-check-input package_type" id="postpaid" value="1" {{ $package->getRawOriginal('type') == 1 ? 'checked' : '' }}>
                                             {{__("postpaid")}}
                                         </label>
                                     </div>
@@ -59,58 +54,23 @@
 
                             <div class="form-group col-sm-12 col-md-6">
                                 <label for="">{{ __('name') }} <span class="text-danger">*</span></label>
-                                {!! Form::text('name', null, [
-                                    'required',
-                                    'class' => 'form-control',
-                                    'placeholder' => __('package') . ' ' . __('name'),
-                                ]) !!}
+                                <input required type="text" name="name" value="{{ $package->name }}" class="form-control" placeholder="{{ __('package') . ' ' . __('name') }}">
                             </div>
 
                             <div class="form-group col-sm-12 col-md-6">
                                 <label for="">{{ __('description') }}</label>
-                                {!! Form::textarea('description', null, [
-                                    'class' => 'form-control',
-                                    'placeholder' => __('description'),
-                                    'rows' => '3',
-                                ]) !!}
+                                <textarea name="description" class="form-control" placeholder="{{ __('description') }}" rows="3">{{ $package->description }}</textarea>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-6">
                                 <label for="">{{ __('tagline') }}</label>
-                                {!! Form::text('tagline', null, ['class' => 'form-control', 'placeholder' => __('tagline')]) !!}
+                                <input type="text" name="tagline" value="{{ $package->tagline }}" class="form-control" placeholder="{{ __('tagline') }}">
                             </div>
 
                             <div class="form-group col-sm-12 col-md-2">
                                 <label for="" class="day-label">{{ __('days') }}</label> <span class="text-danger">*</span>
-                                {!! Form::number('days', null, [
-                                    'required',
-                                    'class' => 'form-control days',
-                                    'min' => 1,
-                                    'placeholder' => __('days'),
-                                ]) !!}
+                                <input required type="number" name="days" value="{{ $package->days }}" class="form-control days" min="1" placeholder="{{ __('days') }}">
                             </div>
-
-                            {{-- <div class="form-group col-sm-12 col-md-2">
-                                <label for="" class="student-label">{{ __('per_active_student_charges') }}</label>
-                                <span class="text-danger">*</span>
-                                {!! Form::number('student_charge', null, [
-                                    'required',
-                                    'class' => 'form-control student-input',
-                                    'min' => 0,
-                                    'placeholder' => __('per_active_student_charges'),
-                                ]) !!}
-                            </div>
-
-                            <div class="form-group col-sm-12 col-md-2">
-                                <label for="" class="staff-label">{{ __('per_active_staff_charges') }}</label>
-                                <span class="text-danger">*</span>
-                                {!! Form::number('staff_charge', null, [
-                                    'required',
-                                    'class' => 'form-control staff-input',
-                                    'min' => 0,
-                                    'placeholder' => __('per_active_staff_charges'),
-                                ]) !!}
-                            </div> --}}
 
 
                             {{-- Postpaid --}}
@@ -120,23 +80,13 @@
                                         <label for=""
                                             class="student-label">{{ __('per_active_student_charges') }}</label> <span
                                             class="text-danger">*</span>
-                                        {!! Form::number('student_charge', null, [
-                                            'required',
-                                            'class' => 'form-control student-input',
-                                            'min' => 0,
-                                            'placeholder' => __('per_active_student_charges'),
-                                        ]) !!}
+                                        <input required type="number" name="student_charge" value="{{ $package->student_charge }}" class="form-control student-input" min="0" placeholder="{{ __('per_active_student_charges') }}">
                                     </div>
     
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label for="" class="staff-label">{{ __('per_active_staff_charges') }}</label>
                                         <span class="text-danger">*</span>
-                                        {!! Form::number('staff_charge', null, [
-                                            'required',
-                                            'class' => 'form-control staff-input',
-                                            'min' => 0,
-                                            'placeholder' => __('per_active_staff_charges'),
-                                        ]) !!}
+                                        <input required type="number" name="staff_charge" value="{{ $package->staff_charge }}" class="form-control staff-input" min="0" placeholder="{{ __('per_active_staff_charges') }}">
                                     </div>
                                 </div>
                                 
@@ -148,35 +98,20 @@
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label for="" class="staff-label">{{ __('no_of_students') }} <span class="text-small text-info"> ({{ __('active') }})</span></label>
                                         <span class="text-danger">*</span>
-                                        {!! Form::number('no_of_students', null, [
-                                            'required',
-                                            'class' => 'form-control',
-                                            'min' => 1,
-                                            'placeholder' => __('no_of_students'),
-                                        ]) !!}
+                                        <input required type="number" name="no_of_students" value="{{ $package->no_of_students }}" class="form-control" min="1" placeholder="{{ __('no_of_students') }}">
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
                                         <label for="" class="staff-label">{{ __('no_of_staffs') }} <span class="text-small text-info"> ({{ __('active') }})</span></label>
                                         <span class="text-danger">*</span>
-                                        {!! Form::number('no_of_staffs', null, [
-                                            'required',
-                                            'class' => 'form-control',
-                                            'min' => 1,
-                                            'placeholder' => __('no_of_staffs'),
-                                        ]) !!}
+                                        <input required type="number" name="no_of_staffs" value="{{ $package->no_of_staffs }}" class="form-control" min="1" placeholder="{{ __('no_of_staffs') }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="prepaid form-group col-sm-12 col-md-2" style="display: none">
                                 <label for="" class="staff-label">{{ __('charges') }}</label>
                                 <span class="text-danger">*</span>
-                                {!! Form::number('charges', null, [
-                                    'required',
-                                    'class' => 'form-control',
-                                    'min' => 1,
-                                    'placeholder' => __('charges'),
-                                ]) !!}
+                                <input required type="number" name="charges" value="{{ $package->charges }}" class="form-control" min="1" placeholder="{{ __('charges') }}">
                             </div>
 
                         </div>
@@ -185,7 +120,7 @@
                             <div class="col-sm-12 col-md-3">
                                 <div class="form-check">
                                     <label class="form-check-label d-inline">
-                                        {!! Form::checkbox('highlight', 1, null, ['class' => 'form-check-input']) !!}
+                                        <input type="checkbox" name="highlight" class="form-check-input" value="1" {{ $package->highlight == 1 ? 'checked' : '' }}>
                                         {{ __('highlight') }} {{ __('package') }}
                                     </label>
                                 </div>
@@ -194,7 +129,7 @@
                                 <div class="form-check">
                                     <div class="popover-container">
                                     <label class="form-check-label d-inline">
-                                        {!! Form::checkbox('instant_effects', 1, null, ['class' => 'form-check-input popover-trigger']) !!}
+                                        <input type="checkbox" name="instant_effects" class="form-check-input popover-trigger" value="1">
                                         {{ __('instant_effects') }}
                                     </label>
                                                                         
@@ -249,7 +184,7 @@
                         <hr>
                         <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit" value={{ __('submit') }}>
                         <input class="btn btn-secondary float-right" type="reset" value={{ __('reset') }}>
-                        {!! Form::close() !!}
+                        </form>
                     </div>
                 </div>
             </div>

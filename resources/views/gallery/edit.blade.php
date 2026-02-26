@@ -25,32 +25,26 @@
                             </div>
                         </div>
                         <hr>
-                            {!! Form::model($gallery, [
-                                'route' => ['gallery.update', $gallery->id],
-                                'method' => 'post',
-                                'class' => 'edit-form',
-                                'novalidate' => 'novalidate',
-                                'enctype' => 'multipart/form-data',
-                                'data-success-function' => 'formSuccessFunction'
-                            ]) !!}
+                        <form action="{{ route('gallery.update', $gallery->id) }}" method="POST" class="edit-form"
+                            novalidate="novalidate" enctype="multipart/form-data"
+                            data-success-function="formSuccessFunction">
+                            @method('POST')
                             @csrf
                             <div class="row">
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control']) !!}
+                                    <input type="text" name="title" class="form-control" placeholder="{{ __('title') }}"
+                                        value="{{ $gallery->title }}" required>
                                 </div>
                                 <div class="form-group col-sm-6 col-md-6">
                                     <label>{{ __('description') }}</label>
-                                    {!! Form::textarea('description', null, [
-                                        'rows' => '2',
-                                        'placeholder' => __('description'),
-                                        'class' => 'form-control',
-                                    ]) !!}
+                                    <textarea name="description" rows="2" class="form-control"
+                                        placeholder="{{ __('description') }}">{{ $gallery->description }}</textarea>
                                 </div>
                                 <div class="form-group col-sm-6 col-md-6">
                                     <label>{{ __('thumbnail') }} </label>
-                                    <input type="file" name="thumbnail" id="thumbnail"
-                                        class="file-upload-default" accept="image/*"/>
+                                    <input type="file" name="thumbnail" id="thumbnail" class="file-upload-default"
+                                        accept="image/*" />
                                     <div class="input-group col-xs-12">
                                         <input type="text" class="form-control file-upload-info" disabled=""
                                             placeholder="{{ __('thumbnail') }}" aria-label="" />
@@ -61,10 +55,11 @@
                                     </div>
                                     <img src="{{ $gallery->thumbnail }}" class="img-lg" alt="">
                                 </div>
-                                    <div class="form-group col-sm-6 col-md-6">
-                                    <label>{{ __('images') }} <span class="text-small text-info">({{ __('upload_multiple_images') }})</span></label>
-                                    <input type="file" multiple name="images[]" id="uploadInput"
-                                        class="file-upload-default" accept="image/*" />
+                                <div class="form-group col-sm-6 col-md-6">
+                                    <label>{{ __('images') }} <span
+                                            class="text-small text-info">({{ __('upload_multiple_images') }})</span></label>
+                                    <input type="file" multiple name="images[]" id="uploadInput" class="file-upload-default"
+                                        accept="image/*" />
                                     <div class="input-group col-xs-12">
                                         <input type="text" class="form-control file-upload-info" disabled=""
                                             placeholder="{{ __('images') }}" required aria-label="" />
@@ -76,14 +71,21 @@
                                     <div id="selectedFiles" class="mt-3" style="max-height: 200px; overflow-y: auto;">
                                         <!-- Selected files will be listed here -->
                                     </div>
-                                </div>                                <div class="form-group col-sm-12 col-md-6">
-                                    <label for="">{{ __('youtube_links') }} <span class="text-small text-info">({{__('please_use_commas_or_press_enter_to_add_multiple_links')}})</span></label>
+                                </div>
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="">{{ __('youtube_links') }} <span
+                                            class="text-small text-info">({{__('please_use_commas_or_press_enter_to_add_multiple_links')}})</span></label>
                                     <input name="youtube_links" id="tags" class="form-control" value="" />
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label for="session_year_id">{{ __('session_year') }}</label>
-                                    {!! Form::select('session_year_id', $sessionYears, null, ['class' => 'form-control']) !!}
+                                    <select name="session_year_id" class="form-control">
+                                        @foreach($sessionYears as $key => $sy)
+                                            <option value="{{ $key }}" {{ $key == $gallery->session_year_id ? 'selected' : '' }}>
+                                                {{ $sy }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                             </div>
@@ -111,7 +113,8 @@
                                 @foreach ($gallery->file as $file)
                                     @if ($file->type == 1)
                                         <div class="col-sm-12 col-md-2 mt-2">
-                                            <button class="mt-1 btn btn-sm btn-danger ml-2 remove-gallery-image" data-id="{{ $file->id }}">X</button>
+                                            <button class="mt-1 btn btn-sm btn-danger ml-2 remove-gallery-image"
+                                                data-id="{{ $file->id }}">X</button>
                                             <a href="{{ $file->file_url }}" data-toggle="lightbox" class="image-tile">
                                                 <img src="{{ $file->file_url }}" alt="image small" class="zoom-img">
                                             </a>
@@ -130,12 +133,14 @@
                             @foreach ($gallery->file as $file)
                                 @if ($file->type == 2)
                                     <div class="col-sm-12 col-md-2 mb-4">
-                                        <button class="mb-1 btn btn-sm btn-danger ml-2 remove-gallery-image" data-id="{{ $file->id }}">X</button>
+                                        <button class="mb-1 btn btn-sm btn-danger ml-2 remove-gallery-image"
+                                            data-id="{{ $file->id }}">X</button>
                                         <a href="{{ $file->file_url }}" data-toggle="lightbox" class="image-tile">
-                                            <img src="{{ $file->youtube_url_action->img ?? '' }}" class="zoom-img" alt="image small">
+                                            <img src="{{ $file->youtube_url_action->img ?? '' }}" class="zoom-img"
+                                                alt="image small">
                                         </a>
                                         <hr>
-                                    </div>    
+                                    </div>
                                 @endif
                             @endforeach
                         </div>
@@ -154,7 +159,7 @@
                 location.reload();
             }, 2000);
         }
-    
+
         const uploadInput = document.getElementById('uploadInput');
         const selectedFilesContainer = document.getElementById('selectedFiles');
         let fileList = [];
@@ -170,31 +175,31 @@
             // Update file counter
             const fileCount = fileList.length;
             $(uploadInput).parent().find('.form-control').val(fileCount + (fileCount === 1 ? ' file selected' : ' files selected'));
-            
+
             // Clear previous preview
             selectedFilesContainer.innerHTML = '';
-            
+
             // Create preview for each selected file
             fileList.forEach((file, index) => {
                 const fileDiv = document.createElement('div');
                 fileDiv.className = 'selected-file d-flex align-items-center p-2 border-bottom';
-                
+
                 if (file.type.startsWith('image/')) {
                     // For images, show thumbnail
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         fileDiv.innerHTML = `
-                            <img src="${e.target.result}" alt="${file.name}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">
-                            <div class="flex-grow-1">
-                                <div class="font-weight-bold">${file.name}</div>
-                                <div class="text-muted small">${(file.size / 1024).toFixed(2)} KB</div>
-                            </div>
-                            <button type="button" class="btn btn-sm btn-danger remove-file" style="padding: 2px 8px; line-height: 1;" data-index="${index}">×</button>
-                        `;
-                        
+                                <img src="${e.target.result}" alt="${file.name}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">
+                                <div class="flex-grow-1">
+                                    <div class="font-weight-bold">${file.name}</div>
+                                    <div class="text-muted small">${(file.size / 1024).toFixed(2)} KB</div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-danger remove-file" style="padding: 2px 8px; line-height: 1;" data-index="${index}">×</button>
+                            `;
+
                         // Add click handler for remove button
                         const removeBtn = fileDiv.querySelector('.remove-file');
-                        removeBtn.addEventListener('click', function() {
+                        removeBtn.addEventListener('click', function () {
                             removeFile(index);
                         });
                     };
@@ -202,21 +207,21 @@
                 } else {
                     // For non-images, show simple text
                     fileDiv.innerHTML = `
-                        <div class="mr-3">📄</div>
-                        <div class="flex-grow-1">
-                            <div class="font-weight-bold">${file.name}</div>
-                            <div class="text-muted small">${(file.size / 1024).toFixed(2)} KB</div>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-danger remove-file" style="padding: 2px 8px; line-height: 1;" data-index="${index}">×</button>
-                    `;
-                    
+                            <div class="mr-3">📄</div>
+                            <div class="flex-grow-1">
+                                <div class="font-weight-bold">${file.name}</div>
+                                <div class="text-muted small">${(file.size / 1024).toFixed(2)} KB</div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-danger remove-file" style="padding: 2px 8px; line-height: 1;" data-index="${index}">×</button>
+                        `;
+
                     // Add click handler for remove button
                     const removeBtn = fileDiv.querySelector('.remove-file');
-                    removeBtn.addEventListener('click', function() {
+                    removeBtn.addEventListener('click', function () {
                         removeFile(index);
                     });
                 }
-                
+
                 selectedFilesContainer.appendChild(fileDiv);
             });
         }
@@ -224,12 +229,12 @@
         function removeFile(index) {
             // Remove file from our array
             fileList.splice(index, 1);
-            
+
             // Update the file input
             const dt = new DataTransfer();
             fileList.forEach(file => dt.items.add(file));
             uploadInput.files = dt.files;
-            
+
             // Update the preview
             updateFilePreview();
         }

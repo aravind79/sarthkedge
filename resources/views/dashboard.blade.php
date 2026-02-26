@@ -4,6 +4,11 @@
 @endsection
 @section('content')
 
+    @php
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+    @endphp
+
     <style>
         .truncateTitle {
             max-width: 100px;
@@ -110,6 +115,12 @@
             border: 2px solid #cbd5e0;
             margin-right: 12px;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task-checkbox:hover {
+            border-color: #48bb78;
+            background: rgba(72, 187, 120, 0.1);
         }
 
         .task-checkbox.checked {
@@ -147,7 +158,7 @@
         </div>
         {{-- School Dashboard --}}
         {{-- School Dashboard --}}
-        @if (Auth::user()->hasRole('School Admin') || Auth::user()->school_id)
+        @if ($user->hasRole('School Admin') || $user->school_id)
 
             {{-- Welcome & Top Bar --}}
             <div class="row mb-4">
@@ -242,7 +253,7 @@
                                 </div>
                                 <div class="stat-icon bg-soft-success"
                                     style="background: rgba(72, 187, 120, 0.1); color: #38a169;">
-                                    <i class="fa fa-user-tie"></i>
+                                    <i class="fa fa-chalkboard-teacher"></i>
                                 </div>
                             </div>
                         </div>
@@ -263,7 +274,7 @@
                                 </div>
                                 <div class="stat-icon bg-soft-warning"
                                     style="background: rgba(237, 137, 54, 0.1); color: #dd6b20;">
-                                    <i class="fa fa-calendar-check"></i>
+                                    <i class="fa fa-user-check"></i>
                                 </div>
                             </div>
                         </div>
@@ -284,7 +295,7 @@
                                     </p>
                                 </div>
                                 <div class="stat-icon bg-soft-info" style="background: rgba(0, 188, 212, 0.1); color: #0097a7;">
-                                    <i class="fa fa-wallet"></i>
+                                    <i class="fa fa-file-invoice-dollar"></i>
                                 </div>
                             </div>
                         </div>
@@ -312,7 +323,7 @@
                                     <a href="{{ route('attendance.index') }}" class="quick-action-btn d-block">
                                         <div class="quick-action-icon"
                                             style="background: rgba(72,187,120,0.12); color: #38a169;">
-                                            <i class="fa fa-calendar-check"></i>
+                                            <i class="fa fa-clipboard-list"></i>
                                         </div>
                                         <span class="font-weight-semibold small">{{ __('Mark Attendance') }}</span>
                                     </a>
@@ -321,7 +332,7 @@
                                     <a href="{{ route('fees.paid.index') }}" class="quick-action-btn d-block">
                                         <div class="quick-action-icon"
                                             style="background: rgba(237,137,54,0.12); color: #dd6b20;">
-                                            <i class="fa fa-money-bill-wave"></i>
+                                            <i class="fa fa-hand-holding-usd"></i>
                                         </div>
                                         <span class="font-weight-semibold small">{{ __('Collect Fee') }}</span>
                                     </a>
@@ -330,7 +341,7 @@
                                     <a href="{{ route('reports.student.student-reports') }}" class="quick-action-btn d-block">
                                         <div class="quick-action-icon"
                                             style="background: rgba(56,189,248,0.12); color: #0284c7;">
-                                            <i class="fa fa-file-alt"></i>
+                                            <i class="fa fa-chart-line"></i>
                                         </div>
                                         <span class="font-weight-semibold small">{{ __('Generate Report') }}</span>
                                     </a>
@@ -348,7 +359,7 @@
                                     <a href="{{ route('transportation-requests.index') }}" class="quick-action-btn d-block">
                                         <div class="quick-action-icon"
                                             style="background: rgba(245,101,101,0.12); color: #e53e3e;">
-                                            <i class="fa fa-bus"></i>
+                                            <i class="fa fa-bus-alt"></i>
                                         </div>
                                         <span class="font-weight-semibold small">{{ __('Transport') }}</span>
                                     </a>
@@ -429,12 +440,18 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <h5 class="font-weight-bold text-dark mb-0">{{ __('Today\'s Tasks') }}</h5>
+                                <button type="button" class="btn btn-xs btn-outline-primary rounded-circle" data-toggle="modal"
+                                    data-target="#addTaskModal">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <p class="text-muted small mb-0">2 of 5 completed</p>
                                 <div class="progress" style="width: 80px; height: 8px; border-radius: 10px;">
                                     <div class="progress-bar bg-success" role="progressbar" style="width: 40%"
                                         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
-                            <p class="text-muted small mb-4">2 of 5 completed</p>
 
                             <div class="task-list">
                                 <div class="task-item">
@@ -508,7 +525,7 @@
             </div>
         @endif
 
-        @if(Auth::user()->hasRole('Super Admin') || (Auth::user()->school_id == null && Auth::user()->hasRole('Admin')))
+        @if($user->hasRole('Super Admin') || ($user->school_id == null && $user->hasRole('Admin')))
             <div class="row">
 
                 <div class="col-md-3 stretch-card grid-margin">
@@ -626,9 +643,11 @@
                                     </h4>
                                 </div>
                                 <div class="col-md-3">
-                                    {!! Form::selectRange('year', $start_year, date('Y'), date('Y'), [
-                'class' => 'form-control form-control-sm year-filter',
-            ]) !!}
+                                    <select name="year" class="form-control form-control-sm year-filter">
+                                        @for ($i = date('Y'); $i >= $start_year; $i--)
+                                            <option value="{{ $i }}" {{ $i == date('Y') ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
                                 </div>
                             </div>
 
@@ -754,15 +773,51 @@
             </div>
         @endif
     </div>
+
+    {{-- Add Task Modal --}}
+    <div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTaskModalLabel">{{ __('Add New Task') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="create-task-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>{{ __('Task Description') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="task_name" class="form-control"
+                                placeholder="{{ __('Enter task description') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{{ __('Priority') }}</label>
+                            <select name="priority" class="form-control">
+                                <option value="low">{{ __('Low') }}</option>
+                                <option value="medium" selected>{{ __('Medium') }}</option>
+                                <option value="high">{{ __('High') }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+                        <button type="submit" class="btn btn-theme">{{ __('Save Task') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
 
-    @if (Auth::user()->school_id)
+    @if ($user->school_id)
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     @endif
 
-    @if (Auth::user()->hasRole('Super Admin'))
+    @if ($user->hasRole('Super Admin'))
         <script>
             $(document).ready(function () {
                 $('.server-configuration-checkbox').change(function () {
@@ -793,7 +848,7 @@
 
 
 
-    @if (!Auth::user()->school_id)
+    @if (!$user->school_id)
         <script>
             window.onload = setTimeout(() => {
                 $('.year-filter').trigger('change');
@@ -805,7 +860,7 @@
     @endif
 
 
-    @if (Auth::user()->hasRole('School Admin') || Auth::user()->school_id)
+    @if ($user->hasRole('School Admin') || $user->school_id)
         <script>
             $(document).ready(function () {
                 // Weekly Attendance Chart

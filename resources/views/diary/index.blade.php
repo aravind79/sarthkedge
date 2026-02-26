@@ -10,9 +10,14 @@
             <h3 class="page-title">
                 {{ __('manage_diaries') }}
             </h3>
-            <button type="button" class="btn btn-theme btn-sm" data-toggle="modal" data-target="#categoryModal">
-                <i class="fa fa-list mr-1"></i> {{ __('manage_categories') }}
-            </button>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#createDiaryModal">
+                    <i class="fa fa-plus-circle mr-1"></i> {{ __('create_diary') }}
+                </button>
+                <button type="button" class="btn btn-theme btn-sm" data-toggle="modal" data-target="#categoryModal">
+                    <i class="fa fa-list mr-1"></i> {{ __('manage_categories') }}
+                </button>
+            </div>
         </div>
 
         <div class="row">
@@ -33,109 +38,6 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-5 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            {{ __('create_diary') }}
-                        </h4>
-
-                        <form class="create-form" data-success-function="formSuccessFunction" action="{{ route('diary.store') }}" method="POST"
-                            novalidate="novalidate">
-                            @csrf
-                            <div class="row">
-                                <div class="form-group col-sm-12 col-md-12">
-                                    <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                    <input type="text" name="title" id="title" class="form-control" placeholder="{{ __('title') }}" required>
-                                </div>
-
-                                <div class="form-group col-sm-12 col-md-12">
-                                    <label>{{ __('diary_category') }} <span class="text-danger">*</span></label>
-                                    <select name="diary_category_id" id="diary_category_id" class="form-control" required>
-                                        <option value="" disabled selected>{{ __('select_category') }}</option>
-                                        @foreach ($diaryCategories as $diaryCategory)
-                                        <option value="{{ $diaryCategory->id }}">{{ $diaryCategory->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
-                                <div class="form-group col-sm-12 col-md-12">
-                                    <label>{{ __('class_section') }} <span class="text-danger">*</span></label>
-                                    <select name="filter_class_section_id" id="filter_class_section_id"
-                                        class="form-control" required>
-                                        <option value="">{{ __('select_class') }}</option>
-                                        @foreach ($class_sections as $class_section)
-                                            <option value="{{ $class_section->id }}">{{ $class_section->full_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-sm-12 col-md-12">
-                                    <label>{{ __('subject') }} </label>
-                                    <select name="subject_id" id="subject_id" class="form-control" disabled>
-                                        <option value="">-- {{ __('select_subject') }} --</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-sm-12 col-md-12">
-                                    <label>{{ __('date') }}</label>
-                                    <input type="text" name="date" id="date"
-                                        class="datepicker-popup-no-future form-control">
-                                </div>
-                                <div class="form-group col-sm-12 col-md-12">
-                                    <label>{{ __('description') }}<span class="text-danger">*</span></label>
-                                    <textarea name="description" id="description" class="form-control" placeholder="{{ __('Write Something...') }}" required></textarea>
-                                </div>
-
-                                <input type="hidden" name="student_class_section_map" id="student_class_section_map">
-
-                            </div>
-
-                            <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit"
-                                value={{ __('submit') }}>
-                            <input class="btn btn-secondary float-right" id="reset" type="reset"
-                                value={{ __('reset') }}>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-7 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            {{ __('list') . ' ' . __('students') }}
-                        </h4>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <table aria-describedby="mydesc" class='table' id='student_table_list' data-toggle="table"
-                                    data-url="{{ route('diary.showStudents') }}" data-click-to-select="true"
-                                    data-side-pagination="server" data-pagination="true"
-                                    data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true"
-                                    data-toolbar="#toolbarStudents" data-show-columns="true" data-show-refresh="true"
-                                    data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
-                                    data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all'
-                                    data-query-params="diaryStudentQueryParams" data-escape="true">
-                                    <thead>
-                                        <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
-                                            <th scope="col" data-field="id" data-sortable="true" data-visible="false"> {{ __('id') }}</th>
-                                            <th scope="col" data-field="user_id" data-sortable="true" data-visible="false"> {{ __('user_id') }}</th>
-                                            <th scope="col" data-field="no">{{ __('no.') }}</th>
-                                            <th scope="col" data-field="full_name">{{ __('student_name') }}</th>
-                                            <th scope="col" data-field="roll_number">{{ __('roll_number') }}</th>
-                                            <th scope="col" data-field="class_section_id" data-visible="false">{{ __('class_section') }}</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -213,6 +115,99 @@
         </div>
     </div>
 
+    {{-- Create Diary Modal --}}
+    <div class="modal fade" id="createDiaryModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="createDiaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createDiaryModalLabel">{{ __('create_diary') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fa fa-close"></i></span>
+                    </button>
+                </div>
+                <form class="create-form" data-success-function="formSuccessFunction" action="{{ route('diary.store') }}" method="POST" novalidate="novalidate">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label>{{ __('title') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="title" id="title" class="form-control" placeholder="{{ __('title') }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('diary_category') }} <span class="text-danger">*</span></label>
+                                    <select name="diary_category_id" id="diary_category_id" class="form-control" required>
+                                        <option value="" disabled selected>{{ __('select_category') }}</option>
+                                        @foreach ($diaryCategories as $diaryCategory)
+                                            <option value="{{ $diaryCategory->id }}">{{ $diaryCategory->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" id="user_id">
+                                <div class="form-group">
+                                    <label>{{ __('class_section') }} <span class="text-danger">*</span></label>
+                                    <select name="filter_class_section_id" id="filter_class_section_id" class="form-control" required>
+                                        <option value="">{{ __('select_class') }}</option>
+                                        @foreach ($class_sections as $class_section)
+                                            <option value="{{ $class_section->id }}">{{ $class_section->full_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('subject') }} </label>
+                                    <select name="subject_id" id="subject_id" class="form-control" disabled>
+                                        <option value="">-- {{ __('select_subject') }} --</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('date') }}</label>
+                                    <input type="text" name="date" id="date" class="datepicker-popup-no-future form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>{{ __('description') }}<span class="text-danger">*</span></label>
+                                    <textarea name="description" id="description" class="form-control" placeholder="{{ __('Write Something...') }}" required></textarea>
+                                </div>
+                                <input type="hidden" name="student_class_section_map" id="student_class_section_map">
+                            </div>
+                            <div class="col-md-7">
+                                <h4 class="card-title">{{ __('list') . ' ' . __('students') }}</h4>
+                                <table aria-describedby="mydesc" class='table' id='student_table_list' data-toggle="table"
+                                    data-url="{{ route('diary.showStudents') }}" data-click-to-select="true"
+                                    data-side-pagination="server" data-pagination="true"
+                                    data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true"
+                                    data-show-columns="true" data-show-refresh="true"
+                                    data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
+                                    data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all'
+                                    data-query-params="diaryStudentQueryParams" data-escape="true" data-height="400">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="state" data-checkbox="true"></th>
+                                            <th scope="col" data-field="id" data-sortable="true" data-visible="false"> {{ __('id') }}</th>
+                                            <th scope="col" data-field="user_id" data-sortable="true" data-visible="false"> {{ __('user_id') }}</th>
+                                            <th scope="col" data-field="no">{{ __('no.') }}</th>
+                                            <th scope="col" data-field="full_name">{{ __('student_name') }}</th>
+                                            <th scope="col" data-field="roll_number">{{ __('roll_number') }}</th>
+                                            <th scope="col" data-field="class_section_id" data-visible="false">{{ __('class_section') }}</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn btn-secondary" id="reset" type="reset" value={{ __('reset') }}>
+                        <input class="btn btn-theme" id="create-btn" type="submit" value={{ __('submit') }}>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     {{-- Category Modal --}}
     <div class="modal fade" id="categoryModal" data-backdrop="static" tabindex="-1" role="dialog"
         aria-labelledby="categoryModalLabel" aria-hidden="true">
@@ -233,20 +228,20 @@
                             <div class="row">
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('name') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('name', null, ['required', 'placeholder' => __('name'), 'class' => 'form-control']) !!}
+                                    <input name="name" type="text" placeholder="{{ __('name') }}" class="form-control" required>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-4">
                                     <label>{{ __('type') }} <span class="text-danger">*</span></label><br>
                                     <div class="d-flex">
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {!! Form::radio('type', 'positive', true, ['id' => 'positive']) !!}
+                                                <input type="radio" name="type" value="positive" id="positive" checked>
                                                 {{ __('positive') }}
                                             </label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <label class="form-check-label">
-                                                {!! Form::radio('type', 'negative', false, ['id' => 'negative']) !!}
+                                                <input type="radio" name="type" value="negative" id="negative">
                                                 {{ __('negative') }}
                                             </label>
                                         </div>
@@ -310,25 +305,20 @@
                         <div class="row">
                             <div class="form-group col-sm-12 col-md-4">
                                 <label>{{ __('name') }} <span class="text-danger">*</span></label>
-                                {!! Form::text('name', null, [
-                                    'required',
-                                    'placeholder' => __('name'),
-                                    'class' => 'form-control',
-                                    'id' => 'name',
-                                ]) !!}
+                                <input name="name" id="name" type="text" placeholder="{{ __('name') }}" class="form-control" required>
                             </div>
                             <div class="form-group col-sm-12 col-md-4">
                                 <label>{{ __('type') }} <span class="text-danger">*</span></label><br>
                                 <div class="d-flex">
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('type', 'positive', false, ['id' => 'positive']) !!}
+                                            <input type="radio" name="type" value="positive" id="edit_positive">
                                             {{ __('positive') }}
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label">
-                                            {!! Form::radio('type', 'negative', false, ['id' => 'negative']) !!}
+                                            <input type="radio" name="type" value="negative" id="edit_negative">
                                             {{ __('negative') }}
                                         </label>
                                     </div>

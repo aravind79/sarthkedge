@@ -46,8 +46,6 @@
     padding: 12px 20px !important;
     /* Fixed padding on left/right */
     border-radius: 12px !important;
-    border-left: 4px solid #f1c40f !important;
-    /* TEST: YELLOW BORDER ON LEFT */
     margin: 4px 10px !important;
     /* Margin from sidebar edges */
     display: grid !important;
@@ -146,6 +144,21 @@
 }
 
 /* Remove default bullets */
+/* Remove ALL potential yellow decorations (pseudo-elements and borders) */
+.sidebar .nav .nav-item .nav-link,
+.sidebar .nav .nav-item .nav-link::before,
+.sidebar .nav .nav-item .nav-link::after {
+    border: none !important;
+    border-left: none !important;
+    box-shadow: none !important;
+}
+
+.sidebar .nav .nav-item .nav-link::before,
+.sidebar .nav .nav-item .nav-link::after {
+    display: none !important;
+    content: none !important;
+}
+
 .sidebar .nav .sub-menu .nav-item .nav-link:before {
     display: none !important;
 }

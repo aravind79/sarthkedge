@@ -34,56 +34,35 @@
                         <div class="row">
                             <div class="form-group col-sm-12 col-md-4">
                                 <label for="">{{ __('name') }}</label>
-                                {!! Form::text('name', $active_package ? $active_package->name : null, [
-                                    'class' => 'form-control form-control-sm',
-                                    'readonly',
-                                ]) !!}
+                                <input type="text" name="name" class="form-control form-control-sm" value="{{ $active_package ? $active_package->name : '' }}" readonly>
                             </div>
                             <div class="form-group col-sm-12 col-md-4">
                                 <label for="">{{ __('start_date') }}</label>
-                                {!! Form::text('start_date', $active_package ? format_date($active_package->start_date) : null, [
-                                    'class' => 'form-control form-control-sm',
-                                    'readonly',
-                                ]) !!}
+                                <input type="text" name="start_date" class="form-control form-control-sm" value="{{ $active_package ? format_date($active_package->start_date) : '' }}" readonly>
                             </div>
                             <div class="form-group col-sm-12 col-md-4">
                                 <label for="">{{ __('end_date') }}</label>
-                                {!! Form::text('end_date', $active_package ? format_date($active_package->end_date) : null, [
-                                    'class' => 'form-control form-control-sm',
-                                    'readonly',
-                                ]) !!}
+                                <input type="text" name="end_date" class="form-control form-control-sm" value="{{ $active_package ? format_date($active_package->end_date) : '' }}" readonly>
                             </div>
                             @if ($active_package && $active_package->package_type == 1)
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label for="">{{ __('per_active_student_charges') }}
                                         ({{ $system_settings['currency_symbol'] }})</label>
-                                    {!! Form::text('student_charge', $active_package ? $active_package->student_charge : null, [
-                                        'class' => 'form-control form-control-sm',
-                                        'readonly',
-                                    ]) !!}
+                                    <input type="text" name="student_charge" class="form-control form-control-sm" value="{{ $active_package ? $active_package->student_charge : '' }}" readonly>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label for="">{{ __('per_active_staff_charges') }}
                                         ({{ $system_settings['currency_symbol'] }})</label>
-                                    {!! Form::text('staff_charge', $active_package ? $active_package->staff_charge : null, [
-                                        'class' => 'form-control form-control-sm',
-                                        'readonly',
-                                    ]) !!}
+                                    <input type="text" name="staff_charge" class="form-control form-control-sm" value="{{ $active_package ? $active_package->staff_charge : '' }}" readonly>
                                 </div>
                             @else
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label for="">{{ __('student_limit') }}</label>
-                                    {!! Form::text('student_charge', $active_package ? $active_package->no_of_students : null, [
-                                        'class' => 'form-control form-control-sm',
-                                        'readonly',
-                                    ]) !!}
+                                    <input type="text" name="student_charge" class="form-control form-control-sm" value="{{ $active_package ? $active_package->no_of_students : '' }}" readonly>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label for="">{{ __('staff_limit') }}</label>
-                                    {!! Form::text('staff_charge', $active_package ? $active_package->no_of_staffs : null, [
-                                        'class' => 'form-control form-control-sm',
-                                        'readonly',
-                                    ]) !!}
+                                    <input type="text" name="staff_charge" class="form-control form-control-sm" value="{{ $active_package ? $active_package->no_of_staffs : '' }}" readonly>
                                 </div>
                             @endif
                             

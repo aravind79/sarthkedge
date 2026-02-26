@@ -6,6 +6,10 @@
 @endsection
 
 @section('content')
+    @php
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+    @endphp
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">
@@ -21,15 +25,15 @@
                             {{ __('create') . ' ' . __('announcement') }}
                         </h4>
                         <form class="create-form pt-3 common-validation-rules" data-success-function="formSuccessFunction" action="{{ route('announcement.store') }}" method="POST" novalidate="novalidate">
-                            {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
+                            <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}">
                             <div class="row">
                                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6">
                                     <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                    {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control']) !!}
+                                    <input type="text" name="title" class="form-control" placeholder="{{ __('title') }}" required>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6">
                                     <label>{{ __('description') }}</label>
-                                    {!! Form::textarea('description', null, ['rows' => '2', 'placeholder' => __('description'), 'class' => 'form-control']) !!}
+                                    <textarea name="description" rows="2" class="form-control" placeholder="{{ __('description') }}"></textarea>
                                 </div>
                                 <div class="form-group col-sm-12 col-md-12 col-lg-6 col-xl-6">
                                     <label>{{ __('files') }} </label>
@@ -59,7 +63,7 @@
                                 </div>
 
                                 <div class="form-group col-sm-12 col-md-6">
-                                    @if (!Auth::user()->hasRole('Teacher'))
+                                    @if (!$user->hasRole('Teacher'))
                                     <label>{{ __('class_sections') }} <span class="text-danger">*</span></label>
                                     <select name="class_section_id[]" required multiple id="class-section-id" class="class_section_id form-control select2-dropdown select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                                         {{-- <option value="">{{ __('select') }} {{ __('class_section') }}</option> --}}
@@ -73,7 +77,7 @@
                                         </label>
                                     </div>
                                     @endif
-                                    @if (Auth::user()->hasRole('Teacher'))
+                                    @if ($user->hasRole('Teacher'))
                                     <label>{{ __('class_sections') }} <span class="text-danger">*</span></label>
                                         <select name="class_section_id[]" required multiple id="class-section-id" class="class_section_id form-control select2-dropdown select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                                             {{-- <option value="">{{ __('select') }} {{ __('class_section') }}</option> --}}
@@ -86,14 +90,14 @@
                             </div>
                             <div class="row">
 
-                                @if (Auth::user()->hasRole('Teacher'))
+                                @if ($user->hasRole('Teacher'))
                                     <div class="form-group col-sm-12 col-md-6 show_class_section_id">
                                         <label>{{ __('subject') }}</label>
                                         <select name="subject_id" id="subject-id" class="form-control">
                                             <option value="">-- {{ __('Select Subject') }} --</option>
                                             <option value="data-not-found">-- {{ __('no_data_found') }} --</option>
                                             @foreach ($subjectTeachers as $item)
-                                                <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_section_id }}" data-user="{{ Auth::user()->id }}">{{ $item->subject_with_name}}</option>
+                                                <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_section_id }}" data-user="{{ $user->id }}">{{ $item->subject_with_name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -129,7 +133,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                @if (Auth::user()->hasRole('Teacher'))
+                                @if ($user->hasRole('Teacher'))
                                 <div class="form-group col-sm-12 col-md-3">
                                     <label class="filter-menu">{{ __('Class') }}</label>
                                     <select name="filter_class_section_id" id="filter_class_section_id" class="form-control">
@@ -194,17 +198,17 @@
                         <div class="row">
                             <div class="form-group col-sm-12 col-md-12">
                                 <label>{{ __('title') }} <span class="text-danger">*</span></label>
-                                {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control', 'id' => 'title']) !!}
+                                <input type="text" name="title" id="title" class="form-control" placeholder="{{ __('title') }}" required>
                             </div>
                             <div class="form-group col-sm-12 col-md-12">
                                 <label>{{ __('description') }}</label>
-                                {!! Form::textarea('description', null, ['rows' => 2, 'placeholder' => __('description'), 'class' => 'form-control', 'id' => 'description']) !!}
+                                <textarea name="description" id="description" rows="2" class="form-control" placeholder="{{ __('description') }}"></textarea>
                             </div>
 
                             <div class="form-group col-sm-12 col-md-12">
                                 <label>{{ __('class_section') }}</label>
                                 <select name="class_section_id[]" multiple id="edit-class-section-id" class="form-control edit_class_section_id select2-dropdown select2-hidden-accessible " style="width:100%;" tabindex="-1" aria-hidden="true">
-                                    @if (Auth::user()->hasRole('Teacher'))
+                                    @if ($user->hasRole('Teacher'))
                                         <option value="">{{ __('select') . ' ' . __('Class Section') }}</option>
                                     @endif
                                     @foreach ($class_section as $item)
@@ -212,17 +216,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                            @if (Auth::user()->hasRole('Teacher'))
+                            @if ($user->hasRole('Teacher'))
                                 <div class="form-group col-sm-12 col-md-12">
                                     <label>{{ __('subject') }}</label>
                                     <select name="subject_id" id="edit-subject-id" class="form-control edit_subject_id" style="width:100%;" required>
                                         <option value="">-- {{ __('Select Subject') }} --</option>
                                         <option value="data-not-found">-- {{ __('no_data_found') }} --</option>
                                         @foreach ($subjectTeachers as $item)
-                                            <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_section_id }}" data-user="{{ Auth::user()->id }}">{{ $item->subject_with_name}}</option>
+                                            <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_section_id }}" data-user="{{ $user->id }}">{{ $item->subject_with_name}}</option>
                                         @endforeach
                                     </select>
-                                    {{-- {!! Form::hidden('class_subject_id',"", ["id" => "class_subject_id_value"]) !!} --}}
                                 </div>
                             @endif
 
@@ -254,7 +257,7 @@
 
                             <div class="form-group col-sm-12 col-md-12">
                                 <label>{{ __('add_url') }}</label>
-                                {!! Form::hidden('add_url_id', '', ['id' => 'edit_add_url_id']) !!}
+                                <input type="hidden" name="add_url_id" id="edit_add_url_id" value="">
                                 <input type="text" name="add_url" id="edit_add_url" placeholder="{{ __('add_url') }}" class="form-control edit_add_url" value="">
                             </div>
                         </div>

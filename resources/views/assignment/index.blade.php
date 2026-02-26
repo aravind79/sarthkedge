@@ -22,7 +22,7 @@
                               method="POST" novalidate="novalidate" enctype="multipart/form-data" data-success-function ="formSuccessFunction">
                             <div class="row">
 
-                                {!! Form::hidden('user_id', Auth::user()->id, ['id' => 'user_id']) !!}
+                                <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
                                 <div class="form-group col-sm-12 col-md-6">
                                     <label>{{ __('Class') . ' ' . __('section') }} <span
                                             class="text-danger">*</span></label>
@@ -256,7 +256,6 @@
                                                 <option value="{{ $item->subject_id }}" data-class-section="{{ $item->class_section_id }}" data-user="{{ Auth::user()->id }}">{{ $item->subject_with_name }}</option>
                                             @endforeach
                                         </select>
-                                        {{-- {!! Form::hidden('class_subject_id',"", ["id" => "class_subject_id_value"]) !!} --}}
                                     </div>
 
                                     <div class="form-group col-sm-12 col-md-6">
@@ -282,7 +281,7 @@
 
                                     <div class="form-group col-sm-12 col-md-4">
                                         <label for="edit_add_url_id">{{ __('add_url') }}</label>
-                                        {!! Form::hidden('add_url_id', '', ['id' => 'edit_add_url_id']) !!}
+                                        <input type="hidden" name="add_url_id" id="edit_add_url_id" value="">
                                         <input type="text" name="add_url" id="edit_add_url" placeholder="{{ __('add_url') }}" class="form-control edit_add_url" value="">
                                     </div>
 
