@@ -5,247 +5,248 @@
 @endsection
 
 @section('css')
-<style>
-    /* ── THEME COLORS ── */
-    :root {
-        --nb-primary: #162fac;
-        --nb-primary-dark: #0f2190;
-        --nb-primary-light: rgba(22, 47, 172, 0.1);
-        --nb-text-muted: #64748b;
-        --nb-bg-light: #f8fafc;
-    }
+    <style>
+        /* ── THEME COLORS ── */
+        :root {
+            --nb-primary: #162fac;
+            --nb-primary-dark: #0f2190;
+            --nb-primary-light: rgba(22, 47, 172, 0.1);
+            --nb-text-muted: #64748b;
+            --nb-bg-light: #f8fafc;
+        }
 
-    /* Wrapper */
-    .fees-v3-wrapper {
-        background: #f0f4f8;
-        padding: 2.5rem 1rem 4rem;
-        min-height: 100vh;
-    }
+        /* Wrapper */
+        .fees-v3-wrapper {
+            background: #f0f4f8;
+            padding: 2.5rem 1rem 4rem;
+            min-height: 100vh;
+        }
 
-    /* ── Hero / Entry Card ── */
-    .adm-card-hero {
-        background: #ffffff;
-        border-radius: 24px;
-        padding: 4rem 2rem;
-        text-align: center;
-        box-shadow: 0 10px 40px rgba(30, 41, 59, 0.08);
-        border: 1px solid #e2e8f0;
-        position: relative;
-        overflow: hidden;
-        max-width: 700px;
-        margin: 0 auto;
-        z-index: 1;
-    }
-
-    .adm-hero-icon-box {
-        width: 84px;
-        height: 84px;
-        margin: 0 auto 1.8rem;
-        background: var(--nb-primary);
-        border-radius: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 12px 28px rgba(22, 47, 172, 0.3);
-    }
-
-    .adm-hero-icon-box i {
-        font-size: 32px;
-        color: #ffffff;
-    }
-
-    .adm-hero-title {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #1e293b;
-        margin-bottom: 0.8rem;
-        letter-spacing: -0.5px;
-    }
-
-    .adm-hero-desc {
-        font-size: 1.05rem;
-        color: var(--nb-text-muted);
-        max-width: 480px;
-        margin: 0 auto 2.5rem;
-        line-height: 1.7;
-    }
-
-    /* Main Action Button */
-    .adm-btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        background: var(--nb-primary) !important;
-        color: #ffffff !important;
-        padding: 1rem 3rem;
-        border-radius: 16px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        border: none;
-        cursor: pointer;
-        box-shadow: 0 10px 25px rgba(22, 47, 172, 0.4);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-decoration: none !important;
-        position: relative;
-        z-index: 100;
-    }
-
-    .adm-btn-primary:hover {
-        transform: translateY(-4px);
-        background: var(--nb-primary-dark) !important;
-        box-shadow: 0 15px 35px rgba(22, 47, 172, 0.5);
-        color: #ffffff !important;
-    }
-
-    .adm-features-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0;
-        margin-top: 3rem;
-        flex-wrap: wrap;
-    }
-
-    .adm-feature {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1.2rem;
-    }
-
-    .adm-feature i {
-        color: var(--nb-primary);
-        font-size: 14px;
-    }
-
-    .adm-feature span {
-        font-size: 0.85rem;
-        color: var(--nb-text-muted);
-        font-weight: 600;
-    }
-
-    .adm-feature-sep {
-        width: 1px;
-        height: 20px;
-        background: #e2e8f0;
-    }
-
-    /* ── Modal Design ── */
-    .adm-modal-content {
-        border: none;
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
-    }
-
-    .adm-modal-header {
-        background: var(--nb-primary);
-        padding: 1.5rem 2.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: none;
-    }
-
-    .adm-modal-header .header-info {
-        color: #ffffff;
-    }
-
-    .adm-modal-header h5 {
-        font-size: 1.35rem;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .adm-modal-header p {
-        font-size: 0.85rem;
-        opacity: 0.8;
-        margin: 0.2rem 0 0;
-    }
-
-    .adm-modal-close {
-        background: rgba(255, 255, 255, 0.15);
-        border: none;
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        color: #fff;
-        font-size: 1.2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .modal-body.adm-modal-body {
-        background: var(--nb-bg-light);
-        padding: 2rem;
-    }
-
-
-
-    .adm-form-card {
-        background: #ffffff;
-        border-radius: 18px;
-        padding: 1.8rem;
-        border: 1px solid #e8edf5;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.03);
-    }
-
-    .adm-form-card h6 {
-        font-size: 0.75rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #94a3b8;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.8rem;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .adm-btn-nav {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: var(--nb-primary);
-        color: #ffffff !important;
-        border: none;
-        padding: 0.8rem 1.8rem;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 6px 15px rgba(22, 47, 172, 0.25);
-        text-decoration: none !important;
-    }
-
-    .form-control {
-        border: 1.5px solid #e2e8f0;
-        border-radius: 10px;
-        background: #fafafa;
-        padding: 0.6rem 0.9rem;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-
-    .form-control:focus {
-        border-color: var(--nb-primary);
-        background: #fff;
-        box-shadow: 0 0 0 4px rgba(22, 47, 172, 0.08);
-    }
-
-    @media (max-width: 600px) {
+        /* ── Hero / Entry Card ── */
         .adm-card-hero {
-            padding: 3rem 1.5rem;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(30, 41, 59, 0.08);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            max-width: 700px;
+            margin: 0 auto;
+            z-index: 1;
+        }
+
+        .adm-hero-icon-box {
+            width: 84px;
+            height: 84px;
+            margin: 0 auto 1.8rem;
+            background: var(--nb-primary);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 28px rgba(22, 47, 172, 0.3);
+        }
+
+        .adm-hero-icon-box i {
+            font-size: 32px;
+            color: #ffffff;
         }
 
         .adm-hero-title {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
         }
-    }
-</style>
+
+        .adm-hero-desc {
+            font-size: 1.05rem;
+            color: var(--nb-text-muted);
+            max-width: 480px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* Main Action Button */
+        .adm-btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--nb-primary) !important;
+            color: #ffffff !important;
+            padding: 1rem 3rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(22, 47, 172, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none !important;
+            position: relative;
+            z-index: 100;
+        }
+
+        .adm-btn-primary:hover {
+            transform: translateY(-4px);
+            background: var(--nb-primary-dark) !important;
+            box-shadow: 0 15px 35px rgba(22, 47, 172, 0.5);
+            color: #ffffff !important;
+        }
+
+        .adm-features-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .adm-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+        }
+
+        .adm-feature i {
+            color: var(--nb-primary);
+            font-size: 14px;
+        }
+
+        .adm-feature span {
+            font-size: 0.85rem;
+            color: var(--nb-text-muted);
+            font-weight: 600;
+        }
+
+        .adm-feature-sep {
+            width: 1px;
+            height: 20px;
+            background: #e2e8f0;
+        }
+
+        /* ── Modal Design ── */
+        .adm-modal-content {
+            border: none;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
+        }
+
+        .adm-modal-header {
+            background: var(--nb-primary);
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: none;
+        }
+
+        .adm-modal-header .header-info {
+            color: #ffffff;
+        }
+
+        .adm-modal-header h5 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .adm-modal-header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin: 0.2rem 0 0;
+        }
+
+        .adm-modal-close {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-body.adm-modal-body {
+            background: var(--nb-bg-light);
+            padding: 2rem;
+        }
+
+
+
+        .adm-form-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 1.8rem;
+            border: 1px solid #e8edf5;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.03);
+        }
+
+        .adm-form-card h6 {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .adm-btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--nb-primary);
+            color: #ffffff !important;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(22, 47, 172, 0.25);
+            text-decoration: none !important;
+        }
+
+        .form-control {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fafafa;
+            padding: 0.6rem 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--nb-primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(22, 47, 172, 0.08);
+        }
+
+        @media (max-width: 600px) {
+            .adm-card-hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .adm-hero-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 
 @endsection
 
@@ -319,8 +320,8 @@
                                     <div class="form-group col-sm-12 col-md-12 col-lg-6">
                                         <label for="class-id">{{ __('Classes') }} <span class="text-danger">*</span></label>
                                         <select name="class_id[]" id="class-id"
-                                            class="class-id form-control select2 select2-hidden-accessible"
-                                            tabindex="-1" aria-hidden="true" required multiple>
+                                            class="class-id form-control select2 select2-hidden-accessible" tabindex="-1"
+                                            aria-hidden="true" required multiple>
                                             @foreach ($classes as $item)
                                                 <option value="{{ $item->id }}">{{ $item->full_name }}</option>
                                             @endforeach
@@ -635,7 +636,7 @@
 @section('js')
     <script>
         // Manual trigger for Fees Modal
-        $('#btn-trigger-fees').on('click', function() {
+        $('#btn-trigger-fees').on('click', function () {
             $('#feesModal').modal('show');
         });
 
