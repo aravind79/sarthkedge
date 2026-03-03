@@ -39,6 +39,7 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+    protected $username;
     private CachingService $cache;
 
     /**
@@ -87,7 +88,7 @@ class LoginController extends Controller
         if ($request->code) {
             // Retrieve the school's database connection info
             $school = School::on('mysql')->where('code', $request->code)->where('installed', 1)->first();
-          
+
             if (!$school) {
                 return back()->withErrors(['code' => 'Invalid school identifier.']);
             }
@@ -131,22 +132,23 @@ class LoginController extends Controller
 
                 Session::put('school_database_name', $school->database_name);
 
-                $data = DB::table('users')
+                // Query user from school DB explicitly
+                $data = DB::connection('school')->table('users')
                     ->where(function ($query) use ($request) {
                         $query->where('email', $request->email)
-                            ->orWhere('mobile', $request->email); // assuming input field is "email" (can be mobile too)
+                            ->orWhere('mobile', $request->email);
                     })
                     ->first();
 
-                if ($data && $school->status == 1) {
-                    if (($data->two_factor_secret == null || $data->two_factor_expires_at == null) && $data->two_factor_enabled == 1 && $request->email != 'demo@school.com' && !env('DEMO_MODE')) {
+                // Allow access if school is active OR user is School Admin
+                if ($school->status == 1 || $user->hasRole('School Admin')) {
+                    if ($data && ($data->two_factor_secret == null || $data->two_factor_expires_at == null) && $data->two_factor_enabled == 1 && $request->email != 'demo@school.com' && !env('DEMO_MODE')) {
                         $twoFACode = $this->generate2FACode();
                         $settings = $this->cache->getSystemSettings();
-                        $user = Auth::user();
 
-                        DB::table('users')->where('email', $user->email)->update(['two_factor_secret' => $twoFACode, 'updated_at' => Carbon::now()]);
+                        DB::connection('school')->table('users')->where('email', $user->email)->update(['two_factor_secret' => $twoFACode, 'updated_at' => Carbon::now()]);
 
-                        $schools = DB::table('users')->where('email', $user->email)->first();
+                        $schools = DB::connection('school')->table('users')->where('email', $user->email)->first();
                         Session::put('2fa_user_id', $user->id);
                         Session::put('school_database_name', $school->database_name);
                         $status = $this->send2FAEmail($schools, $user, $settings, $twoFACode);
@@ -160,10 +162,12 @@ class LoginController extends Controller
                     } else {
                         return redirect()->intended('/dashboard');
                     }
+                } else {
+                    // School is not active and user is not a School Admin
+                    Auth::logout();
+                    $request->session()->flush();
+                    return back()->withErrors(['email' => 'Your school is currently inactive. Please contact the administrator.']);
                 }
-
-
-                // return redirect()->intended('/dashboard');
             } else {
                 \Log::error('Login attempt failed in school database. Email: ' . $request->email);
             }

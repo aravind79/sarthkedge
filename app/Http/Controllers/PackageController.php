@@ -306,6 +306,7 @@ class PackageController extends Controller
             $this->package->update($id, ['status' => 0]);
             $this->package->deleteById($id);
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Deleted Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -324,6 +325,7 @@ class PackageController extends Controller
             $package_status = ['status' => $package->status == 1 ? 0 : 1];
             $this->package->update($id, $package_status);
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Updated Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -341,6 +343,7 @@ class PackageController extends Controller
             DB::beginTransaction();
             $this->package->restoreById($id);
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Restored Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -365,6 +368,7 @@ class PackageController extends Controller
 
 
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Deleted Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -397,6 +401,7 @@ class PackageController extends Controller
             }
             $this->package->upsert($update, ['id'], ['rank']);
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Rank Updated Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -503,6 +508,7 @@ class PackageController extends Controller
 
             $this->feature->upsert($update, ['id'], ['status']);
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Updated Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -649,6 +655,7 @@ class PackageController extends Controller
             DB::beginTransaction();
             $this->feature->create($request->all());
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Stored Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -670,6 +677,7 @@ class PackageController extends Controller
             DB::beginTransaction();
             $this->feature->update($id, $request->all());
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Updated Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -685,6 +693,7 @@ class PackageController extends Controller
             DB::beginTransaction();
             $this->feature->deleteById($id);
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Deleted Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
@@ -702,6 +711,7 @@ class PackageController extends Controller
             $feature_status = ['status' => $feature->status == 1 ? 0 : 1];
             $this->feature->update($id, $feature_status);
             DB::commit();
+            Cache::flush();
             ResponseService::successResponse('Data Updated Successfully');
         } catch (Throwable $e) {
             DB::rollBack();
