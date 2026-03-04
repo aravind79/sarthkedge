@@ -35,7 +35,8 @@ final class SetupSchoolDatabase implements ShouldQueue
         private readonly int $schoolId,
         private readonly ?int $packageId = null,
         private readonly ?string $schoolCodePrefix = null
-    ) {}
+    ) {
+    }
 
     /**
      * Execute the job.
@@ -51,7 +52,7 @@ final class SetupSchoolDatabase implements ShouldQueue
 
             // Get school data
             $school = School::findOrFail($this->schoolId);
-            
+
             // Create database
             DB::statement("CREATE DATABASE IF NOT EXISTS {$school->database_name}");
 
@@ -81,25 +82,25 @@ final class SetupSchoolDatabase implements ShouldQueue
                 }
             }
 
-            // Update school status to active
-            $school->update(['status' => 1, 'installed' => 1]);
+            // Update school installation status
+            $school->update(['installed' => 1]);
 
             DB::setDefaultConnection('school');
             Config::set('database.connections.school.database', $school->database_name);
             DB::purge('school');
             DB::connection('school')->reconnect();
             DB::setDefaultConnection('school');
-            School::on('school')->where('id', $this->schoolId)->update(['status' => 1, 'installed' => 1]);
+            School::on('school')->where('id', $this->schoolId)->update(['installed' => 1]);
 
             $school = School::with('user')->findOrFail($this->schoolId);
             $settings = $cache->getSystemSettings();
 
             $email_body = $this->replacePlaceholders($school, $school->user, $settings, $school->code);
-            
+
             $data = [
-                'subject'     => 'Welcome to ' . ($settings['system_name'] ?? 'eSchool Saas'),
-                'email'       => $school->support_email,
-                'email_body'  => $email_body
+                'subject' => 'Welcome to ' . ($settings['system_name'] ?? 'eSchool Saas'),
+                'email' => $school->support_email,
+                'email_body' => $email_body
             ];
 
             Mail::send('schools.email', $data, static function ($message) use ($data, $settings) {
@@ -136,7 +137,7 @@ final class SetupSchoolDatabase implements ShouldQueue
     private function replacePlaceholders($school, $user, $settings, $schoolCode): string
     {
         $templateContent = $settings['email_template_school_registration'] ?? '';
-        
+
         $placeholders = [
             '{school_admin_name}' => $user->full_name,
             '{code}' => $schoolCode,
@@ -156,4 +157,4 @@ final class SetupSchoolDatabase implements ShouldQueue
 
         return $templateContent;
     }
-} 
+}

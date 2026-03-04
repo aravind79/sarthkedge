@@ -1,0 +1,11 @@
+/home/sarthakedge/htdocs/sarthakedge.com/beta/public
+/home/sarthakedge/htdocs/sarthakedge.com/php_26-02-2026/public
+/home/sarthakedge/htdocs/sarthakedge.com/php_code/public
+/home/sarthakedge/htdocs/sarthakedge.com/phpnew/public
+/home/sarthakedge/htdocs/sarthakedge.com/deploy_v2/public
+/home/sarthakedge/htdocs/sarthakedge.com/phpnew1/public
+/home/sarthakedge/htdocs/sarthakedge.com/php_code2/public
+/home/sarthakedge/htdocs/sarthakedge.com/php_code2/php_code/public
+/home/sarthakedge/htdocs/sarthakedge.com/php_25-02-2026/public
+/home/sarthakedge/htdocs/sarthakedge.com/php_code1/public
+/home/sarthakedge/htdocs/sarthakedge.com/php_code1/Student Web Code/public

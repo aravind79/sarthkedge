@@ -37,8 +37,9 @@ class ClassSchoolController extends Controller
     private ShiftInterface $shift;
     private StreamInterface $stream;
     private TimetableInterface $timetable;
+    private \App\Repositories\ClassTeachers\ClassTeachersInterface $classTeachers;
 
-    public function __construct(MediumInterface $medium, SectionInterface $section, ClassSchoolInterface $class, ClassSectionInterface $classSection, SubjectInterface $subject, ClassSubjectInterface $classSubject, ElectiveSubjectGroupInterface $electiveSubjectGroup, SemesterInterface $semester, CachingService $cache, ShiftInterface $shift, StreamInterface $stream, TimetableInterface $timetable)
+    public function __construct(MediumInterface $medium, SectionInterface $section, ClassSchoolInterface $class, ClassSectionInterface $classSection, SubjectInterface $subject, ClassSubjectInterface $classSubject, ElectiveSubjectGroupInterface $electiveSubjectGroup, SemesterInterface $semester, CachingService $cache, ShiftInterface $shift, StreamInterface $stream, TimetableInterface $timetable, \App\Repositories\ClassTeachers\ClassTeachersInterface $classTeachers)
     {
         $this->medium = $medium;
         $this->section = $section;
@@ -52,6 +53,7 @@ class ClassSchoolController extends Controller
         $this->shift = $shift;
         $this->stream = $stream;
         $this->timetable = $timetable;
+        $this->classTeachers = $classTeachers;
     }
 
 
@@ -119,25 +121,34 @@ class ClassSchoolController extends Controller
 
                     $class = $this->class->create($classDetails);
                     /* Create Class Sections */
-                    $class_section = array();
                     if (!empty($request->section_id[$stream])) {
                         foreach ($request->section_id[$stream] as $section_id) {
-                            $class_section[] = array(
+                            $classSection = $this->classSection->create([
                                 'class_id' => $class->id,
                                 'section_id' => $section_id,
                                 'medium_id' => $request->medium_id,
-                                'class_teacher_id' => $teacherId
-                            );
+                            ]);
+                            if ($teacherId) {
+                                $this->classTeachers->create([
+                                    'class_section_id' => $classSection->id,
+                                    'teacher_id' => $teacherId,
+                                    'school_id' => \Illuminate\Support\Facades\Auth::user()->school_id,
+                                ]);
+                            }
                         }
                     } else {
-                        $class_section[] = array(
+                        $classSection = $this->classSection->create([
                             'class_id' => $class->id,
                             'medium_id' => $request->medium_id,
-                            'class_teacher_id' => $teacherId
-                        );
+                        ]);
+                        if ($teacherId) {
+                            $this->classTeachers->create([
+                                'class_section_id' => $classSection->id,
+                                'teacher_id' => $teacherId,
+                                'school_id' => \Illuminate\Support\Facades\Auth::user()->school_id,
+                            ]);
+                        }
                     }
-
-                    $this->classSection->createBulk($class_section);
                 }
             } else {
                 $classDetails = [
@@ -148,25 +159,34 @@ class ClassSchoolController extends Controller
 
                 $class = $this->class->create($classDetails);
                 /* Create Class Sections */
-                $class_section = array();
                 if (!empty($request->section_id[0])) {
                     foreach ($request->section_id[0] as $section_id) {
-                        $class_section[] = array(
+                        $classSection = $this->classSection->create([
                             'class_id' => $class->id,
                             'section_id' => $section_id,
                             'medium_id' => $request->medium_id,
-                            'class_teacher_id' => $teacherId
-                        );
+                        ]);
+                        if ($teacherId) {
+                            $this->classTeachers->create([
+                                'class_section_id' => $classSection->id,
+                                'teacher_id' => $teacherId,
+                                'school_id' => \Illuminate\Support\Facades\Auth::user()->school_id,
+                            ]);
+                        }
                     }
                 } else {
-                    $class_section[] = array(
+                    $classSection = $this->classSection->create([
                         'class_id' => $class->id,
                         'medium_id' => $request->medium_id,
-                        'class_teacher_id' => $teacherId
-                    );
+                    ]);
+                    if ($teacherId) {
+                        $this->classTeachers->create([
+                            'class_section_id' => $classSection->id,
+                            'teacher_id' => $teacherId,
+                            'school_id' => \Illuminate\Support\Facades\Auth::user()->school_id,
+                        ]);
+                    }
                 }
-
-                $this->classSection->createBulk($class_section);
             }
 
             if ($teacherId) {

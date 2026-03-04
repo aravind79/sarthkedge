@@ -108,7 +108,7 @@ class DashboardController extends Controller
         $super_admin = [];
         $classes_counter = $streams = $exams = 0;
         $class_names = $class_section_names = [];
-        $sessionYear = collect();
+        $sessionYears = collect();
         $server_configuration = [];
 
         // School Admin Dashboard
@@ -149,7 +149,7 @@ class DashboardController extends Controller
                 $license_expire = Carbon::now()->diffInDays(Carbon::parse($subscription->end_date)) + 1;
             }
 
-            $sessionYear = $this->sessionYear->builder()->select('id', 'name', 'default')->get();
+            $sessionYears = $this->sessionYear->builder()->select('id', 'name', 'default')->get();
             $paymentConfiguration = '';
             // For prepaid upcoming plans, please make the payment before your current subscription expires.
             if ($license_expire <= ($settings['current_plan_expiry_warning_days'] ?? 7) && $subscription) {
@@ -367,7 +367,7 @@ class DashboardController extends Controller
         }
 
         // Super admin dashboard
-        if (Auth::user()->hasRole('Super Admin') || !Auth::user()->school_id) {
+        if (Auth::user()->hasRole('Super Admin')) {
             $school = $this->school->builder()->get();
             $total_school = $school->count();
             $active_school = $school->where('status', 1)->count();
@@ -450,7 +450,7 @@ class DashboardController extends Controller
             'prepiad_upcoming_plan',
             'prepiad_upcoming_plan_type',
             'check_payment',
-            'sessionYear',
+            'sessionYears',
             'classes_counter',
             'streams',
             'exams',
@@ -476,7 +476,7 @@ class DashboardController extends Controller
             'super_admin'
         );
 
-        if (Auth::user()->hasRole('Super Admin') || (Auth::user()->school_id == null && Auth::user()->hasRole('Admin'))) {
+        if (Auth::user()->hasRole('Super Admin') || (Auth::user()->school_id == null && Auth::user()->hasRole('Admin') && !Auth::user()->hasRole('School Admin'))) {
             $all_vars = array_merge($all_vars, compact('start_year', 'schools', 'staffs', 'addon_graph', 'package_graph', 'paymentConfiguration', 'server_configuration'));
             return view('dashboard', $all_vars);
         }
@@ -485,6 +485,15 @@ class DashboardController extends Controller
             $all_vars = array_merge($all_vars, compact('timetables'));
             return view('teacher_dashboard', $all_vars);
         }
+
+        // School Admin — pass empty defaults for super-admin-only vars so dashboard.blade.php doesn't crash
+        $start_year = $start_year ?? Carbon::now()->format('Y');
+        $schools = $schools ?? collect();
+        $staffs = $staffs ?? collect();
+        $addon_graph = $addon_graph ?? [[], []];
+        $package_graph = $package_graph ?? [[], []];
+        $server_configuration = $server_configuration ?? [];
+        $all_vars = array_merge($all_vars, compact('start_year', 'schools', 'staffs', 'addon_graph', 'package_graph', 'paymentConfiguration', 'server_configuration', 'sessionYears'));
 
         return view('dashboard', $all_vars);
     }

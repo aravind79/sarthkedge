@@ -95,7 +95,7 @@ class CheckSchoolStatus
                     return redirect()->route('login')->withErrors(trans('no_permission_message'));
                 }
 
-                if ($user->school->status == 0) {
+                if ($user->school->status == 0 && !$request->routeIs('verification.verify', 'verification.notice', 'verification.resend', 'logout')) {
                     Auth::logout();
                     $request->session()->flush();
                     $request->session()->regenerate();

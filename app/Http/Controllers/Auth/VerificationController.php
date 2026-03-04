@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
+use App\Models\School;
 
 class VerificationController extends Controller
 {
@@ -38,5 +40,24 @@ class VerificationController extends Controller
         $this->middleware('auth');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
+    }
+
+    /**
+     * The user has been verified.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    protected function verified(Request $request)
+    {
+        $user = $request->user();
+        if ($user->hasRole('School Admin')) {
+            $school = School::find($user->school_id);
+            if ($school) {
+                // Activate the school in the main database
+                $school->status = 1;
+                $school->save();
+            }
+        }
     }
 }

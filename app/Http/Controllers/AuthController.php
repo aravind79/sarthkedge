@@ -204,6 +204,17 @@ class AuthController extends Controller
         $maxFailedAttempts = 3;
         $failedAttempts = session('failed_attempts', 0);
         $userId = Session::get('2fa_user_id');
+
+        $school_database_name = Session::get('school_database_name');
+        if ($school_database_name) {
+            \Illuminate\Support\Facades\Config::set('database.connections.school.database', $school_database_name);
+            \Illuminate\Support\Facades\DB::purge('school');
+            \Illuminate\Support\Facades\DB::connection('school')->reconnect();
+            \Illuminate\Support\Facades\DB::setDefaultConnection('school');
+        } else {
+            \Illuminate\Support\Facades\DB::setDefaultConnection('mysql');
+        }
+
         $user = \App\Models\User::find($userId);
         // If the 2FA secret has expired (based on the user's `updated_at`)
         $actual_start_at = Carbon::parse($user->getRawOriginal('updated_at'));

@@ -1,0 +1,2 @@
+Users in school_db: 1
+10 - bizbyaravind@gmail.com - School Admin

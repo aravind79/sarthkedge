@@ -389,11 +389,11 @@
                                                         <div class="dropdown-menu dropdown-menu-right">
                                                             @if($school->trashed())
                                                                 <a class="dropdown-item" href="#"
-                                                                    onclick="document.getElementById('restore-form-{{ $school->id }}').submit();"><i
+                                                                    onclick="event.preventDefault(); submitSchoolAction({{ $school->id }}, 'restore', 'Are you sure you want to restore this school?');"><i
                                                                         class="fa fa-refresh mr-2"></i> {{ __('Restore') }}</a>
 
                                                                 <a class="dropdown-item text-danger" href="#"
-                                                                    onclick="confirm('Are you sure you want to permanently delete this school? This action cannot be undone.') ? document.getElementById('force-delete-form-{{ $school->id }}').submit() : false;">
+                                                                    onclick="event.preventDefault(); submitSchoolAction({{ $school->id }}, 'force-delete', 'Are you sure you want to permanently delete this school? This action cannot be undone.');">
                                                                     <i class="fa fa-trash mr-2"></i> {{ __('Delete Permanently') }}
                                                                 </a>
                                                             @else
@@ -416,18 +416,18 @@
 
                                                                 @if($school->status)
                                                                     <a class="dropdown-item" href="#"
-                                                                        onclick="confirm('Are you sure?') ? document.getElementById('status-form-{{ $school->id }}').submit() : false;"><i
+                                                                        onclick="event.preventDefault(); submitSchoolAction({{ $school->id }}, 'status', 'Are you sure?');"><i
                                                                             class="fa fa-ban mr-2"></i> {{ __('Deactivate') }}</a>
                                                                 @else
                                                                     <a class="dropdown-item" href="#"
-                                                                        onclick="confirm('Are you sure?') ? document.getElementById('status-form-{{ $school->id }}').submit() : false;"><i
+                                                                        onclick="event.preventDefault(); submitSchoolAction({{ $school->id }}, 'status', 'Are you sure?');"><i
                                                                             class="fa fa-check mr-2"></i> {{ __('Activate') }}</a>
                                                                 @endif
 
                                                                 <div class="dropdown-divider"></div>
 
                                                                 <a class="dropdown-item text-danger" href="#"
-                                                                    onclick="confirm('Are you sure you want to delete this school?') ? document.getElementById('delete-form-{{ $school->id }}').submit() : false;">
+                                                                    onclick="event.preventDefault(); submitSchoolAction({{ $school->id }}, 'delete', 'Are you sure you want to delete this school?');">
                                                                     <i class="fa fa-trash mr-2"></i> {{ __('Delete') }}
                                                                 </a>
                                                             @endif
@@ -996,6 +996,35 @@
                 e.stopPropagation();
             });
         });
+
+        function submitSchoolAction(id, type, confirmMsg) {
+            if (confirmMsg && !confirm(confirmMsg)) return false;
+            
+            let form = $('#' + type + '-form-' + id);
+            let url = form.attr('action');
+            let data = new FormData(form[0]);
+            
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.error == false) {
+                        showSuccessToast(response.message);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        showErrorToast(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    showErrorToast('Error occurred');
+                }
+            });
+        }
     </script>
 
 @endsection

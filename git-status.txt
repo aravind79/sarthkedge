@@ -1,0 +1,80 @@
+app/Http/Controllers/Auth/VerificationController.php
+app/Http/Controllers/AuthController.php
+app/Http/Controllers/Controller.php
+app/Http/Controllers/DashboardController.php
+app/Http/Middleware/CheckSchoolStatus.php
+app/Http/Middleware/MustVerifyEmail.php
+app/Jobs/SetupSchoolDatabase.php
+check_user.php
+resources/views/dashboard.blade.php
+resources/views/schools/index.blade.php
+schools.txt
+storage/logs/laravel.log
+ M app/Http/Controllers/Auth/VerificationController.php
+ M app/Http/Controllers/AuthController.php
+ M app/Http/Controllers/Controller.php
+ M app/Http/Controllers/DashboardController.php
+ M app/Http/Middleware/CheckSchoolStatus.php
+ M app/Http/Middleware/MustVerifyEmail.php
+ M app/Jobs/SetupSchoolDatabase.php
+ M check_user.php
+ M resources/views/dashboard.blade.php
+ M resources/views/schools/index.blade.php
+ M schools.txt
+ M storage/logs/laravel.log
+?? check.sh
+?? check_logos.php
+?? check_root.php
+?? clear_opcache.php
+?? compiled.php
+?? deploy_v6.zip
+?? dev_null.txt
+?? disable_2fa.php
+?? e.txt
+?? err2.log
+?? error_snippet.txt
+?? framework_view.php
+?? getLastLog.php
+?? getLastLog.txt
+?? gitstatus.txt
+?? grab_log.sh
+?? laravel_error.log
+?? last500.txt
+?? last_errors.log
+?? lasterr.txt
+?? local_test3.html
+?? localc5.php
+?? login_blades.txt
+?? logos_out.json
+?? ls.php
+?? main_db_user.txt
+?? newlog.txt
+?? output.txt
+?? pub_dirs.txt
+?? read_last_error_v3.php
+?? restore_db.php
+?? school_users.txt
+?? server_index.blade.php
+?? set_school_id.php
+?? temp_compiled.php
+?? tenant_check.txt
+?? testGit.php
+?? testLogin.php
+?? testLogin.txt
+?? testLoginSchool.php
+?? testTeacherDashboard.php
+?? test_login.php
+?? test_login2.php
+?? test_login3.php
+?? test_login4.php
+?? test_login5.php
+?? test_login6.php
+?? test_login6_out.txt
+?? test_login7.php
+?? update_footer_logo.php
+?? update_logos.php
+?? update_logos2.php
+?? update_school_logos.php
+?? update_texts.php
+?? verify_email.php
+?? where_am_i.php

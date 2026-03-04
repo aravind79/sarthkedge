@@ -24,9 +24,9 @@ class MustVerifyEmail
             if (!$user->hasVerifiedEmail()) {
                 return redirect('/email/verify');
             } else {
-                $user = DB::connection('mysql')->table('users')->where('id',$user->id)->first();
-                if(is_null($user->email_verified_at)) {
-                    DB::connection('mysql')->table('users')->where('id',$user->id)->update(['email_verified_at' => Carbon::now()]);
+                $userCheck = DB::connection('mysql')->table('users')->where('email', $user->email)->first();
+                if ($userCheck && is_null($userCheck->email_verified_at)) {
+                    DB::connection('mysql')->table('users')->where('id', $user->id)->update(['email_verified_at' => Carbon::now()]);
                 }
             }
         }

@@ -174,7 +174,7 @@
                                     <div class="mr-4 text-right">
                                         <span class="text-muted small d-block">{{ __('Academic Year') }}</span>
                                         <span class="font-weight-bold text-dark" style="font-size: 1.1rem;">
-                                            {{ $sessionYear->where('default', 1)->first()->name ?? 'N/A' }}
+                                            {{ collect($sessionYears)->where('default', 1)->first()->name ?? 'N/A' }}
                                         </span>
                                     </div>
                                     <div class="text-right border-left pl-4">

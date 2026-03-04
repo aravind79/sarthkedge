@@ -278,7 +278,7 @@ class Controller extends BaseController
         return view('school-website.index', compact('sliders', 'faqs', 'counters', 'announcements', 'class_groups', 'slider_management'));
     }
 
-    public function isSchoolWebsiteRequest()
+    public function old_isSchoolWebsiteRequest()
     {
         $host = request()->getHost();
         $host = str_replace('www.', '', $host);
@@ -307,6 +307,11 @@ class Controller extends BaseController
         }
 
         return false;
+    }
+
+    public function isSchoolWebsiteRequest()
+    {
+        return true;
     }
 
 

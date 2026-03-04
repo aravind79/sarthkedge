@@ -1,0 +1,1 @@
+Error checking DB project: SQLSTATE[HY000] [1049] Unknown database 'project' (Connection: school, SQL: select * from `users` where `email` = saisuppu1@gmail.com limit 1)
