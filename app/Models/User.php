@@ -274,6 +274,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ExtraStudentData::class, 'user_id', 'id')->withTrashed();
     }
 
+    public function file()
+    {
+        return $this->morphMany(File::class, 'modal');
+    }
+
     public function selectedStudentSubjects()
     {
         $studentSubject = app(StudentSubjectInterface::class);

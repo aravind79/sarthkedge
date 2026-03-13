@@ -41,9 +41,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Str;
+use Illuminate\Support\Str;
 use Throwable;
 use App\Repositories\FormField\FormFieldsInterface;
 use App\Repositories\ContactInquiry\ContactInquiryInterface;
@@ -745,16 +746,23 @@ class Controller extends BaseController
 
             $school = School::on('mysql')->where('domain', $fullDomain)->orwhere('domain', $subdomain)->first();
 
+            if (!$school) {
+                return response()->json(['error' => true, 'message' => 'School not found.']);
+            }
+
             Config::set('database.connections.school.database', $school->database_name);
             DB::purge('school');
             DB::connection('school')->reconnect();
             DB::setDefaultConnection('school');
 
-            // $defaultSessionYear = SessionYear::where('school_id',$school->id)->where('default', 1)->first();
-            $sessionYear = $this->cache->getDefaultSessionYear($school->id);
+            // Get school ID from tenant database to avoid foreign key issues
+            $tenantSchoolId = DB::connection('school')->table('schools')->value('id') ?? $school->id;
+            \Log::info("Admission Registration - School ID: " . $school->id . " Tenant School ID: " . $tenantSchoolId . " Guardian Email: " . $request->guardian_email);
+
+            $sessionYear = $this->cache->getDefaultSessionYear($tenantSchoolId);
             $sessionYearId = $sessionYear->id;
-            $get_student = Students::where('school_id', $school->id)->latest('id')->withTrashed()->pluck('id')->first();
-            $admission_no = $sessionYear->name . '0' . $school->id . '0' . ($get_student + 1);
+            $get_student = Students::where('school_id', $tenantSchoolId)->latest('id')->withTrashed()->pluck('id')->first();
+            $admission_no = $sessionYear->name . '0' . $tenantSchoolId . '0' . ($get_student + 1);
 
             // Verify google captcha
             $schoolSettings = $this->cache->getSchoolSettings('*', $school->id);
@@ -789,7 +797,7 @@ class Controller extends BaseController
                 'last_name' => $request->guardian_last_name,
                 'mobile' => $request->guardian_mobile,
                 'gender' => $request->guardian_gender,
-                'school_id' => $school->id
+                'school_id' => $tenantSchoolId
             );
 
             //NOTE : This line will return the old values if the user is already exists
@@ -825,7 +833,7 @@ class Controller extends BaseController
                 'dob' => date('Y-m-d', strtotime($request->dob)),
                 'gender' => $request->gender,
                 'password' => Hash::make($password),
-                'school_id' => $school->id,
+                'school_id' => $tenantSchoolId,
                 'image' => $image,
                 'status' => 0,
                 'current_address' => $request->current_address,
@@ -844,8 +852,44 @@ class Controller extends BaseController
                 'class_id' => $request->class_id ?? null,
                 'application_type' => "online",
                 'application_status' => 0,
-                'school_id' => $school->id,
+                'school_id' => $tenantSchoolId,
             ]);
+
+            // Handle Student Documents
+            if ($request->hasFile('student_documents')) {
+                foreach ($request->file('student_documents') as $file) {
+                    $path = UploadService::upload($file, 'students');
+                    Log::info("Inserting Student File - School ID: " . $tenantSchoolId . " Path: " . $path);
+                    DB::connection('school')->table('files')->insert([
+                        'file_url' => $path,
+                        'file_name' => $file->getClientOriginalName(),
+                        'modal_id' => $user->id,
+                        'modal_type' => 'App\Models\User',
+                        'type' => 1,
+                        'school_id' => $tenantSchoolId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+
+            // Handle Guardian Documents
+            if ($request->hasFile('guardian_documents')) {
+                foreach ($request->file('guardian_documents') as $file) {
+                    $path = UploadService::upload($file, 'guardian');
+                    Log::info("Inserting Guardian File - School ID: " . $tenantSchoolId . " Path: " . $path);
+                    DB::connection('school')->table('files')->insert([
+                        'file_url' => $path,
+                        'file_name' => $file->getClientOriginalName(),
+                        'modal_id' => $parentUser->id,
+                        'modal_type' => 'App\Models\User',
+                        'type' => 1,
+                        'school_id' => $tenantSchoolId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
 
             $extraDetails = array();
             foreach ($request->extra_fields ?? [] as $fields) {
@@ -865,11 +909,16 @@ class Controller extends BaseController
             }
 
             DB::commit();
-            ResponseService::successResponse('Student Registered successfully');
+            ResponseService::successRedirectResponse(route('online-admission.index'), 'Student Registered successfully');
         } catch (Throwable $e) {
-            DB::rollBack();
-            ResponseService::logErrorResponse($e, "Student Controller -> Store method");
-            ResponseService::errorResponse();
+            if (Str::contains($e->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
+                DB::commit();
+                ResponseService::successRedirectResponse(route('online-admission.index'), "Student Registered successfully.");
+            } else {
+                DB::rollBack();
+                ResponseService::logErrorResponse($e, "Student Controller -> Store method");
+                ResponseService::errorResponse();
+            }
         }
     }
 

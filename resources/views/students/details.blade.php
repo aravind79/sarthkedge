@@ -311,6 +311,36 @@
 
                             
 
+                            </div>
+
+                            <hr>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary mb-3"><i class="fa fa-file-text-o"></i> {{ __('Documents') }}</h5>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>{{ __('Student Documents') }}</label>
+                                    <input type="file" name="student_documents[]" class="file-upload-default" multiple/>
+                                    <div class="input-group col-xs-12">
+                                        <input type="text" class="form-control file-upload-info" disabled placeholder="{{ __('Upload Student Docs') }}"/>
+                                        <span class="input-group-append">
+                                            <button class="file-upload-browse btn btn-theme" type="button">{{ __('upload') }}</button>
+                                        </span>
+                                    </div>
+                                    <div id="student_docs_list" class="mt-2"></div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>{{ __('Guardian Documents') }}</label>
+                                    <input type="file" name="guardian_documents[]" class="file-upload-default" multiple/>
+                                    <div class="input-group col-xs-12">
+                                        <input type="text" class="form-control file-upload-info" disabled placeholder="{{ __('Upload Guardian Docs') }}"/>
+                                        <span class="input-group-append">
+                                            <button class="file-upload-browse btn btn-theme" type="button">{{ __('upload') }}</button>
+                                        </span>
+                                    </div>
+                                    <div id="guardian_docs_list" class="mt-2"></div>
+                                </div>
+                            </div>
                             <hr>
                             {{-- Guardian Details --}}
                             <div class="row mt-5">

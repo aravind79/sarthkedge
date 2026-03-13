@@ -1,4 +1,4 @@
-﻿@extends('layouts.master')
+@extends('layouts.master')
 
 @section('title')
     {{ __('students') }}
@@ -298,6 +298,97 @@
         .adm-form-card {
             background: #ffffff;
             border-radius: 18px;
+            padding: 1.8rem;
+            border: 1px solid #e8edf5;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            margin-bottom: 1.5rem;
+        }
+
+        .adm-form-card h6 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        /* Upload Zones */
+        .adm-upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .adm-upload-zone:hover {
+            border-color: var(--nb-primary);
+            background: rgba(22, 47, 172, 0.05);
+            transform: scale(1.01);
+        }
+        .adm-upload-zone i {
+            font-size: 2.8rem;
+            color: var(--nb-primary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .adm-upload-zone p {
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 0.2rem;
+        }
+        
+        .adm-file-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 1rem;
+        }
+        .adm-file-preview-item {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.8rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .adm-file-preview-item i {
+            font-size: 1.8rem;
+            color: var(--nb-primary);
+            margin-bottom: 0.5rem;
+        }
+        .adm-file-preview-item p {
+            font-size: 0.75rem;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #475569;
+            font-weight: 500;
+        }
+        .adm-file-remove {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
             padding: 1.8rem;
             border: 1px solid #e8edf5;
             margin-bottom: 1.5rem;
@@ -718,7 +809,29 @@
                             <!-- Step 4: Documents -->
                             <div class="tab-pane fade" id="step-4">
                                 <div class="adm-form-card">
-                                    <h6>{{ __('Upload Documents') }}</h6>
+                                    <h6 class="mb-3"><i class="fa fa-graduation-cap text-primary mr-2"></i>{{ __('Academic Documents') }} <span class="text-danger">*</span></h6>
+                                    <div class="adm-upload-zone" id="academic-docs-zone" onclick="document.getElementById('student-docs-input').click()">
+                                        <i class="fa fa-cloud-upload"></i>
+                                        <p>{{ __('Drag & Drop or Click to upload files') }}</p>
+                                        <span class="text-muted small">{{ __('(Birth Certificate, Previous Marksheets, etc.)') }}</span>
+                                        <input type="file" name="student_documents[]" id="student-docs-input" multiple class="d-none" onchange="handleFileSelect(this, 'academic-preview')">
+                                    </div>
+                                    <div id="academic-preview" class="adm-file-preview-grid mt-3"></div>
+                                </div>
+
+                                <div class="adm-form-card">
+                                    <h6 class="mb-3"><i class="fa fa-users text-primary mr-2"></i>{{ __('Guardian Documents') }} <span class="text-danger">*</span></h6>
+                                    <div class="adm-upload-zone" id="guardian-docs-zone" onclick="document.getElementById('guardian-docs-input').click()">
+                                        <i class="fa fa-id-card-o"></i>
+                                        <p>{{ __('Drag & Drop or Click to upload files') }}</p>
+                                        <span class="text-muted small">{{ __('(Aadhar Card, Pan Card, etc.)') }}</span>
+                                        <input type="file" name="guardian_documents[]" id="guardian-docs-input" multiple class="d-none" onchange="handleFileSelect(this, 'guardian-preview')">
+                                    </div>
+                                    <div id="guardian-preview" class="adm-file-preview-grid mt-3"></div>
+                                </div>
+
+                                <div class="adm-form-card">
+                                    <h6>{{ __('Additional Fields') }}</h6>
                                     @php $fileFields = $extraFields->where('type', 'file'); @endphp
                                     @if(count($fileFields))
                                         <div class="row">
@@ -734,7 +847,7 @@
                                     @else
                                         <div class="text-center py-4">
                                             <i class="fa fa-file-text-o mb-3" style="font-size: 3rem; color: #cbd5e1;"></i>
-                                            <p class="text-muted">{{ __('No document fields defined or required.') }}</p>
+                                            <p class="text-muted">{{ __('No additional specific document fields required.') }}</p>
                                         </div>
                                     @endif
                                 </div>
@@ -784,6 +897,33 @@
                     }).find('i, span').hide();
                 };
                 reader.readAsDataURL(input.files[0]);
+            }
+        };
+
+        window.handleFileSelect = function(input, previewId) {
+            const files = input.files;
+            const previewContainer = document.getElementById(previewId);
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const item = document.createElement('div');
+                    item.className = 'adm-file-preview-item';
+                    
+                    let icon = 'fa-file-o';
+                    if (file.type.includes('image')) icon = 'fa-file-image-o';
+                    if (file.type.includes('pdf')) icon = 'fa-file-pdf-o';
+                    
+                    item.innerHTML = `
+                        <div class="adm-file-remove" onclick="this.parentElement.remove()"><i class="fa fa-times"></i></div>
+                        <i class="fa ${icon}"></i>
+                        <p title="${file.name}">${file.name}</p>
+                    `;
+                    previewContainer.appendChild(item);
+                };
+                reader.readAsDataURL(file);
             }
         };
 
@@ -897,8 +1037,60 @@
 
             // Fix for select2 inside modal
             $('#admissionModal').on('shown.bs.modal', function () {
-                $('.select2').select2({
-                    dropdownParent: $('#admissionModal')
+                $('.select2').each(function() {
+                    let $this = $(this);
+                    
+                    if ($this.hasClass('guardian-search')) {
+                        $this.select2({
+                            dropdownParent: $('#admissionModal'),
+                            tags: true, // Allow typing new email
+                            placeholder: "Search or Enter Guardian Email",
+                            minimumInputLength: 2,
+                            ajax: {
+                                url: baseUrl + '/guardian/search',
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                    return {
+                                        email: params.term // Controller expects 'email' param
+                                    };
+                                },
+                                processResults: function (response) {
+                                    return {
+                                        results: $.map(response.data, function (item) {
+                                            return {
+                                                text: item.email,
+                                                id: item.email,
+                                                first_name: item.first_name,
+                                                last_name: item.last_name,
+                                                mobile: item.mobile,
+                                                gender: item.gender,
+                                                image: item.image
+                                            }
+                                        })
+                                    };
+                                },
+                                cache: true
+                            },
+                        }).on('select2:select', function (e) {
+                            var data = e.params.data;
+                            // If it's a found result (has first_name), auto-fill
+                            if (data.first_name) {
+                                $('#guardian_first_name').val(data.first_name);
+                                $('#guardian_last_name').val(data.last_name);
+                                $('#guardian_mobile').val(data.mobile);
+                                $('#guardian_gender').val(data.gender);
+                                $('#guardian_email_hidden').val(data.id);
+                            } else {
+                                // It's a new tag (new email)
+                                $('#guardian_email_hidden').val(data.id);
+                            }
+                        });
+                    } else {
+                        $this.select2({
+                            dropdownParent: $('#admissionModal')
+                        });
+                    }
                 });
             });
         });

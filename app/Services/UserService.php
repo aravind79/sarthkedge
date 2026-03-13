@@ -10,6 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -180,6 +181,35 @@ class UserService
             $this->extraFormFields->createBulk($extraDetails);
         }
 
+        // Handle Student Documents
+        if (request()->hasFile('student_documents')) {
+            foreach (request()->file('student_documents') as $file) {
+                $path = $file->store('students', 'public');
+                $user->file()->create([
+                    'file_url' => $path,
+                    'file_name' => $file->getClientOriginalName(),
+                    'type' => 1,
+                    'school_id' => $user->school_id,
+                ]);
+            }
+        }
+
+        // Handle Guardian Documents
+        if ($guardianID) {
+            $guardianUser = $this->user->findById($guardianID);
+            if ($guardianUser && request()->hasFile('guardian_documents')) {
+                foreach (request()->file('guardian_documents') as $file) {
+                    $path = $file->store('guardians', 'public');
+                    $guardianUser->file()->create([
+                        'file_url' => $path,
+                        'file_name' => $file->getClientOriginalName(),
+                        'type' => 1,
+                        'school_id' => $guardianUser->school_id,
+                    ]);
+                }
+            }
+        }
+
         $guardian = $this->user->guardian()->where('id', $guardianID)->firstOrFail();
         if (is_object($guardian)) {
             $guardian = (object) $guardian->toArray();
@@ -271,6 +301,35 @@ class UserService
             }
         }
         $this->extraFormFields->upsert($extraDetails, ['id'], ['data']);
+
+        // Handle Student Documents (Updates)
+        if (request()->hasFile('student_documents')) {
+            foreach (request()->file('student_documents') as $file) {
+                $path = $file->store('students', 'public');
+                $user->file()->create([
+                    'file_url' => $path,
+                    'file_name' => $file->getClientOriginalName(),
+                    'type' => 1,
+                    'school_id' => $user->school_id,
+                ]);
+            }
+        }
+
+        // Handle Guardian Documents (Updates)
+        if ($guardianID) {
+            $guardianUser = $this->user->findById($guardianID);
+            if ($guardianUser && request()->hasFile('guardian_documents')) {
+                foreach (request()->file('guardian_documents') as $file) {
+                    $path = $file->store('guardians', 'public');
+                    $guardianUser->file()->create([
+                        'file_url' => $path,
+                        'file_name' => $file->getClientOriginalName(),
+                        'type' => 1,
+                        'school_id' => $guardianUser->school_id,
+                    ]);
+                }
+            }
+        }
         $user->assignRole('Student');
         DB::commit();
         return $user;
@@ -304,13 +363,9 @@ class UserService
                 $message->to($data['email'])->subject($data['subject']);
             });
         } catch (\Throwable $th) {
-            if (Str::contains($th->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
-                ResponseService::warningResponse("Data stored successfully. But Email not sent.");
-            } else {
-                ResponseService::errorResponse(trans('error_occured'));
-            }
+            Log::error("Registration Email Failed: " . $th->getMessage() . " File: " . $th->getFile() . " Line: " . $th->getLine());
+            throw $th;
         }
-
     }
 
     private function replacePlaceholders($guardian, $child, $childAdmissionNumber, $childPlainTextPassword)
@@ -367,11 +422,8 @@ class UserService
                 $message->to($data['email'])->subject($data['subject']);
             });
         } catch (\Throwable $th) {
-            if (Str::contains($th->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
-                ResponseService::warningResponse("Data stored successfully. But Email not sent.");
-            } else {
-                ResponseService::errorResponse(trans('error_occured'));
-            }
+            Log::error("Staff Registration Email Failed: " . $th->getMessage() . " File: " . $th->getFile() . " Line: " . $th->getLine());
+            throw $th;
         }
     }
 
@@ -425,11 +477,8 @@ class UserService
                 $message->to($data['email'])->subject($data['subject']);
             });
         } catch (\Throwable $th) {
-            if (Str::contains($th->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
-                ResponseService::warningResponse("Data stored successfully. But Email not sent.");
-            } else {
-                ResponseService::errorResponse(trans('error_occured'));
-            }
+            Log::error("Application Reject Email Failed: " . $th->getMessage() . " File: " . $th->getFile() . " Line: " . $th->getLine());
+            throw $th;
         }
     }
 

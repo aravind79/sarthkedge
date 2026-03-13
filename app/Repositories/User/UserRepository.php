@@ -30,7 +30,7 @@ class UserRepository extends SaaSRepository implements UserInterface {
     }
 
     public function guardian() {
-        return $this->model->role('Guardian');
+        return $this->defaultModel()->role('Guardian');
     }
 
 }

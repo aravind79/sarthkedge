@@ -173,23 +173,15 @@ class StudentController extends Controller
             $userService = app(UserService::class);
             $sessionYear = $this->sessionYear->findById($request->session_year_id);
             $guardian = $userService->createOrUpdateParent($request->guardian_first_name, $request->guardian_last_name, $request->guardian_email, $request->guardian_mobile, $request->guardian_gender, $request->guardian_image);
-            $is_send_notification = true;
+            $is_send_notification = false;
             $userService->createStudentUser($request->first_name, $request->last_name, $request->admission_no, $request->mobile, $request->dob, $request->gender, $request->image, $request->class_section_id, $request->admission_date, $request->current_address, $request->permanent_address, $sessionYear->id, $guardian->id, $request->extra_fields ?? [], $request->status ?? 0, $is_send_notification);
 
             DB::commit();
-            ResponseService::successResponse('Data Stored Successfully');
+            ResponseService::successRedirectResponse(route('students.index'), 'Data Stored Successfully');
         } catch (Throwable $e) {
-            // IF Exception is TypeError and message contains Mail keywords then email is not sent successfully
-            if (
-                $e instanceof TypeError && Str::contains($e->getMessage(), [
-                    'Failed',
-                    'Mail',
-                    'Mailer',
-                    'MailManager'
-                ])
-            ) {
+            if (Str::contains($e->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
                 DB::commit();
-                ResponseService::warningResponse("Student Registered successfully. But Email not sent.");
+                ResponseService::warningRedirectResponse(route('students.index'), "Student Registered successfully.");
             } else {
                 DB::rollBack();
                 ResponseService::logErrorResponse($e, "Student Controller -> Store method");
@@ -269,7 +261,7 @@ class StudentController extends Controller
             ->orwhere(function ($query) {
                 $query->where('application_status', 1); // Only online applications with status 1
             })
-            ->with('user.extra_student_details.form_field', 'guardian', 'class_section.class.stream', 'class_section.section', 'class_section.class.shift', 'class_section.medium')
+            ->with('user.extra_student_details.form_field', 'user.file', 'guardian.file', 'guardian', 'class_section.class.stream', 'class_section.section', 'class_section.class.shift', 'class_section.medium')
             ->where(function ($query) use ($search) {
                 $query->when($search, function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
@@ -1050,6 +1042,20 @@ class StudentController extends Controller
             $tempRow['eng_guardian_gender'] = $guardian_gender;
             $tempRow['extra_fields'] = $row->user->extra_student_details;
             $tempRow['application_status'] = $row->application_status;
+            
+            // Add Student Documents
+            $tempRow['student_files'] = $row->user->file->map(function($f) {
+                return ['id' => $f->id, 'name' => basename($f->file_url), 'url' => $f->file_url];
+            });
+            
+            // Add Guardian Documents
+            if ($row->guardian) {
+               $tempRow['guardian_files'] = $row->guardian->file->map(function($f) {
+                   return ['id' => $f->id, 'name' => basename($f->file_url), 'url' => $f->file_url];
+               });
+            } else {
+                $tempRow['guardian_files'] = [];
+            }
             foreach ($row->user->extra_student_details as $key => $field) {
                 $data = '';
                 if ($field->form_field->type == 'checkbox') {
@@ -1102,14 +1108,14 @@ class StudentController extends Controller
                     $this->student->builder()->where('user_id', $userId)->withTrashed()->update(['application_status' => 1, 'class_section_id' => $request->class_section_id]);
                     $password = str_replace('-', '', date('d-m-Y', strtotime($user->dob)));
                     $guardian = $this->user->guardian()->where('id', $student->guardian_id)->firstOrFail();
-                    $userService->sendRegistrationEmail($guardian, $user, $student->admission_no, $password);
+                    // $userService->sendRegistrationEmail($guardian, $user, $student->admission_no, $password);
                 } else {
                     $this->student->builder()->where('user_id', $userId)->withTrashed()->update(['application_status' => 0, 'class_section_id' => $request->class_section_id]);
                     $guardian = $this->user->guardian()->where('id', $student->guardian_id)->firstOrFail();
                     $class = $this->classSchool->builder()->where('id', $student->class_id)->with('medium', 'stream')->first();
                     $class_name = $class->full_name;
 
-                    $userService->sendApplicationRejectEmail($user, $class_name, $guardian);
+                    // $userService->sendApplicationRejectEmail($user, $class_name, $guardian);
 
                 }
             }
@@ -1153,11 +1159,11 @@ class StudentController extends Controller
                 $this->student->builder()->where('user_id', $request->edit_user_id)->withTrashed()->update(['application_status' => 1, 'class_section_id' => $request->class_section_id]);
                 $password = str_replace('-', '', date('d-m-Y', strtotime($user->dob)));
                 $guardian = $this->user->guardian()->where('id', $student->guardian_id)->firstOrFail();
-                $userService->sendRegistrationEmail($guardian, $user, $student->admission_no, $password);
+                // $userService->sendRegistrationEmail($guardian, $user, $student->admission_no, $password);
             } else {
                 $this->student->builder()->where('user_id', $request->edit_user_id)->withTrashed()->update(['application_status' => 0]);
                 $guardian = $this->user->guardian()->where('id', $student->guardian_id)->firstOrFail();
-                $userService->sendApplicationRejectEmail($user, $student, $guardian);
+                // $userService->sendApplicationRejectEmail($user, $student, $guardian);
 
             }
 

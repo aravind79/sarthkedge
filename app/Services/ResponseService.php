@@ -199,6 +199,12 @@ class ResponseService {
         exit();
     }
 
+    public static function warningRedirectResponse($url = null, string $message = 'Error Occurred') {
+        return (($url != null) ? redirect($url) : redirect()->back())->with([
+            'warning' => trans($message)
+        ])->send();
+    }
+
 
     /**
      * @param string $message

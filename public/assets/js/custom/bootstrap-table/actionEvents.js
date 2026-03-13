@@ -440,6 +440,29 @@ window.studentEvents = {
                 $('#edit-guardian-female').prop('checked', true);
             }
         }, 500);
+
+        // Populate Documents
+        $('#student_docs_list').html('');
+        if (row.student_files && row.student_files.length) {
+            row.student_files.forEach(file => {
+                $('#student_docs_list').append(`
+                    <div class="d-flex align-items-center mb-1">
+                        <a href="${file.url}" target="_blank" class="mr-2 btn btn-xs btn-outline-primary"><i class="fa fa-download"></i> ${file.name}</a>
+                    </div>
+                `);
+            });
+        }
+
+        $('#guardian_docs_list').html('');
+        if (row.guardian_files && row.guardian_files.length) {
+            row.guardian_files.forEach(file => {
+                $('#guardian_docs_list').append(`
+                    <div class="d-flex align-items-center mb-1">
+                        <a href="${file.url}" target="_blank" class="mr-2 btn btn-xs btn-outline-primary"><i class="fa fa-download"></i> ${file.name}</a>
+                    </div>
+                `);
+            });
+        }
     }, 'click .deactivate-student': function (e) {
         e.preventDefault();
         showDeletePopupModal($(e.currentTarget).attr('href'), {
