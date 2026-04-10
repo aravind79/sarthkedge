@@ -155,6 +155,11 @@
                     <i class="fa fa-home"></i>
                 </span> {{ __('dashboard') }}
             </h3>
+            @if ($user->hasRole('Super Admin'))
+                <button class="btn btn-theme px-4 py-2" style="border-radius: 10px;">
+                    <i class="fa fa-file-pdf mr-2"></i> {{ __('Generate Report') }}
+                </button>
+            @endif
         </div>
         {{-- School Dashboard --}}
         {{-- School Dashboard --}}
@@ -526,247 +531,315 @@
         @endif
 
         @if($user->hasRole('Super Admin') || ($user->school_id == null && $user->hasRole('Admin')))
+            {{-- Welcome Bar --}}
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h3 class="font-weight-bold mb-1" style="color: #1a202c;">{{ __('Welcome back') }}!</h3>
+                            <p class="text-muted mb-0">{{ __('Here\'s what\'s happening with SarthakEdge today.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Super Admin Stat Cards --}}
             <div class="row">
-
-                <div class="col-md-3 stretch-card grid-margin">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <div class="d-flex flex-row flex-wrap">
-                                <div class="ms-3">
-                                    {{ __('total_schools') }}
-                                    <p class="text-muted">
-                                    <h3>{{ $super_admin['total_school'] }}</h3>
+                <div class="col-md-2 mb-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted small mb-1">{{ __('Total Schools') }}</p>
+                                    <h3 class="font-weight-bold mb-0 text-dark">{{ $super_admin['total_school'] }}</h3>
+                                    <p class="mb-0 text-muted small mt-1">
+                                        {{ __('Total integrated') }}
                                     </p>
-                                    <p class="mt-2 text-success font-weight-bold"> </p>
                                 </div>
-                                <img class="ml-auto" src="{{ url('images/total-schools.svg') }}" alt="">
+                                <div class="stat-icon bg-soft-primary" style="width: 36px; height: 36px; font-size: 1rem;">
+                                    <i class="fa fa-university"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3 stretch-card grid-margin">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <div class="d-flex flex-row flex-wrap">
-                                <div class="ms-3">
-                                    {{ __('active_schools') }}
-                                    <p class="text-muted">
-                                    <h3>{{ $super_admin['active_schools'] }}</h3>
+                <div class="col-md-2 mb-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted small mb-1">{{ __('Active Schools') }}</p>
+                                    <h3 class="font-weight-bold mb-0 text-dark">{{ $super_admin['active_schools'] }}</h3>
+                                    <p class="mb-0 text-muted small mt-1">
+                                        {{ round(($super_admin['active_schools'] / max(1, $super_admin['total_school'])) * 100) }}% rate
                                     </p>
-                                    <p class="mt-2 text-success font-weight-bold"> </p>
                                 </div>
-                                <img class="ml-auto" src="{{ url('images/active-schools.svg') }}" alt="">
+                                <div class="stat-icon bg-soft-success" style="width: 36px; height: 36px; font-size: 1rem;">
+                                    <i class="fa fa-check-circle"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3 stretch-card grid-margin">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <div class="d-flex flex-row flex-wrap">
-                                <div class="ms-3">
-                                    {{ __('inactive_schools') }}
-                                    <p class="text-muted">
-                                    <h3>{{ $super_admin['inactive_schools'] }}</h3>
-                                    </p>
-                                    <p class="mt-2 text-success font-weight-bold"> </p>
+                <div class="col-md-2 mb-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted small mb-1">{{ __('Inactive Schools') }}</p>
+                                    <h3 class="font-weight-bold mb-0 text-dark">{{ $super_admin['inactive_schools'] }}</h3>
+                                    <p class="mb-0 text-danger small mt-1">Need attention</p>
                                 </div>
-                                <img class="ml-auto" src="{{ url('images/inactive-schools.svg') }}" alt="">
+                                <div class="stat-icon bg-soft-danger" style="width: 36px; height: 36px; font-size: 1rem;">
+                                    <i class="fa fa-clock"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3 stretch-card grid-margin">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <div class="d-flex flex-row flex-wrap">
-                                <div class="ms-3">
-                                    {{ __('total_packages') }}
-                                    <p class="text-muted">
-                                    <h3>{{ $super_admin['total_packages'] }}</h3>
-                                    </p>
-                                    <p class="mt-2 text-success font-weight-bold"> </p>
+                <div class="col-md-2 mb-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted small mb-1">{{ __('Total Packages') }}</p>
+                                    <h3 class="font-weight-bold mb-0 text-dark">{{ $super_admin['total_packages'] }}</h3>
                                 </div>
-                                <img class="ml-auto" src="{{ url('images/package.svg') }}" alt="">
+                                <div class="stat-icon bg-soft-warning" style="width: 36px; height: 36px; font-size: 1rem;">
+                                    <i class="fa fa-box"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted small mb-1">{{ __('Total Revenue') }}</p>
+                                    <h3 class="font-weight-bold mb-0 text-dark">₹{{ number_format($super_admin['total_revenue'] / 100, 0) }}</h3>
+                                    <p class="mb-0 text-muted small mt-1">
+                                        {{ __('Gross Revenue') }}
+                                    </p>
+                                </div>
+                                <div class="stat-icon bg-soft-info" style="width: 36px; height: 36px; font-size: 1rem;">
+                                    <i class="fa fa-rupee-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted small mb-1">{{ __('MRR') }}</p>
+                                    <h3 class="font-weight-bold mb-0 text-dark">₹{{ number_format($super_admin['mrr'] / 100, 0) }}</h3>
+                                    <p class="mb-0 {{ $super_admin['revenue_growth'] >= 0 ? 'text-success' : 'text-danger' }} small mt-1">
+                                        <i class="fa fa-arrow-{{ $super_admin['revenue_growth'] >= 0 ? 'up' : 'down' }} mr-1"></i> {{ abs(number_format($super_admin['revenue_growth'], 1)) }}%
+                                    </p>
+                                </div>
+                                <div class="stat-icon bg-soft-primary" style="width: 36px; height: 36px; font-size: 1rem;">
+                                    <i class="fa fa-chart-line"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- Charts Row 1 --}}
+            <div class="row mb-4">
+                <div class="col-md-6 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="font-weight-bold mb-4 text-dark">{{ __('Subscription Growth') }}</h5>
+                            <div style="height: 300px;">
+                                <canvas id="subscriptionGrowthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="font-weight-bold mb-4 text-dark">{{ __('Revenue Trend') }}</h5>
+                            <div style="height: 300px;">
+                                <canvas id="revenueTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Quick Stats & Alrets Row --}}
+            <div class="row mb-4">
+                <div class="col-md-4 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="font-weight-bold mb-4 text-dark">{{ __('Revenue Distribution') }}</h5>
+                            <div style="height: 250px;">
+                                <canvas id="revenueDistributionChart"></canvas>
+                            </div>
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small"><i class="fa fa-circle text-primary mr-1"></i> Subscriptions</span>
+                                    <span class="font-weight-bold small">₹{{ number_format($super_admin['charts']['revenue_distribution']['Subscriptions'] / 100) }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small"><i class="fa fa-circle text-info mr-1"></i> Add-ons</span>
+                                    <span class="font-weight-bold small">₹{{ number_format($super_admin['charts']['revenue_distribution']['Add-ons'] / 100) }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small"><i class="fa fa-circle text-warning mr-1"></i> AI Revenue</span>
+                                    <span class="font-weight-bold small">₹{{ number_format($super_admin['charts']['revenue_distribution']['AI Revenue'] / 100) }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted small"><i class="fa fa-circle text-secondary mr-1"></i> Marketplace</span>
+                                    <span class="font-weight-bold small">₹{{ number_format($super_admin['charts']['revenue_distribution']['Marketplace'] / 100) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 mb-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="font-weight-bold mb-0 text-dark"><i class="fa fa-exclamation-triangle mr-2"></i> {{ __('Smart Alerts') }}</h5>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">{{ __('View All') }}</a>
+                            </div>
+                            
+                            <div class="alert-list">
+                                @php $alert_count = 0; @endphp
+                                @foreach ($server_configuration as $key => $value)
+                                    @if (($settings[$key] ?? 0) == 0)
+                                        @php $alert_count++; @endphp
+                                        <div class="activity-item d-flex align-items-center py-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                            <div class="badge badge-soft-danger mr-3" style="width: 70px;">Critical</div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1 font-weight-bold text-dark">{{ $value['title'] }}</h6>
+                                                <p class="text-muted small mb-0">{{ $value['description'] ?? '' }}</p>
+                                            </div>
+                                            <a href="{{ $value['link'] }}" target="_blank" class="btn btn-sm btn-link text-primary">{{ __('Setup') }}</a>
+                                        </div>
+                                    @endif
+                                @endforeach
+
+                                @if($alert_count == 0)
+                                    <div class="text-center py-4">
+                                        <i class="fa fa-check-circle text-success mb-2" style="font-size: 2rem;"></i>
+                                        <p class="text-muted mb-0">{{ __('All systems optimal') }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Quick Stats Small --}}
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card dashboard-card" style="background: #f0f4ff;">
+                        <div class="card-body py-3 d-flex align-items-center">
+                            <div class="stat-icon mr-3" style="background: #c3d4ff; color: #4361ee;">
+                                <i class="fa fa-bolt"></i>
+                            </div>
+                            <div>
+                                <p class="text-muted small mb-0">AI Queries Today</p>
+                                <h4 class="font-weight-bold mb-0 text-dark">{{ number_format($super_admin['ai_queries']) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card" style="background: #f0fff4;">
+                        <div class="card-body py-3 d-flex align-items-center">
+                            <div class="stat-icon mr-3" style="background: #c6f6d5; color: #38a169;">
+                                <i class="fa fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <p class="text-muted small mb-0">Payments Today</p>
+                                <h4 class="font-weight-bold mb-0 text-dark">₹{{ number_format($super_admin['payments_today'] / 100, 0) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card" style="background: #ebf8ff;">
+                        <div class="card-body py-3 d-flex align-items-center">
+                            <div class="stat-icon mr-3" style="background: #bee3f8; color: #3182ce;">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="text-muted small mb-0">Active Users</p>
+                                <h4 class="font-weight-bold mb-0 text-dark">{{ number_format($super_admin['active_users']) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card" style="background: #faf5ff;">
+                        <div class="card-body py-3 d-flex align-items-center">
+                            <div class="stat-icon mr-3" style="background: #e9d8fd; color: #805ad5;">
+                                <i class="fa fa-signal"></i>
+                            </div>
+                            <div>
+                                <p class="text-muted small mb-0">Uptime</p>
+                                <h4 class="font-weight-bold mb-0 text-dark">{{ $super_admin['uptime'] }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Existing Super Admin Tables (Simplified) --}}
             <div class="row">
-
-
-                @if (($settings['database_root_user'] ?? 0) == 0 || ($settings['laravel_queue_setup'] ?? 0) == 0 || ($settings['wildcard_domain'] ?? 0) == 0 || ($settings['web_socket_setup'] ?? 0) == 0 || ($settings['notification_settings'] ?? 0) == 0)
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title text-dark"><i class="fa fa-info-circle" aria-hidden="true"></i>
-                                    {{ __('server_configuration') }} - <span
-                                        class="">{{ __('required_for_full_system_functionality') }}</span></h4>
-                                <div class="list-wrapper">
-                                    <ul class="d-flex flex-column todo-list todo-list-custom">
-                                        @foreach ($server_configuration as $key => $value)
-                                            @if (($settings[$key] ?? 0) == 0)
-                                                <li class="{{ $loop->index == 0 ? 'border-bottom' : '' }}">
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input class="checkbox server-configuration-checkbox" id="{{ $key }}" value="1"
-                                                                type="checkbox"> {{ $value['title'] }} <i class="input-helper"></i>
-                                                            <a href="{{ $value['link'] }}" target="_blank" class="">
-                                                                {{ __('view_setup') }}
-                                                            </a>
-                                                        </label>
-                                                        <p class="text-muted text-wrap">{{ $value['description'] ?? '' }}</p>
+                <div class="col-md-7 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <div class="card-header-flex">
+                                <h5 class="font-weight-bold mb-0 text-dark">{{ __('Recent Schools') }}</h5>
+                                <a href="{{ route('schools.index') }}" class="small text-primary font-weight-bold">{{ __('View All') }}</a>
+                            </div>
+                            <div class="table-responsive mt-3">
+                                <table class="table custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ __('School') }}</th>
+                                            <th>{{ __('Admin') }}</th>
+                                            <th class="text-center">{{ __('Status') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($schools->take(4) as $school)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="{{ $school->logo }}" onerror="onErrorImage(event)" class="rounded-circle mr-2" style="width: 30px; height: 30px;" alt="">
+                                                        <span>{{ $school->name }}</span>
                                                     </div>
-                                                </li>
-                                            @endif
+                                                </td>
+                                                <td>{{ $school?->user?->full_name }}</td>
+                                                <td class="text-center">
+                                                    <span class="badge badge-soft-{{ $school->status ? 'success' : 'danger' }}">{{ $school->status ? 'Active' : 'Inactive' }}</span>
+                                                </td>
+                                            </tr>
                                         @endforeach
-                                    </ul>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                @endif
-
-
-                <div class="col-md-7 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <h4 class="card-title">
-                                        {{ __('transaction') }}
-                                    </h4>
-                                </div>
-                                <div class="col-md-3">
-                                    <select name="year" class="form-control form-control-sm year-filter">
-                                        @for ($i = date('Y'); $i >= $start_year; $i--)
-                                            <option value="{{ $i }}" {{ $i == date('Y') ? 'selected' : '' }}>{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div id="subscriptionTransactionChart">
-
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
-
-                <div class="col-md-5 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <h4 class="card-title">
-                                {{ __('schools') }}
-                            </h4>
-                            @if ($schools->isNotEmpty())
-                                <div class="v-scroll">
-                                    <table class="table custom-table">
-                                        <thead>
-                                            <th></th>
-                                            <th>{{ __('school') }}</th>
-                                            <th class="text-right">{{ __('admin') }}</th>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($schools as $school)
-                                                <tr>
-                                                    <td>
-                                                        <img src="{{ $school->logo }}" onerror="onErrorImage(event)" class="me-2"
-                                                            alt="image">
-                                                    </td>
-                                                    <td>{{ $school->name }}</td>
-                                                    <td class="text-right">{{ $school?->user?->full_name }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <div class="v-scroll text-center" style="padding-top: 50%;">
-                                    <span>{{ __('no_school_added') }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <h4 class="card-title">
-                                {{ __('subscription') }} {{ __('details') }}
-                            </h4>
-                            @if (collect($package_graph)->filter()->isNotEmpty())
-                                <div id="packageChart"> </div>
-                            @else
-                                <div class="text-center" style="padding-top: 40%;">
-                                    <span>{{ __('no_subscription_details_available') }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <h4 class="card-title">
-                                {{ __('staff') }} {{ __('details') }}
-                            </h4>
-                            @if ($staffs->isNotEmpty())
-                                <div class="v-scroll">
-                                    <table class="table custom-table">
-                                        @hasNotFeature('Staff Management')
-                                        <thead>
-                                            <th></th>
-                                            <th>{{ __('name') }}</th>
-                                            <th>{{ __('role') }}</th>
-                                            <th class="text-right">{{ __('assign_schools') }}</th>
-                                        </thead>
-                                        {{-- @endHasNotFeature
-                                        @hasFeature('Staff Management') --}}
-                                        <tbody>
-                                            @foreach ($staffs as $staff)
-                                                <tr>
-                                                    <td>
-                                                        <img src="{{ $staff->image }}" onerror="onErrorImage(event)" class="me-2"
-                                                            alt="image">
-                                                    </td>
-                                                    <td>{{ $staff->full_name }}</td>
-                                                    <td>{{ $staff->roles->first()->name ?? '' }}</td>
-                                                    <td>{{ $staff->school_names }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                        @endHasNotFeature
-                                    </table>
-                                </div>
-                            @else
-                                <div class="v-scroll text-center" style="padding-top: 40%;">
-                                    <span>{{ __('no_staff_details_available') }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body custom-card-body">
-                            <h4 class="card-title">
-                                {{ __('addon') }}
-                            </h4>
-                            <div id="addonChart"> </div>
+                <div class="col-md-5 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                           <h5 class="font-weight-bold mb-4 text-dark">{{ __('Subscription Details') }}</h5>
+                           <div id="packageChartSmall" style="height: 250px;"></div>
                         </div>
                     </div>
                 </div>
@@ -848,13 +921,97 @@
 
 
 
+    @if (!$user->school_id && $user->hasRole('Super Admin'))
+        <script>
+            $(document).ready(function () {
+                // Subscription Growth Chart
+                var subCtx = document.getElementById('subscriptionGrowthChart').getContext('2d');
+                new Chart(subCtx, {
+                    type: 'line',
+                    data: {
+                        labels: {!! json_encode(array_column($super_admin['charts']['subscription_growth'], 'month')) !!},
+                        datasets: [{
+                            label: "{{ __('Active Subscriptions') }}",
+                            data: {!! json_encode(array_column($super_admin['charts']['subscription_growth'], 'count')) !!},
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                    }
+                });
+
+                // Revenue Trend Chart
+                var revCtx = document.getElementById('revenueTrendChart').getContext('2d');
+                new Chart(revCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode(array_column($super_admin['charts']['revenue_trend'], 'month')) !!},
+                        datasets: [{
+                            label: "{{ __('Revenue (₹)') }}",
+                            data: {!! json_encode(array_map(function($v) { return $v/100; }, array_column($super_admin['charts']['revenue_trend'], 'amount'))) !!},
+                            backgroundColor: '#4361ee',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                    }
+                });
+
+                // Revenue Distribution Chart
+                var distCtx = document.getElementById('revenueDistributionChart').getContext('2d');
+                new Chart(distCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["Subscriptions", "Add-ons", "AI Revenue", "Marketplace"],
+                        datasets: [{
+                            data: [
+                                {{ $super_admin['charts']['revenue_distribution']['Subscriptions'] / 100 }},
+                                {{ $super_admin['charts']['revenue_distribution']['Add-ons'] / 100 }},
+                                {{ $super_admin['charts']['revenue_distribution']['AI Revenue'] / 100 }},
+                                {{ $super_admin['charts']['revenue_distribution']['Marketplace'] / 100 }}
+                            ],
+                            backgroundColor: ['#4361ee', '#4cc9f0', '#7209b7', '#f72585'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            });
+        </script>
+    @endif
+
     @if (!$user->school_id)
         <script>
             window.onload = setTimeout(() => {
                 $('.year-filter').trigger('change');
 
-                addon_graph(<?php    echo json_encode($addon_graph[0]); ?>, <?php    echo json_encode($addon_graph[1]); ?>);
-                package_graph(<?php    echo json_encode($package_graph[0]); ?>, <?php    echo json_encode($package_graph[1]); ?>);
+                if (typeof addon_graph === "function") {
+                    addon_graph(<?php    echo json_encode($addon_graph[0]); ?>, <?php    echo json_encode($addon_graph[1]); ?>);
+                }
+                
+                if (document.getElementById('packageChartSmall')) {
+                   // Render package chart in our small container too
+                   package_graph(<?php    echo json_encode($package_graph[0]); ?>, <?php    echo json_encode($package_graph[1]); ?>, 'packageChartSmall');
+                } else {
+                   package_graph(<?php    echo json_encode($package_graph[0]); ?>, <?php    echo json_encode($package_graph[1]); ?>);
+                }
             }, 500);
         </script>
     @endif

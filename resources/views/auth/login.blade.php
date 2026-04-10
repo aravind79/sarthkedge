@@ -76,34 +76,10 @@
 
             <div class="z-index-1 text-center position-relative p-5" style="max-width: 550px;">
                 <div class="d-flex align-items-center justify-content-center mb-5">
-                    @if ($schoolSettings['horizontal_logo'] ?? '')
-                        <img class="img-fluid" style="max-height: 60px;"
-                            src="{{ $schoolSettings['horizontal_logo'] ?? '' }}" alt="logo">
-                    @elseif($systemSettings['login_page_logo'] ?? $systemSettings['horizontal_logo'] ?? '')
-                        <img class="img-fluid" style="max-height: 60px;"
-                            src="{{ $systemSettings['login_page_logo'] ?? $systemSettings['horizontal_logo'] ?? '' }}"
-                            alt="logo">
-                    @else
-                        <!-- Logo mockup matching image -->
-                        <div class="d-flex align-items-center text-start">
-                            <div class="d-flex align-items-center justify-content-center"
-                                style="width: 56px; height: 56px; background-color: rgba(255,255,255,0.15); border-radius: 12px; margin-right: 15px;">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M12 3L1 9L12 15L21 10.09V17H23V9L12 3ZM12 12.8L4.34 8.6L12 4.4L19.66 8.6L12 12.8Z"
-                                        fill="white" />
-                                    <path
-                                        d="M4 11.45V16.89C4 16.89 7.5 20.2 12 20.2C16.5 20.2 20 16.89 20 16.89V11.45L12 15.82L4 11.45Z"
-                                        fill="white" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h1 class="mb-0 fw-bold" style="font-size: 32px; letter-spacing: -0.5px;">SarthakEdge</h1>
-                                <p class="mb-0" style="color: rgba(255,255,255,0.7); font-size: 15px;">Your Digital Edge</p>
-                            </div>
-                        </div>
-                    @endif
+                    <a href="{{ url('/') }}">
+                        <img class="img-fluid" style="max-height: 80px;"
+                            src="{{ asset('assets/web-site-images/logo.png') }}" alt="logo">
+                    </a>
                 </div>
 
                 <h3 class="fw-bold mb-4" style="font-size: 26px;">Streamline Your School Operations</h3>

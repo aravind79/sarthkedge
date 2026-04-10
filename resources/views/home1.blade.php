@@ -127,7 +127,7 @@
       <div class="container">
         <!-- navigation bar -->
         <nav class="navbar navbar-expand-lg">
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="{{ url('/') }}">
             <img src="{{ asset('assets/web-site-images/logo.png') }}" alt="image">
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -151,7 +151,7 @@
                 <a class="nav-link" href="{{ url('/#features') }}">Features</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url('/#how_it_work') }}">About Us</a>
+                <a class="nav-link" href="{{ route('about-us') }}">About Us</a>
               </li>
               <!-- secondery menu start -->
 
@@ -166,7 +166,7 @@
               <!-- secondery menu end -->
 
               <li class="nav-item">
-                <a class="nav-link" href="{{ url('/#contact') }}">Contact</a>
+                <a class="nav-link" href="{{ route('contact-us') }}">Contact</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link dark_btn" href="{{ url('/login') }}">GET STARTED</a>
@@ -207,16 +207,7 @@
               <!-- Links removed as per request -->
             </ul>
 
-            <!-- users -->
-            <div class="used_app">
-              <ul>
-                <li><img src="{{ asset('assets/web-site-images/used01.png') }}" alt="image"></li>
-                <li><img src="{{ asset('assets/web-site-images/used02.png') }}" alt="image"></li>
-                <li><img src="{{ asset('assets/web-site-images/used03.png') }}" alt="image"></li>
-                <li><img src="{{ asset('assets/web-site-images/used04.png') }}" alt="image"></li>
-              </ul>
-              <p>12M + <br> used this app</p>
-            </div>
+
           </div>
 
           <!-- banner slides start -->
@@ -254,70 +245,8 @@
 
 
 
-    <!-- Trusted Section start -->
-    <section class="row_am trusted_section">
-      <!-- container start -->
-      <div class="container">
-        <div class="section_title" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="100">
-          <!-- h2 -->
-          <h2>Trusted by <span>150+</span> Schools & Institutions</h2>
-          <!-- p -->
-          <p>Across India, schools trust SarthakEdge to simplify administration, improve communication, and deliver a
-            smarter digital learning experience.</p>
-        </div>
 
-        <!-- logos slider start -->
-        <div class="company_logos">
-          <div id="company_slider" class="owl-carousel owl-theme">
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/paypal.png') }}" alt="image">
-              </div>
-            </div>
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/spoty.png') }}" alt="image">
-              </div>
-            </div>
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/shopboat.png') }}" alt="image">
-              </div>
-            </div>
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/slack.png') }}" alt="image">
-              </div>
-            </div>
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/envato.png') }}" alt="image">
-              </div>
-            </div>
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/paypal.png') }}" alt="image">
-              </div>
-            </div>
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/spoty.png') }}" alt="image">
-              </div>
-            </div>
-            <div class="item">
-              <div class="logo">
-                <img src="{{ asset('assets/web-site-images/shopboat.png') }}" alt="image">
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- logos slider end -->
-      </div>
-      <!-- container end -->
-    </section>
-    <!-- Trusted Section ends -->
-
-    <section class="row_am why_we_section" data-aos="fade-in">
+    <section class="row_am why_we_section" id="features" data-aos="fade-in">
       <div class="why_inner">
         <div class="container">
 
@@ -331,7 +260,7 @@
           <div class="row">
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/secure.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_student_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Student Management</h3>
                   <p>Manage admissions, profiles, attendance, and student records efficiently.</p>
@@ -341,7 +270,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/abt_functional.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_academics_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Academics Management</h3>
                   <p>Handle classes, subjects, syllabus, exams, and results seamlessly.</p>
@@ -351,7 +280,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/communication.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_teacher_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Teacher Management</h3>
                   <p>Track staff details, attendance, workload, and performance easily.</p>
@@ -361,7 +290,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/abt_support.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_session_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Session Year Management</h3>
                   <p>Organize academic years, promotions, and class transitions smoothly.</p>
@@ -374,7 +303,7 @@
           <div class="row">
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/secure.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_attendance_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Attendance Tracking</h3>
                   <p>Daily attendance with instant parent notifications.</p>
@@ -384,7 +313,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/abt_functional.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_fee_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Fee Management</h3>
                   <p>Online payments, receipts, dues, and installment tracking.</p>
@@ -394,7 +323,8 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/communication.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_communication_v2.png') }}" alt="">
+                </div>
                 <div class="text">
                   <h3>Parent Communication</h3>
                   <p>Instant alerts via app, SMS, and WhatsApp.</p>
@@ -404,7 +334,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/abt_support.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_exam_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Exam Management</h3>
                   <p>Create exams, publish results, and generate report cards.</p>
@@ -417,7 +347,7 @@
           <div class="row extra-features">
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/secure.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_homework_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Homework & Assignments</h3>
                   <p>Share and track homework digitally.</p>
@@ -427,7 +357,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/abt_functional.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_transport_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Transport Management</h3>
                   <p>Bus routes, drivers, and student transport tracking.</p>
@@ -437,7 +367,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/communication.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_reports_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Reports & Analytics</h3>
                   <p>Smart reports for data-driven decisions.</p>
@@ -447,7 +377,7 @@
 
             <div class="col-md-6 col-lg-3">
               <div class="why_box">
-                <div class="icon"><img src="{{ asset('assets/web-site-images/abt_support.png') }}" alt=""></div>
+                <div class="icon"><img src="{{ asset('assets/web-site-images/feat_access_v2.png') }}" alt=""></div>
                 <div class="text">
                   <h3>Role Based Access</h3>
                   <p>Secure access for admins, teachers, parents & students.</p>
@@ -509,10 +439,10 @@
           <!-- RIGHT IMAGE -->
           <div class="col-lg-6 text-center">
             <div class="ui_images">
-              <img id="img1" class="ui_img active" src="{{ asset('assets/web-site-images/student/2.png') }}">
-              <img id="img2" class="ui_img" src="{{ asset('assets/web-site-images/student/1.png') }}">
-              <img id="img3" class="ui_img active" src="{{ asset("assets/web-site-images/student/2.png") }}">
-              <img id="img4" class="ui_img" src="{{ asset('assets/web-site-images/student/1.png') }}">
+              <img id="img1" class="ui_img active" src="{{ asset('assets/web-site-images/app_dashboard.jpg') }}">
+              <img id="img2" class="ui_img" src="{{ asset('assets/web-site-images/app_academics.jpg') }}">
+              <img id="img3" class="ui_img" src="{{ asset('assets/web-site-images/app_chat.jpg') }}">
+              <img id="img4" class="ui_img" src="{{ asset('assets/web-site-images/app_profile.jpg') }}">
             </div>
           </div>
 
@@ -529,13 +459,12 @@
           <!-- LEFT : IMAGES -->
           <div class="col-lg-6 text-center">
             <div class="teacher_app_images">
-              <img id="teacherImg1" class="teacher_img active" src="{{ asset('assets/web-site-images/student/1.png') }}"
+              <img id="teacherImg1" class="teacher_img active"
+                src="{{ asset('assets/web-site-images/app_dashboard.jpg') }}" alt="">
+              <img id="teacherImg2" class="teacher_img" src="{{ asset("assets/web-site-images/app_academics.jpg") }}"
                 alt="">
-              <img id="teacherImg2" class="teacher_img" src="{{ asset("assets/web-site-images/student/1.png") }}"
-                alt="">
-              <img id="teacherImg3" class="teacher_img" src="{{ asset("assets/web-site-images/student/1.png") }}"
-                alt="">
-              <img id="teacherImg4" class="teacher_img" src="{{ asset('assets/web-site-images/student/1.png') }}"
+              <img id="teacherImg3" class="teacher_img" src="{{ asset("assets/web-site-images/app_chat.jpg") }}" alt="">
+              <img id="teacherImg4" class="teacher_img" src="{{ asset('assets/web-site-images/app_login.jpg') }}"
                 alt="">
             </div>
           </div>
@@ -591,6 +520,8 @@
     <!-- How-It-Workes-Section Removed -->
 
     <!-- Testimonial-Section start -->
+    {{-- Testimonial-Section Removed --}}
+    {{--
     <section class="row_am testimonial_section">
       <!-- container start -->
       <div class="container">
@@ -693,6 +624,8 @@
       </div>
       <!-- container end -->
     </section>
+    --}}
+
     <!-- Testimonial-Section end -->
 
     <!-- Pricing-Section -->
@@ -827,8 +760,7 @@
           <!-- h2 -->
           <h2><span>FAQ</span> - Frequently Asked Questions</h2>
           <!-- p -->
-          <p>Lorem Ipsum is simply dummy text of the printing and typese tting <br> indus orem Ipsum has beenthe
-            standard dummy.</p>
+          <p>Find answers to common questions about SarthakEdge school management system.</p>
         </div>
         <!-- faq data -->
         <div class="faq_panel">
@@ -837,15 +769,14 @@
               <div class="card-header" id="headingOne">
                 <h2 class="mb-0">
                   <button type="button" class="btn btn-link active" data-toggle="collapse" data-target="#collapseOne">
-                    <i class="icon_faq icofont-plus"></i> How can i pay ?</button>
+                    <i class="icon_faq icofont-plus"></i> What is SarthakEdge?</button>
                 </h2>
               </div>
               <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry lorem Ipsum has. been the
-                    industrys standard dummy text ever since the when an unknown printer took a galley of type and
-                    scrambled it to make a type specimen book. It has survived not only five cen turies but also the
-                    leap into electronic typesetting, remaining essentially unchanged.</p>
+                  <p>SarthakEdge is an AI-powered school management system designed to streamline administration,
+                    academics, fees, and communication. It provides a unified platform for admins, teachers, parents,
+                    and students to manage school operations efficiently.</p>
                 </div>
               </div>
             </div>
@@ -853,15 +784,15 @@
               <div class="card-header" id="headingTwo">
                 <h2 class="mb-0">
                   <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
-                    data-target="#collapseTwo"><i class="icon_faq icofont-plus"></i> How to setup account ?</button>
+                    data-target="#collapseTwo"><i class="icon_faq icofont-plus"></i> How can SarthakEdge help my
+                    school?</button>
                 </h2>
               </div>
               <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                 <div class="card-body">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry lorem Ipsum has. been the
-                    industrys standard dummy text ever since the when an unknown printer took a galley of type and
-                    scrambled it to make a type specimen book. It has survived not only five cen turies but also the
-                    leap into electronic typesetting, remaining essentially unchanged.</p>
+                  <p>It automates daily tasks like attendance, fee collection, and exam scheduling. With real-time
+                    notifications via WhatsApp and SMS, it improves parent-teacher communication and helps in
+                    data-driven decision making through advanced analytics.</p>
                 </div>
               </div>
             </div>
@@ -869,16 +800,15 @@
               <div class="card-header" id="headingThree">
                 <h2 class="mb-0">
                   <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
-                    data-target="#collapseThree"><i class="icon_faq icofont-plus"></i>What is process to get refund
-                    ?</button>
+                    data-target="#collapseThree"><i class="icon_faq icofont-plus"></i> Is there a mobile app
+                    available?</button>
                 </h2>
               </div>
               <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                 <div class="card-body">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry lorem Ipsum has. been the
-                    industrys standard dummy text ever since the when an unknown printer took a galley of type and
-                    scrambled it to make a type specimen book. It has survived not only five cen turies but also the
-                    leap into electronic typesetting, remaining essentially unchanged.</p>
+                  <p>Yes, we provide dedicated mobile applications for Parents, Students, and Teachers. These apps
+                    ensure that everyone stays updated with marks, attendance, home work, and school announcements on
+                    the go.</p>
                 </div>
               </div>
             </div>
@@ -886,16 +816,15 @@
               <div class="card-header" id="headingFour">
                 <h2 class="mb-0">
                   <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
-                    data-target="#collapseFour"><i class="icon_faq icofont-plus"></i>What is process to get refund
-                    ?</button>
+                    data-target="#collapseFour"><i class="icon_faq icofont-plus"></i> How secure is our school's
+                    data?</button>
                 </h2>
               </div>
               <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
                 <div class="card-body">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry lorem Ipsum has. been the
-                    industrys standard dummy text ever since the when an unknown printer took a galley of type and
-                    scrambled it to make a type specimen book. It has survived not only five cen turies but also the
-                    leap into electronic typesetting, remaining essentially unchanged.</p>
+                  <p>We prioritize data security with industry-standard encryption, secure cloud hosting, and daily
+                    backups. Role-based access control ensures that sensitive information is only accessible to
+                    authorized personnel.</p>
                 </div>
               </div>
             </div>
@@ -912,11 +841,11 @@
       <div class="container-fluid">
         <div class="section_title" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="300">
           <!-- h2 -->
-          <h2>Beautifull <span>interface</span></h2>
+          <h2>Beautiful <span>interface</span></h2>
           <!-- p -->
           <p>
-            Lorem Ipsum is simply dummy text of the printing and typese tting <br> indus orem Ipsum has beenthe standard
-            dummy.
+            Experience a clean, intuitive, and modern UI designed for efficiency across all devices, making school
+            management simpler than ever.
           </p>
         </div>
 
@@ -925,32 +854,32 @@
           <div id="screen_slider" class="owl-carousel owl-theme">
             <div class="item">
               <div class="screen_frame_img">
-                <img src="{{ asset('assets/web-site-images/screen-1.png') }}" alt="image">
+                <img src="{{ asset('assets/web-site-images/app_dashboard.jpg') }}" alt="image">
               </div>
             </div>
             <div class="item">
               <div class="screen_frame_img">
-                <img src="{{ asset('assets/web-site-images/screen-2.png') }}" alt="image">
+                <img src="{{ asset('assets/web-site-images/app_academics.jpg') }}" alt="image">
               </div>
             </div>
             <div class="item">
               <div class="screen_frame_img">
-                <img src="{{ asset('assets/web-site-images/screen-3.png') }}" alt="image">
+                <img src="{{ asset('assets/web-site-images/app_chat.jpg') }}" alt="image">
               </div>
             </div>
             <div class="item">
               <div class="screen_frame_img">
-                <img src="{{ asset('assets/web-site-images/screen-4.png') }}" alt="image">
+                <img src="{{ asset('assets/web-site-images/app_profile.jpg') }}" alt="image">
               </div>
             </div>
             <div class="item">
               <div class="screen_frame_img">
-                <img src="{{ asset('assets/web-site-images/screen-5.png') }}" alt="image">
+                <img src="{{ asset('assets/web-site-images/app_login.jpg') }}" alt="image">
               </div>
             </div>
             <div class="item">
               <div class="screen_frame_img">
-                <img src="{{ asset('assets/web-site-images/screen-3.png') }}" alt="image">
+                <img src="{{ asset('assets/web-site-images/app_dashboard.jpg') }}" alt="image">
               </div>
             </div>
           </div>
@@ -970,68 +899,6 @@
   </section>
   <!-- Download-Free-App-section-end  -->
 
-  <!-- Story-Section-Start -->
-  <section class="row_am latest_story" id="blog">
-    <!-- container start -->
-    <div class="container">
-      <div class="section_title" data-aos="fade-in" data-aos-duration="1500" data-aos-delay="100">
-        <h2>Read latest <span>story</span></h2>
-        <p>Lorem Ipsum is simply dummy text of the printing and typese tting <br> indus orem Ipsum has beenthe
-          standard dummy.</p>
-      </div>
-      <!-- row start -->
-      <div class="row">
-        <!-- story -->
-        <div class="col-md-4">
-          <div class="story_box" data-aos="fade-up" data-aos-duration="1500">
-            <div class="story_img">
-              <img src="{{ asset('assets/web-site-images/story01.png') }}" alt="image">
-              <span>45 min ago</span>
-            </div>
-            <div class="story_text">
-              <h3>Cool features added!</h3>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry lorem Ipsum has.</p>
-              <a href="blog-single.html.htm">READ MORE</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- story -->
-        <div class="col-md-4">
-          <div class="story_box" data-aos="fade-up" data-aos-duration="1500">
-            <div class="story_img">
-              <img src="{{ asset('assets/web-site-images/story02.png') }}" alt="image">
-              <span>45 min ago</span>
-            </div>
-            <div class="story_text">
-              <h3>Top rated app! Yupp.</h3>
-              <p>Simply dummy text of the printing and typesetting industry lorem Ipsum has Lorem Ipsum is.</p>
-              <a href="blog-single.html.htm">READ MORE</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- story -->
-        <div class="col-md-4">
-          <div class="story_box" data-aos="fade-up" data-aos-duration="1500">
-            <div class="story_img">
-              <img src="{{ asset('assets/web-site-images/story03.png') }}" alt="image">
-              <span>45 min ago</span>
-            </div>
-            <div class="story_text">
-              <h3>Creative ideas on app.</h3>
-              <p>Printing and typesetting industry lorem Ipsum has Lorem simply dummy text of the.</p>
-              <a href="blog-single.html.htm">READ MORE</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- row end -->
-    </div>
-    <!-- container end -->
-  </section>
-  <!-- Story-Section-end -->
 
   <!-- News-Letter-Section-Start -->
   <section class="newsletter_section">
@@ -1074,7 +941,11 @@
           <!-- footer link 1 -->
           <div class="col-lg-4 col-md-6 col-12">
             <div class="abt_side">
-              <div class="logo"> <img src="{{ asset('assets/web-site-images/footer_logo.png') }}" alt="image"></div>
+              <div class="logo">
+                <a href="{{ url('/') }}">
+                  <img src="{{ asset('assets/web-site-images/logo.png') }}" alt="image">
+                </a>
+              </div>
               <ul>
                 <li><a href="#">info@sarthakedge.com</a></li>
                 <li><a href="#">+91 81797 09818</a></li>
@@ -1095,9 +966,9 @@
               <ul>
                 <li><a href="{{ url('/') }}">Home</a></li>
                 <li><a href="{{ url('/#features') }}">Features</a></li>
-                <li><a href="{{ url('/#how_it_work') }}">About Us</a></li>
+                <li><a href="{{ route('about-us') }}">About Us</a></li>
                 <li><a href="{{ route('pricing') }}">Pricing</a></li>
-                <li><a href="{{ url('/#contact') }}">Contact us</a></li>
+                <li><a href="{{ route('contact-us') }}">Contact us</a></li>
               </ul>
             </div>
           </div>
@@ -1108,7 +979,7 @@
               <h3>Help & Suport</h3>
               <ul>
 
-                <li><a href="{{ url('/#contact') }}">Support</a></li>
+                <li><a href="{{ route('contact-us') }}">Support</a></li>
                 <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
                 <li><a href="{{ route('terms-conditions') }}">Terms & conditions</a></li>
                 <li><a href="{{ route('refund-policy') }}">Refund Policy</a></li>

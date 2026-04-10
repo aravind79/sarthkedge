@@ -128,6 +128,8 @@ Route::get('pricing', [Controller::class, 'pricingPage'])->name('pricing');
 Route::get('data-security', [Controller::class, 'dataSecurityPage'])->name('data-security');
 Route::get('cookies-policy', [Controller::class, 'cookiesPolicyPage'])->name('cookies-policy');
 Route::get('terms-conditions', [Controller::class, 'termsConditionsPage'])->name('terms-conditions');
+Route::get('about-us', [Controller::class, 'aboutPage'])->name('about-us');
+Route::get('contact-us', [Controller::class, 'contactPage'])->name('contact-us');
 
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 

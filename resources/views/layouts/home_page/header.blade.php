@@ -28,7 +28,7 @@
                         <a class="nav-link" href="{{ url('/#features') }}">Features</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#how_it_work') }}">About Us</a>
+                        <a class="nav-link" href="{{ route('about-us') }}">About Us</a>
                     </li>
                     <!-- secondery menu start -->
 
@@ -43,7 +43,7 @@
                     <!-- secondery menu end -->
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#contact') }}">Contact</a>
+                        <a class="nav-link" href="{{ route('contact-us') }}">Contact</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link dark_btn" href="{{ url('/login') }}">GET STARTED</a>

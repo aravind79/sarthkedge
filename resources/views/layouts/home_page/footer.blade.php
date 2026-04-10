@@ -17,7 +17,10 @@
                 <!-- footer link 1 -->
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="abt_side">
-                        <div class="logo"> <img src="{{ asset('assets/web-site-images/footer_logo.png') }}" alt="image">
+                        <div class="logo">
+                            <a href="{{ url('/') }}">
+                                <img src="{{ asset('assets/web-site-images/logo.png') }}" alt="image">
+                            </a>
                         </div>
                         <ul>
                             <li><a href="#">info@sarthakedge.com</a></li>
@@ -39,9 +42,9 @@
                         <ul>
                             <li><a href="{{ url('/') }}">Home</a></li>
                             <li><a href="{{ url('/#features') }}">Features</a></li>
-                            <li><a href="{{ url('/#how_it_work') }}">About Us</a></li>
+                            <li><a href="{{ route('about-us') }}">About Us</a></li>
                             <li><a href="{{ route('pricing') }}">Pricing</a></li>
-                            <li><a href="{{ url('/#contact') }}">Contact us</a></li>
+                            <li><a href="{{ route('contact-us') }}">Contact us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -52,7 +55,7 @@
                         <h3>Help & Suport</h3>
                         <ul>
 
-                            <li><a href="{{ url('/#contact') }}">Support</a></li>
+                            <li><a href="{{ route('contact-us') }}">Support</a></li>
                             <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
                             <li><a href="{{ route('terms-conditions') }}">Terms & conditions</a></li>
                             <li><a href="{{ route('refund-policy') }}">Refund Policy</a></li>

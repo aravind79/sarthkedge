@@ -1036,4 +1036,12 @@ class Controller extends BaseController
     {
         return view('landing-pages.terms-conditions', $this->getCommonLandingData());
     }
+    public function aboutPage()
+    {
+        return view('landing-pages.about', $this->getCommonLandingData());
+    }
+    public function contactPage()
+    {
+        return view('landing-pages.contact', $this->getCommonLandingData());
+    }
 }
