@@ -103,7 +103,11 @@ final class SetupSchoolDatabase implements ShouldQueue
             ];
 
             Mail::send('schools.email', $data, static function ($message) use ($data, $settings) {
-                $message->to($data['email'])->from($settings['mail_username'] ?? 'eSchool Saas')->subject($data['subject']);
+                $fromEmail = !empty($settings['mail_username']) && filter_var($settings['mail_username'], FILTER_VALIDATE_EMAIL) 
+                    ? $settings['mail_username'] 
+                    : config('mail.from.address', 'hello@example.com');
+                $fromName = $settings['system_name'] ?? config('app.name', 'eSchool Saas');
+                $message->to($data['email'])->from($fromEmail, $fromName)->subject($data['subject']);
             });
 
             // Send email verification if not already verified

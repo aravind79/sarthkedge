@@ -276,7 +276,11 @@ class ApiController extends Controller
         }
         try {
 
-            $response = $this->paymentConfiguration->builder()->select('payment_method', 'status')->pluck('status', 'payment_method');
+            $response = $this->paymentConfiguration->builder()->select('payment_method', 'status')->pluck('status', 'payment_method')->toArray();
+            if (isset($response['Ccavenue'])) {
+                $response['ccavenue'] = $response['Ccavenue'];
+                unset($response['Ccavenue']);
+            }
             ResponseService::successResponse("Payment Details Fetched", $response);
         } catch (Throwable $e) {
             ResponseService::logErrorResponse($e);
@@ -381,36 +385,48 @@ class ApiController extends Controller
                                 }
                             } else {
                                 // For other payment gateways
-                                $paymentIntent = PaymentService::create($data->payment_gateway, $data->school_id)
-                                    ->retrievePaymentIntent($data->order_id);
-                                $paymentIntent = PaymentService::formatPaymentIntent($data->payment_gateway, $paymentIntent);
-
-                                if ($paymentIntent['status'] != "pending") {
-                                    $this->paymentTransaction->update($data->id, [
-                                        'payment_status' => $paymentIntent['status'],
-                                        'school_id' => $data->school_id
-                                    ]);
-                                    if ($paymentIntent['status'] == "succeed") {
-                                        $transportationFee = TransportationFee::where('id', $paymentIntent['metadata']['fees_id'])->first();
-                                        $expiryDate = null;
-                                        if ($transportationFee) {
-                                            if (!empty($transportationFee->duration)) {
-                                                $expiryDate = now()->addDays($transportationFee->duration);
-                                            }
-                                        }
-                                        TransportationPayment::where('payment_transaction_id', $data->id)
-                                            ->update([
-                                                'status' => "paid",
-                                                'paid_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                                                'expiry_date' => $expiryDate
-                                            ]);
-                                    } else {
-                                        TransportationPayment::where('payment_transaction_id', $data->id)
-                                            ->update([
-                                                'status' => "canceled"
-                                            ]);
+                                if (strtolower($data->payment_gateway) == 'ccavenue') {
+                                    // CCAvenue doesn't support retrieving by ID.
+                                    // If it's been pending for more than 15 minutes, mark it failed to unblock the user.
+                                    if (Carbon::parse($data->created_at)->addMinutes(15)->isPast()) {
+                                        $this->paymentTransaction->update($data->id, [
+                                            'payment_status' => 'failed',
+                                            'school_id' => $data->school_id
+                                        ]);
+                                        $data->payment_status = 'failed';
                                     }
-                                    $data->payment_status = $paymentIntent['status'];
+                                } else {
+                                    $paymentIntent = PaymentService::create($data->payment_gateway, $data->school_id)
+                                        ->retrievePaymentIntent($data->order_id);
+                                    $paymentIntent = PaymentService::formatPaymentIntent($data->payment_gateway, $paymentIntent);
+
+                                    if ($paymentIntent['status'] != "pending") {
+                                        $this->paymentTransaction->update($data->id, [
+                                            'payment_status' => $paymentIntent['status'],
+                                            'school_id' => $data->school_id
+                                        ]);
+                                        if ($paymentIntent['status'] == "succeed") {
+                                            $transportationFee = TransportationFee::where('id', $paymentIntent['metadata']['fees_id'])->first();
+                                            $expiryDate = null;
+                                            if ($transportationFee) {
+                                                if (!empty($transportationFee->duration)) {
+                                                    $expiryDate = now()->addDays($transportationFee->duration);
+                                                }
+                                            }
+                                            TransportationPayment::where('payment_transaction_id', $data->id)
+                                                ->update([
+                                                    'status' => "paid",
+                                                    'paid_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                                    'expiry_date' => $expiryDate
+                                                ]);
+                                        } else {
+                                            TransportationPayment::where('payment_transaction_id', $data->id)
+                                                ->update([
+                                                    'status' => "canceled"
+                                                ]);
+                                        }
+                                        $data->payment_status = $paymentIntent['status'];
+                                    }
                                 }
                             }
                         }
