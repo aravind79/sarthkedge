@@ -1531,7 +1531,7 @@ class ParentApiController extends Controller
             'installment_ids' => 'nullable|array',
             'installment_ids.*' => 'required|integer',
             'advance' => 'present|numeric',
-            'payment_method' => 'required|in:Stripe,Razorpay,Flutterwave,Paystack',
+            'payment_method' => 'required|in:Stripe,Razorpay,Flutterwave,Paystack,ccavenue,Ccavenue',
         ]);
         if ($validator->fails()) {
             ResponseService::validationError($validator->errors()->first());
@@ -1539,7 +1539,7 @@ class ParentApiController extends Controller
         try {
             DB::beginTransaction();
 
-            $paymentConfigurations = $this->paymentConfigurations->builder()->where(['status' => 1, 'payment_method' => $request->payment_method])->first();
+            $paymentConfigurations = $this->paymentConfigurations->builder()->where('status', 1)->whereRaw('LOWER(payment_method) = ?', [strtolower($request->payment_method)])->first();
 
             if (empty($paymentConfigurations)) {
                 ResponseService::errorResponse("Payment is not Enabled", [], config('constants.RESPONSE_CODE.ENABLE_PAYMENT_GATEWAY'));
@@ -1682,9 +1682,56 @@ class ParentApiController extends Controller
                 'type' => 'fees',
                 'fees_type' => 'compulsory',
                 'is_fully_paid' => $amount > $fees->total_compulsory_fees,
+                'merchant_param1' => $paymentTransactionData->id,
+                'merchant_param2' => $schoolId,
+                'merchant_param3' => 'fees',
+                'redirect_url' => route('ccavenue.callback', ['school_id' => $schoolId]),
+                'cancel_url' => route('ccavenue.callback', ['school_id' => $schoolId]),
             ]);
 
-            if ($request->payment_method == "Flutterwave" || $request->payment_method == "Paystack") {
+            if (strtolower($request->payment_method) == "ccavenue") {
+                // Store metadata in payment_signature for retrieval in callback
+                $metadata = [
+                    'fees_id' => $request->fees_id,
+                    'student_id' => $studentData->user_id,
+                    'parent_id' => $parentId,
+                    'session_year_id' => $sessionYear->id,
+                    'installment_details' => $installmentDetails,
+                    'total_amount' => $finalAmount,
+                    'advance_amount' => $request->advance,
+                    'dueChargesAmount' => $dueChargesAmount,
+                    'school_id' => $schoolId,
+                    'fees_type' => 'compulsory',
+                ];
+                $this->paymentTransaction->update($paymentTransactionData->id, [
+                    'order_id' => $paymentIntent['order_id'] ?? null, 
+                    'school_id' => $schoolId,
+                    'payment_signature' => json_encode($metadata)
+                ]);
+                
+                DB::commit();
+
+                $ccavenueDetails = [
+                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id]),
+                    "encRequest" => $paymentIntent['encRequest'],
+                    "enc_val" => $paymentIntent['encRequest'],
+                    "access_code" => $paymentIntent['access_code'],
+                    "url" => $paymentIntent['url'],
+                    "order_id" => $paymentIntent['order_id'] ?? $paymentTransactionData->id,
+                    "redirect_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "cancel_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "merchant_param1" => $paymentTransactionData->id,
+                    "merchant_param2" => $schoolId,
+                    "merchant_param3" => "fees"
+                ];
+
+                return ResponseService::successResponse("", array_merge($ccavenueDetails, [
+                    "payment_intent" => $ccavenueDetails,
+                    "payment_transaction" => $paymentTransactionData
+                ]));
+            }
+
+            if (strtolower($request->payment_method) == "flutterwave" || strtolower($request->payment_method) == "paystack") {
                 $this->paymentTransaction->update($paymentTransactionData->id, ['order_id' => $paymentIntent['order_id'] ?? null, 'school_id' => $schoolId]);
                 $paymentTransactionData = $this->paymentTransaction->findById($paymentTransactionData->id);
                 DB::commit();
@@ -1692,7 +1739,7 @@ class ParentApiController extends Controller
                 \Log::info("Payment Intent:", ['payment_intent' => $paymentIntent]);
 
                 // Return only the payment_link for Flutterwave
-                if ($request->payment_method == "Flutterwave") {
+                if (strtolower($request->payment_method) == "flutterwave") {
                     ResponseService::successResponse("", [
                         "payment_link" => $paymentIntent['payment_link']
                     ]);
@@ -1727,7 +1774,7 @@ class ParentApiController extends Controller
             'fees_id' => 'required',
             'optional_id' => 'required|array',
             'optional_id.*' => 'required|integer',
-            'payment_method' => 'required|in:Stripe,Razorpay,Flutterwave,Paystack',
+            'payment_method' => 'required|in:Stripe,Razorpay,Flutterwave,Paystack,ccavenue,Ccavenue',
         ]);
         if ($validator->fails()) {
             ResponseService::validationError($validator->errors()->first());
@@ -1746,7 +1793,7 @@ class ParentApiController extends Controller
             $schoolId = $studentData->user->school_id;
             $sessionYear = $this->cache->getDefaultSessionYear($schoolId);
 
-            $paymentConfigurations = $this->paymentConfigurations->builder()->where(['status' => 1, 'payment_method' => $request->payment_method])->first();
+            $paymentConfigurations = $this->paymentConfigurations->builder()->where('status', 1)->whereRaw('LOWER(payment_method) = ?', [strtolower($request->payment_method)])->first();
 
             if (empty($paymentConfigurations)) {
                 ResponseService::errorResponse("Payment is not Enabled", [], config('constants.RESPONSE_CODE.ENABLE_PAYMENT_GATEWAY'));
@@ -1810,10 +1857,55 @@ class ParentApiController extends Controller
                 'fees_type' => 'optional',
                 'name' => Auth::user()->full_name,
                 'email' => Auth::user()->email,
-                'mobile' => Auth::user()->mobile
+                'mobile' => Auth::user()->mobile,
+                'merchant_param1' => $paymentTransactionData->id,
+                'merchant_param2' => $schoolId,
+                'merchant_param3' => 'fees',
+                'redirect_url' => route('ccavenue.callback', ['school_id' => $schoolId]),
+                'cancel_url' => route('ccavenue.callback', ['school_id' => $schoolId]),
             ]);
 
-            if ($request->payment_method == "Flutterwave" || $request->payment_method == "Paystack") {
+            if (strtolower($request->payment_method) == "ccavenue") {
+                // Store metadata in payment_signature for retrieval in callback
+                $metadata = [
+                    'fees_id' => $request->fees_id,
+                    'student_id' => $studentData->user_id,
+                    'parent_id' => $parentId,
+                    'session_year_id' => $sessionYear->id,
+                    'total_amount' => $amount,
+                    'school_id' => $schoolId,
+                    'class_id' => $classId,
+                    'optional_fees_id' => $optional_fee,
+                    'fees_type' => 'optional',
+                ];
+                $this->paymentTransaction->update($paymentTransactionData->id, [
+                    'order_id' => $paymentIntent['order_id'] ?? null, 
+                    'school_id' => $schoolId,
+                    'payment_signature' => json_encode($metadata)
+                ]);
+
+                DB::commit();
+                $ccavenueDetails = [
+                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id]),
+                    "encRequest" => $paymentIntent['encRequest'],
+                    "enc_val" => $paymentIntent['encRequest'],
+                    "access_code" => $paymentIntent['access_code'],
+                    "url" => $paymentIntent['url'],
+                    "order_id" => $paymentIntent['order_id'] ?? $paymentTransactionData->id,
+                    "redirect_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "cancel_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "merchant_param1" => $paymentTransactionData->id,
+                    "merchant_param2" => $schoolId,
+                    "merchant_param3" => "fees"
+                ];
+
+                return ResponseService::successResponse("", array_merge($ccavenueDetails, [
+                    "payment_intent" => $ccavenueDetails,
+                    "payment_transaction" => $paymentTransactionData
+                ]));
+            }
+
+            if (strtolower($request->payment_method) == "flutterwave" || strtolower($request->payment_method) == "paystack") {
                 $this->paymentTransaction->update($paymentTransactionData->id, ['order_id' => $paymentIntent['order_id'] ?? null, 'school_id' => $schoolId]);
                 $paymentTransactionData = $this->paymentTransaction->findById($paymentTransactionData->id);
                 DB::commit();
@@ -1821,7 +1913,7 @@ class ParentApiController extends Controller
                 \Log::info("Payment Intent:", ['payment_intent' => $paymentIntent]);
 
                 // Return only the payment_link for Flutterwave
-                if ($request->payment_method == "Flutterwave") {
+                if (strtolower($request->payment_method) == "flutterwave") {
                     ResponseService::successResponse("", [
                         "payment_link" => $paymentIntent['payment_link']
                     ]);
@@ -1921,7 +2013,12 @@ class ParentApiController extends Controller
             $sessionYear = $this->cache->getDefaultSessionYear($child->user->school_id);
             $semester = $this->cache->getDefaultSemesterData($child->user->school_id);
             $features = FeaturesService::getFeatures($child->user->school_id);
-            $paymentGateways = $this->paymentConfigurations->builder()->select(['id', 'payment_method', 'api_key', 'currency_code'])->where('status', 1)->get();
+            $paymentGateways = $this->paymentConfigurations->builder()->select(['id', 'payment_method', 'api_key', 'currency_code'])->where('status', 1)->get()->map(function($gateway) {
+                if ($gateway->payment_method === 'Ccavenue') {
+                    $gateway->payment_method = 'ccavenue';
+                }
+                return $gateway;
+            });
             $data = [
                 'school_id' => $child->user->school_id,
                 'settings' => $settings,

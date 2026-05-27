@@ -210,6 +210,34 @@ class SchoolDataService
 
         );
         SchoolSetting::upsert($schoolSettingData, ["name", "school_id"], ["data", "type"]);
+
+        // --- ADD GLOBAL PAYMENT GATEWAYS FOR NEW SCHOOL ---
+        // Fetch all global payment gateways (where school_id is null) from main database
+        $globalGateways = DB::connection('mysql')->table('payment_configurations')->whereNull('school_id')->get();
+        
+        if ($globalGateways->count() > 0) {
+            foreach ($globalGateways as $gw) {
+                $gwData = (array)$gw;
+                unset($gwData['id']);
+                unset($gwData['currency_symbol']); // Not present in tenant DB schema
+                $gwData['school_id'] = $schoolData->id;
+                $gwData['created_at'] = Carbon::now();
+                $gwData['updated_at'] = Carbon::now();
+                
+                // Insert into tenant database
+                DB::connection('school')->table('payment_configurations')->insert($gwData);
+                
+                // Insert into main database (Check if exists first to avoid duplicates in case of retries)
+                $exists = DB::connection('mysql')->table('payment_configurations')
+                    ->where('school_id', $schoolData->id)
+                    ->where('payment_method', $gw->payment_method)
+                    ->exists();
+                    
+                if (!$exists) {
+                    DB::connection('mysql')->table('payment_configurations')->insert($gwData);
+                }
+            }
+        }
     }
 
     public function createPreSetupRole($school)

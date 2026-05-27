@@ -57,6 +57,7 @@ use App\Http\Controllers\StaffAttendanceController;
 use App\Http\Controllers\StreamController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SubscriptionBillPaymentController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionWebhookController;
@@ -110,6 +111,7 @@ Auth::routes(['verify' => true]);
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
+Route::post('ccavenue/callback', [App\Http\Controllers\CcavenueController::class, 'handleResponse'])->name('ccavenue.callback');
 Route::get('/', [Controller::class, 'index'])->name('index')->middleware(['CheckForMaintenanceMode', '2fa']);
 
 // 2fa code verification
@@ -130,6 +132,10 @@ Route::get('cookies-policy', [Controller::class, 'cookiesPolicyPage'])->name('co
 Route::get('terms-conditions', [Controller::class, 'termsConditionsPage'])->name('terms-conditions');
 Route::get('about-us', [Controller::class, 'aboutPage'])->name('about-us');
 Route::get('contact-us', [Controller::class, 'contactPage'])->name('contact-us');
+Route::get('onboarding', function () {
+    return view('onboarding');
+})->name('onboarding');
+
 
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
@@ -845,6 +851,7 @@ Route::group(['middleware' => ['Role', 'checkSchoolStatus', 'status', 'SwitchDat
 
         Route::resource('leave', LeaveController::class);
         Route::resource('leave-master', LeaveMasterController::class);
+        Route::resource('tasks', TaskController::class);
 
         // Semester
         Route::group(['prefix' => 'semester'], static function () {
@@ -1041,6 +1048,8 @@ Route::post('webhook/flutterwave', [WebhookController::class, 'flutterwave']);
 
 Route::post('subscription/webhook/stripe', [SubscriptionWebhookController::class, 'stripe']);
 Route::post('subscription/webhook/razorpay', [SubscriptionWebhookController::class, 'razorpay']);
+Route::post('ccavenue/encrypted-request', [App\Http\Controllers\CcavenueController::class, 'getEncryptedRequest']);
+Route::get('ccavenue/webview/{transaction_id}', [App\Http\Controllers\CcavenueController::class, 'webviewPayment'])->name('ccavenue.webview');
 Route::post('subscription/webhook/paystack', [SubscriptionWebhookController::class, 'paystack']);
 Route::post('subscription/webhook/flutterwave', [SubscriptionWebhookController::class, 'flutterwave']);
 
