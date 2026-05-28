@@ -326,7 +326,8 @@ class ApiController extends Controller
         try {
             $paymentTransactions = app(PaymentTransactionInterface::class)->builder();
             if ($request->latest_only) {
-                $paymentTransactions->where('created_at', '>', Carbon::now()->subMinutes(30)->toDateTimeString());
+                $paymentTransactions->where('created_at', '>', Carbon::now()->subMinutes(30)->toDateTimeString())
+                                    ->where('payment_status', '!=', 'Pending');
             }
             $paymentTransactions = $paymentTransactions->with('school')->orderBy('id', 'DESC')->get();
 

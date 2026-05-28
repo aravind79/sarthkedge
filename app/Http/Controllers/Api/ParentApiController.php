@@ -1725,10 +1725,9 @@ class ParentApiController extends Controller
                     "merchant_param3" => "fees"
                 ];
 
-                return ResponseService::successResponse("", array_merge($ccavenueDetails, [
-                    "payment_intent" => $ccavenueDetails,
-                    "payment_transaction" => $paymentTransactionData
-                ]));
+                return ResponseService::successResponse("", [
+                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id])
+                ]);
             }
 
             if (strtolower($request->payment_method) == "flutterwave" || strtolower($request->payment_method) == "paystack") {
@@ -1899,10 +1898,9 @@ class ParentApiController extends Controller
                     "merchant_param3" => "fees"
                 ];
 
-                return ResponseService::successResponse("", array_merge($ccavenueDetails, [
-                    "payment_intent" => $ccavenueDetails,
-                    "payment_transaction" => $paymentTransactionData
-                ]));
+                return ResponseService::successResponse("", [
+                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id])
+                ]);
             }
 
             if (strtolower($request->payment_method) == "flutterwave" || strtolower($request->payment_method) == "paystack") {
