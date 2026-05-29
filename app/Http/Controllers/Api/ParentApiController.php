@@ -2041,12 +2041,7 @@ class ParentApiController extends Controller
             $sessionYear = $this->cache->getDefaultSessionYear($child->user->school_id);
             $semester = $this->cache->getDefaultSemesterData($child->user->school_id);
             $features = FeaturesService::getFeatures($child->user->school_id);
-            $paymentGateways = $this->paymentConfigurations->builder()->select(['id', 'payment_method', 'api_key', 'currency_code'])->where('status', 1)->get()->map(function($gateway) {
-                if ($gateway->payment_method === 'Ccavenue') {
-                    $gateway->payment_method = 'ccavenue';
-                }
-                return $gateway;
-            });
+            $paymentGateways = $this->paymentConfigurations->builder()->select(['id', 'payment_method', 'api_key', 'currency_code'])->where('status', 1)->get();
             $data = [
                 'school_id' => $child->user->school_id,
                 'settings' => $settings,
