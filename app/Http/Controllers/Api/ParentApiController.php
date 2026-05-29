@@ -1526,6 +1526,7 @@ class ParentApiController extends Controller
     public function payCompulsoryFees(Request $request)
     {
         \Log::info("payCompulsoryFees endpoint HIT by user " . Auth::id(), $request->all());
+        \Log::info("Payment Config:", ["config" => $this->paymentConfigurations->builder()->where('status', 1)->whereRaw('LOWER(payment_method) = ?', [strtolower($request->payment_method)])->first()]);
         $validator = Validator::make($request->all(), [
             'child_id' => 'required',
             'fees_id' => 'required',
