@@ -1725,9 +1725,24 @@ class ParentApiController extends Controller
                     "merchant_param3" => "fees"
                 ];
 
-                return ResponseService::successResponse("", [
-                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id])
-                ]);
+                $ccavenueDetails = [
+                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id]),
+                    "encRequest" => $paymentIntent['encRequest'],
+                    "enc_val" => $paymentIntent['encRequest'],
+                    "access_code" => $paymentIntent['access_code'],
+                    "url" => $paymentIntent['url'],
+                    "order_id" => $paymentIntent['order_id'] ?? $paymentTransactionData->id,
+                    "redirect_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "cancel_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "merchant_param1" => $paymentTransactionData->id,
+                    "merchant_param2" => $schoolId,
+                    "merchant_param3" => "fees"
+                ];
+
+                return ResponseService::successResponse("", array_merge($ccavenueDetails, [
+                    "payment_intent" => $ccavenueDetails,
+                    "payment_transaction" => $paymentTransactionData
+                ]));
             }
 
             if (strtolower($request->payment_method) == "flutterwave" || strtolower($request->payment_method) == "paystack") {
@@ -1898,9 +1913,24 @@ class ParentApiController extends Controller
                     "merchant_param3" => "fees"
                 ];
 
-                return ResponseService::successResponse("", [
-                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id])
-                ]);
+                $ccavenueDetails = [
+                    "payment_link" => route('ccavenue.webview', ['transaction_id' => $paymentTransactionData->id]),
+                    "encRequest" => $paymentIntent['encRequest'],
+                    "enc_val" => $paymentIntent['encRequest'],
+                    "access_code" => $paymentIntent['access_code'],
+                    "url" => $paymentIntent['url'],
+                    "order_id" => $paymentIntent['order_id'] ?? $paymentTransactionData->id,
+                    "redirect_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "cancel_url" => route('ccavenue.callback', ['school_id' => $schoolId]),
+                    "merchant_param1" => $paymentTransactionData->id,
+                    "merchant_param2" => $schoolId,
+                    "merchant_param3" => "fees"
+                ];
+
+                return ResponseService::successResponse("", array_merge($ccavenueDetails, [
+                    "payment_intent" => $ccavenueDetails,
+                    "payment_transaction" => $paymentTransactionData
+                ]));
             }
 
             if (strtolower($request->payment_method) == "flutterwave" || strtolower($request->payment_method) == "paystack") {
