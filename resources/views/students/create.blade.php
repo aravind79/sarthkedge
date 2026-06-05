@@ -585,9 +585,11 @@
 
                 <!-- Body -->
                 <div class="modal-body adm-modal-body">
-                    <form id="admission-form" class="student-registration-form" action="{{ route('students.store') }}"
-                        method="POST" enctype="multipart/form-data" novalidate>
+                    <div id="admission-error-alert" class="alert alert-danger" style="display:none; margin:10px 15px 0;"></div>
+                    <form id="admission-form" class="admission-wizard-form" action="{{ route('students.store') }}"
+                        method="POST" enctype="multipart/form-data" novalidate onsubmit="return false;">
                         @csrf
+                        <input type="hidden" name="status" id="student_status" value="1">
 
 
 
@@ -865,7 +867,7 @@
                                 <button type="button" class="adm-btn-nav" id="btn-next-step">
                                     {{ __('Save & Continue') }} <i class="fa fa-arrow-right"></i>
                                 </button>
-                                <button type="submit" class="adm-btn-nav d-none" id="btn-submit-admission">
+                                <button type="button" class="adm-btn-nav d-none" id="btn-submit-admission">
                                     <i class="fa fa-check-circle"></i> {{ __('Finish & Enroll') }}
                                 </button>
                             </div>
@@ -946,7 +948,7 @@
         };
 
         jQuery(document).ready(function ($) {
-            console.log("Admission Wizard Initialized (V3.7 - Stabilized)");
+            console.log("Admission Wizard Initialized (V4.0 - AJAX Fixed)");
 
             // Datepicker Init with safety
             const initDatepickers = () => {
@@ -1020,9 +1022,99 @@
                 $('#guardian_email_hidden').val($(this).val());
             });
 
+            // Admission Form AJAX Submission Handler
+            function submitAdmissionForm() {
+                if ($('#admission-form').data('submitting')) return;
+                $('#admission-form').data('submitting', true);
+                $('#admission-error-alert').hide();
+
+                var $btn = $('#btn-submit-admission');
+                var $draftBtn = $('#btn-save-draft');
+                var originalHtml = $btn.html();
+                var originalDraftText = $draftBtn.text();
+                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Please Wait...');
+                $draftBtn.prop('disabled', true);
+
+                var formData = new FormData($('#admission-form')[0]);
+
+                $.ajax({
+                    type: 'POST',
+                    url: $('#admission-form').attr('action'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('[ADM] AJAX success response:', response);
+                        if (response && !response.error) {
+                            // Show success toast and alert
+                            if (typeof showSuccessToast === 'function') {
+                                showSuccessToast(response.message || 'Student Registered Successfully');
+                            }
+                            $('#admission-error-alert')
+                                .removeClass('alert-danger').addClass('alert-success')
+                                .html('<strong>Success:</strong> ' + (response.message || 'Student Registered Successfully')).show();
+                            
+                            // Scroll to top to see success message
+                            $('html, body').animate({ scrollTop: 0 }, 'fast');
+
+                            // Disable buttons during redirect
+                            $('#admission-form').data('submitting', true);
+                            $('#btn-submit-admission').prop('disabled', true).html('<i class="fa fa-check"></i> Success');
+                            $('#btn-save-draft').prop('disabled', true);
+
+                            // Redirect after short delay
+                            setTimeout(function() {
+                                window.location.href = "{{ route('students.index') }}";
+                            }, 1500);
+                        } else {
+                            var msg = (response && response.message) ? response.message : 'Unknown error';
+                            $('#admission-error-alert')
+                                .removeClass('alert-success').addClass('alert-danger')
+                                .html('<strong>Error:</strong> ' + msg).show();
+                            
+                            $('html, body').animate({ scrollTop: 0 }, 'fast');
+                        }
+                    },
+                    error: function(jqXHR) {
+                        console.log('[ADM] AJAX error:', jqXHR.status, jqXHR.responseText);
+                        var msg = 'Server error (' + jqXHR.status + ')';
+                        if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                            msg = jqXHR.responseJSON.message;
+                        } else if (jqXHR.responseText) {
+                            msg += ': ' + jqXHR.responseText.substring(0, 300);
+                        }
+                        $('#admission-error-alert')
+                            .removeClass('alert-success').addClass('alert-danger')
+                            .html('<strong>Error:</strong> ' + msg).show();
+                        $('.adm-modal-body').scrollTop(0);
+                    },
+                    complete: function(jqXHR, textStatus) {
+                        // Only reset if there was an error or it wasn't a success response
+                        var response = jqXHR.responseJSON;
+                        var isSuccess = (textStatus === 'success' && response && !response.error);
+                        
+                        if (!isSuccess) {
+                            $('#admission-form').data('submitting', false);
+                            $btn.prop('disabled', false).html(originalHtml);
+                            $draftBtn.prop('disabled', false).text(originalDraftText);
+                        }
+                    }
+                });
+
+            }
+
             // Draft/Submit Support
-            $('#btn-save-draft').on('click', function () {
-                $('#admission-form').submit();
+            $('#btn-save-draft').on('click', function (e) {
+                e.preventDefault();
+                $('#student_status').val(0);
+                submitAdmissionForm();
+            });
+
+            $('#btn-submit-admission').on('click', function (e) {
+                e.preventDefault();
+                $('#student_status').val(1);
+                submitAdmissionForm();
             });
 
             // Manual trigger to avoid double initialization or conflicts
@@ -1034,6 +1126,12 @@
             $('#admissionModal').on('hidden.bs.modal', function () {
                 updateStepUI(1);
             });
+
+            window.admissionSuccess = function(response) {
+                setTimeout(function() {
+                    window.location.href = "{{ route('students.index') }}";
+                }, 1500);
+            };
 
             // Fix for select2 inside modal
             $('#admissionModal').on('shown.bs.modal', function () {
