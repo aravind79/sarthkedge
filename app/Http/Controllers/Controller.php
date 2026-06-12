@@ -348,7 +348,6 @@ class Controller extends BaseController
             ResponseService::successResponse('Message send successfully');
 
         } catch (Throwable $e) {
-            dd($e);
             if (Str::contains($e->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
                 ResponseService::warningResponse("Data stored successfully. But Email not sent.");
             } else {
@@ -362,6 +361,51 @@ class Controller extends BaseController
     public function cron_job()
     {
         Artisan::call('schedule:run');
+    }
+
+    public function onboardingInquiry(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'name'    => 'required|string|max:255',
+                'email'   => 'required|email|max:255',
+                'mobile'  => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|digits_between:6,15',
+                'subject' => 'required|string|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                ResponseService::errorResponse($validator->errors()->first());
+            }
+
+            $admin_email = app(CachingService::class)->getSystemSettings('mail_username');
+            $data = [
+                'name'        => $request->name,
+                'email'       => $request->email,
+                'mobile'      => $request->mobile,
+                'description' => "School Name: {$request->subject}\nMobile: {$request->mobile}\n\n" . ($request->message ?? ''),
+                'admin_email' => $admin_email,
+            ];
+
+            $this->contactInquiry->create([
+                'name'    => $request->name,
+                'email'   => $request->email,
+                'subject' => $request->subject,
+                'message' => "Mobile: {$request->mobile}\n\n" . ($request->message ?? ''),
+            ]);
+
+            Mail::send('contact', $data, static function ($message) use ($data) {
+                $message->to($data['admin_email'])->subject('New Onboarding Inquiry: ' . request('subject'));
+            });
+
+            ResponseService::successResponse('Thank you! Your inquiry has been submitted. We will get back to you soon.');
+
+        } catch (Throwable $e) {
+            if (Str::contains($e->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
+                ResponseService::warningResponse("Your inquiry was saved. But the confirmation email could not be sent.");
+            } else {
+                ResponseService::errorResponse('Apologies for the Inconvenience: Please Try Again Later');
+            }
+        }
     }
 
     public function relatedDataIndex($table, $id)
@@ -938,19 +982,13 @@ class Controller extends BaseController
         try {
             $user = Auth::user();
             if (!$user->hasVerifiedEmail()) {
-                $now = Carbon::now();
-                if ($now->diffInHours($user->updated_at) >= 2) {
-                    // Send the verification email
-                    $user->sendEmailVerificationNotification();
+                // Send the verification email
+                $user->sendEmailVerificationNotification();
 
-                    // Update the `updated_at` timestamp to the current time
-                    $user->touch(); // This will update the `updated_at` timestamp
-                    Auth::logout();
-                    return redirect()->route('login')->with('emailSuccess', 'A verification email has been sent to your email address. Please check your inbox.');
-                } else {
-                    Auth::logout();
-                    return redirect()->route('login')->with('emailError', 'You have already requested a verification email recently. Please try again later.');
-                }
+                // Update the `updated_at` timestamp to the current time
+                $user->touch(); // This will update the `updated_at` timestamp
+                Auth::logout();
+                return redirect()->route('login')->with('emailSuccess', 'A verification email has been sent to your email address. Please check your inbox.');
             }
 
             if ($user->email_verified_at) {

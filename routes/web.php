@@ -135,7 +135,7 @@ Route::get('contact-us', [Controller::class, 'contactPage'])->name('contact-us')
 Route::get('onboarding', function () {
     return view('onboarding');
 })->name('onboarding');
-
+Route::post('onboarding-inquiry', [Controller::class, 'onboardingInquiry'])->name('onboarding.inquiry');
 
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
